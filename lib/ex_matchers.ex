@@ -9,9 +9,12 @@ defmodule ExMatchers do
 
   # Matchers to work with standard library types
   defdelegate naive_datetime, to: ExMatchers.NaiveDateTimeMatcher, as: :new
+  defdelegate naive_datetime(opts), to: ExMatchers.NaiveDateTimeMatcher, as: :new
   defdelegate datetime, to: ExMatchers.DateTimeMatcher, as: :new
+  defdelegate datetime(opts), to: ExMatchers.DateTimeMatcher, as: :new
   defdelegate date, to: ExMatchers.DateMatcher, as: :new
   defdelegate time, to: ExMatchers.TimeMatcher, as: :new
+  defdelegate time(opts), to: ExMatchers.TimeMatcher, as: :new
 
   # TODO - add map, list, tuple matchers that allow for parametrized matching ('exactly', 'covering', any_order', etc)
 end

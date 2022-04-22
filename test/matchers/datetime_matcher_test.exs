@@ -6,4 +6,12 @@ defmodule DateTimeMatcherTest do
   test "matches datetimes" do
     assert DateTime.utc_now() ~> ExMatchers.datetime()
   end
+
+  test "matches on precision match" do
+    assert DateTime.utc_now() ~> ExMatchers.datetime(precision: 6)
+  end
+
+  test "refutes on precision mismatch" do
+    refute DateTime.utc_now() ~> ExMatchers.datetime(precision: 0)
+  end
 end
