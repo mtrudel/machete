@@ -1,18 +1,17 @@
 defmodule ExMatchers do
-  @moduledoc """
-  Documentation for `ExMatchers`.
-  """
+  def a ~> b, do: ExMatchers.Matchable.matches?(b, a)
 
-  @doc """
-  Hello world.
+  # Matchers to work with intrinsic types
+  defdelegate boolean, to: ExMatchers.BooleanMatcher, as: :new
+  defdelegate integer, to: ExMatchers.IntegerMatcher, as: :new
+  defdelegate float, to: ExMatchers.FloatMatcher, as: :new
+  defdelegate string, to: ExMatchers.StringMatcher, as: :new
 
-  ## Examples
+  # Matchers to work with standard library types
+  defdelegate naive_datetime, to: ExMatchers.NaiveDateTimeMatcher, as: :new
+  defdelegate datetime, to: ExMatchers.DateTimeMatcher, as: :new
+  defdelegate date, to: ExMatchers.DateMatcher, as: :new
+  defdelegate time, to: ExMatchers.TimeMatcher, as: :new
 
-      iex> ExMatchers.hello()
-      :world
-
-  """
-  def hello do
-    :world
-  end
+  # TODO - add map, list, tuple matchers that allow for parametrized matching ('exactly', 'covering', any_order', etc)
 end
