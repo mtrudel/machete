@@ -16,5 +16,9 @@ defmodule ExMatchers do
   defdelegate time, to: ExMatchers.TimeMatcher, as: :new
   defdelegate time(opts), to: ExMatchers.TimeMatcher, as: :new
 
+  # Matchers to work with various other types
+  defdelegate iso8601_datetime, to: ExMatchers.ISO8601DateTimeMatcher, as: :new
+  defdelegate iso8601_datetime(opts), to: ExMatchers.ISO8601DateTimeMatcher, as: :new
+
   # TODO - add map, list, tuple matchers that allow for parametrized matching ('exactly', 'covering', any_order', etc)
 end
