@@ -1,6 +1,36 @@
 # ExMatchers
 
-**TODO: Add description**
+Literate matchers for better ExUnit tests.
+
+## Examples
+
+```elixir
+import ExMatchers
+
+# You can match against literals (using == semantics)
+assert "abc" ~> "abc"
+assert %{a: 1} ~> %{a: 1}
+
+# ...or against regexes
+assert %{a: "abc"} ~> %{a: ~r/abc/}
+
+# ...or against types
+assert %{a: 1} ~> %{a: integer()}
+assert %{a: DateTime.utc_now()} ~> %{a: datetime()}
+```
+
+### Coming Soon
+
+* Parametrized type matchers:
+    ```elixir
+    assert %{a: 1} ~> %{a: integer(odd: true)}
+    assert %{a: DateTime.utc_now()} ~> %{a: datetime(precision: 6)}
+    ```
+* Flexible collection matchers:
+    ```elixir
+    assert %{a: 1} ~> map(at_least: %{a: integer(odd: true)})
+    assert [3,2,1] ~> list(any_order: [1,2,3])
+    ```
 
 ## Installation
 
