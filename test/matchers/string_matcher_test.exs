@@ -4,6 +4,6 @@ defmodule StringMatcherTest do
   import ExMatchers
 
   test "matches strings" do
-    assert "" ~> ExMatchers.string()
+    assert "" ~> string()
   end
 end

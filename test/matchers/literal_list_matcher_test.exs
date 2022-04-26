@@ -21,11 +21,11 @@ defmodule LiteralListMatcherTest do
 
   describe "nested matchers" do
     test "matches based on nested matchers" do
-      assert [1] ~> [ExMatchers.integer()]
+      assert [1] ~> [integer()]
     end
 
     test "refutes based on nested matchers" do
-      refute [1.0] ~> [ExMatchers.integer()]
+      refute [1.0] ~> [integer()]
     end
   end
 end

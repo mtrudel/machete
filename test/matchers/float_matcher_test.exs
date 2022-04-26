@@ -4,6 +4,6 @@ defmodule FloatMatcherTest do
   import ExMatchers
 
   test "matches floats" do
-    assert 1.0 ~> ExMatchers.float()
+    assert 1.0 ~> float()
   end
 end

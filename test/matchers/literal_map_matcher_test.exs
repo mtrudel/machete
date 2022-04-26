@@ -21,11 +21,11 @@ defmodule LiteralMapMatcherTest do
 
   describe "nested matchers" do
     test "matches based on nested matchers" do
-      assert %{a: 1} ~> %{a: ExMatchers.integer()}
+      assert %{a: 1} ~> %{a: integer()}
     end
 
     test "refutes based on nested matchers" do
-      refute %{a: 1.0} ~> %{a: ExMatchers.integer()}
+      refute %{a: 1.0} ~> %{a: integer()}
     end
   end
 end

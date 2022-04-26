@@ -4,6 +4,6 @@ defmodule DateMatcherTest do
   import ExMatchers
 
   test "matches dates" do
-    assert Date.utc_today() ~> ExMatchers.date()
+    assert Date.utc_today() ~> date()
   end
 end

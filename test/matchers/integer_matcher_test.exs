@@ -4,6 +4,6 @@ defmodule IntegerMatcherTest do
   import ExMatchers
 
   test "matches integers" do
-    assert 1 ~> ExMatchers.integer()
+    assert 1 ~> integer()
   end
 end

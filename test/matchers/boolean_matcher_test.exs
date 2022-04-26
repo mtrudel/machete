@@ -4,10 +4,10 @@ defmodule BooleanMatcherTest do
   import ExMatchers
 
   test "matches true" do
-    assert true ~> ExMatchers.boolean()
+    assert true ~> boolean()
   end
 
   test "matches false" do
-    assert false ~> ExMatchers.boolean()
+    assert false ~> boolean()
   end
 end

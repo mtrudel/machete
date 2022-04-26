@@ -4,10 +4,10 @@ defmodule AnyMatcherTest do
   import ExMatchers
 
   test "matches anything" do
-    assert "a" ~> ExMatchers.any()
-    assert :a ~> ExMatchers.any()
-    assert 1 ~> ExMatchers.any()
-    assert %{} ~> ExMatchers.any()
-    assert nil ~> ExMatchers.any()
+    assert "a" ~> any()
+    assert :a ~> any()
+    assert 1 ~> any()
+    assert %{} ~> any()
+    assert nil ~> any()
   end
 end
