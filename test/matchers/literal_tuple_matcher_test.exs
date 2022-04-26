@@ -1,4 +1,4 @@
-defmodule TupleMatcherTest do
+defmodule LiteralTupleMatcherTest do
   use ExUnit.Case, async: true
 
   import ExMatchers

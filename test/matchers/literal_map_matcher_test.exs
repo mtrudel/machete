@@ -1,31 +1,31 @@
-defmodule ListMatcherTest do
+defmodule LiteralMapMatcherTest do
   use ExUnit.Case, async: true
 
   import ExMatchers
 
-  test "matches empty list" do
-    assert [] ~> []
+  test "matches empty maps" do
+    assert %{} ~> %{}
   end
 
-  test "matches literal lists" do
-    assert [1] ~> [1]
+  test "matches literal maps" do
+    assert %{a: 1} ~> %{a: 1}
   end
 
   test "refutes based on missing entries" do
-    refute [] ~> [1]
+    refute %{} ~> %{a: 1}
   end
 
   test "refutes based on extra entries" do
-    refute [1] ~> []
+    refute %{a: 1} ~> %{}
   end
 
   describe "nested matchers" do
     test "matches based on nested matchers" do
-      assert [1] ~> [ExMatchers.integer()]
+      assert %{a: 1} ~> %{a: ExMatchers.integer()}
     end
 
     test "refutes based on nested matchers" do
-      refute [1.0] ~> [ExMatchers.integer()]
+      refute %{a: 1.0} ~> %{a: ExMatchers.integer()}
     end
   end
 end
