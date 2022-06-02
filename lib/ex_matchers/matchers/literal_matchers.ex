@@ -1,9 +1,8 @@
 defmodule ExMatchers.LiteralMatchers do
   @moduledoc """
   This module defines ExMatchers.Matchable protocol conformance for a number of 
-  literal types. The general contract here is one of strict (`===`) equality
-  semantics, though for types with imperative equality (ie: `Regex`, `DateTime`, &c)
-  the suggested equality operation is used instead.
+  literal types. We use whichever equality semantic is indicated for the type (`match?/2` for
+  Regex, `compare/2` for date-like types, `===` for everything else).
 
   Note that literal collection matching is not handled here; each collection type has their own
   literal matcher module defined separately.
