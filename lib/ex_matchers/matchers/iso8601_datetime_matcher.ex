@@ -8,16 +8,16 @@ defmodule ExMatchers.ISO8601DateTimeMatcher do
   end
 
   defimpl ExMatchers.Matchable do
-    def matches?(%ExMatchers.ISO8601DateTimeMatcher{} = a, b) do
+    def mismatches(%ExMatchers.ISO8601DateTimeMatcher{} = a, b) do
       DateTime.from_iso8601(b)
       |> case do
         {:ok, datetime_b, 0} ->
           a.datetime_opts
           |> ExMatchers.DateTimeMatcher.new()
-          |> ExMatchers.Matchable.matches?(datetime_b)
+          |> ExMatchers.Matchable.mismatches(datetime_b)
 
         _ ->
-          false
+          [%ExMatchers.Mismatch{message: "Not a parseable ISO8601 datetime"}]
       end
     end
   end

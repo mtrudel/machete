@@ -1,5 +1,8 @@
 defmodule ExMatchers do
-  def a ~> b, do: ExMatchers.Matchable.matches?(b, a)
+  def a ~> b do
+    mismatches = ExMatchers.Matchable.mismatches(b, a)
+    mismatches == []
+  end
 
   # Matchers to work with intrinsic types
   defdelegate boolean, to: ExMatchers.BooleanMatcher, as: :new

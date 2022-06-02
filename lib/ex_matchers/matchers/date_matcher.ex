@@ -4,6 +4,7 @@ defmodule ExMatchers.DateMatcher do
   def new(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
-    def matches?(%ExMatchers.DateMatcher{}, b), do: match?(%Date{}, b)
+    def mismatches(%ExMatchers.DateMatcher{}, %Date{}), do: []
+    def mismatches(%ExMatchers.DateMatcher{}, _), do: [%ExMatchers.Mismatch{message: "Not a Date"}]
   end
 end

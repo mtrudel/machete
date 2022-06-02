@@ -8,12 +8,15 @@ defmodule ExMatchers.DateTimeMatcher do
   end
 
   defimpl ExMatchers.Matchable do
-    def matches?(%ExMatchers.DateTimeMatcher{} = a, b) do
-      match?(%DateTime{}, b) && matches_precision?(b, a.precision)
+    def mismatches(%ExMatchers.DateTimeMatcher{} = a, b) do
+      matches_type(b) ++ matches_precision(b, a.precision)
     end
 
-    defp matches_precision?(_, nil), do: true
-    defp matches_precision?(%{microsecond: {_, precision}}, precision), do: true
-    defp matches_precision?(_, _), do: false
+    defp matches_type(%DateTime{}), do: []
+    defp matches_type(_), do: [%ExMatchers.Mismatch{message: "Not a DateTime"}]
+
+    defp matches_precision(_, nil), do: []
+    defp matches_precision(%{microsecond: {_, precision}}, precision), do: []
+    defp matches_precision(_, _), do: [%ExMatchers.Mismatch{message: "Precision does not match"}]
   end
 end

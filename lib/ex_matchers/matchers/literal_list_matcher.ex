@@ -6,20 +6,22 @@ defmodule ExMatchers.LiteralListMatcher do
   """
 
   defimpl ExMatchers.Matchable, for: List do
-    def matches?(a, b) when is_list(a) and is_list(b) do
-      matching_length?(a, b) && matching_values?(a, b)
-    end
-
-    def matches?(_, _), do: false
-
-    defp matching_length?(a, b), do: length(a) == length(b)
-
-    defp matching_values?(a, b) do
+    def mismatches(a, b) when is_list(a) and is_list(b) and length(a) == length(b) do
       [a, b]
       |> Enum.zip()
-      |> Enum.all?(fn {a, b} ->
-        ExMatchers.Matchable.matches?(a, b)
+      |> Enum.with_index()
+      |> Enum.flat_map(fn {{a, b}, idx} ->
+        ExMatchers.Matchable.mismatches(a, b)
+        |> Enum.map(&%{&1 | path: [idx | &1.path]})
       end)
+    end
+
+    def mismatches(a, b) when is_list(a) and is_list(b) do
+      [%ExMatchers.Mismatch{message: "List lengths not equal"}]
+    end
+
+    def mismatches(a, _) when is_list(a) do
+      [%ExMatchers.Mismatch{message: "Not a list"}]
     end
   end
 end

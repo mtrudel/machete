@@ -4,6 +4,6 @@ defmodule ExMatchers.AnyMatcher do
   def new(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
-    def matches?(%ExMatchers.AnyMatcher{}, _), do: true
+    def mismatches(%ExMatchers.AnyMatcher{}, _), do: []
   end
 end

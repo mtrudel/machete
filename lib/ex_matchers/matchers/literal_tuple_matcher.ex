@@ -6,20 +6,22 @@ defmodule ExMatchers.LiteralTupleMatcher do
   """
 
   defimpl ExMatchers.Matchable, for: Tuple do
-    def matches?(a, b) when is_tuple(a) and is_tuple(b) do
-      matching_length?(a, b) && matching_values?(a, b)
-    end
-
-    def matches?(_, _), do: false
-
-    defp matching_length?(a, b), do: tuple_size(a) == tuple_size(b)
-
-    defp matching_values?(a, b) do
+    def mismatches(a, b) when is_tuple(a) and is_tuple(b) and tuple_size(a) == tuple_size(b) do
       [Tuple.to_list(a), Tuple.to_list(b)]
       |> Enum.zip()
-      |> Enum.all?(fn {a, b} ->
-        ExMatchers.Matchable.matches?(a, b)
+      |> Enum.with_index()
+      |> Enum.flat_map(fn {{a, b}, idx} ->
+        ExMatchers.Matchable.mismatches(a, b)
+        |> Enum.map(&%{&1 | path: [idx | &1.path]})
       end)
+    end
+
+    def mismatches(a, b) when is_tuple(a) and is_tuple(b) do
+      [%ExMatchers.Mismatch{message: "Tuple sizes not equal"}]
+    end
+
+    def mismatches(a, _) when is_tuple(a) do
+      [%ExMatchers.Mismatch{message: "Not a tuple"}]
     end
   end
 end
