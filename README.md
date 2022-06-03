@@ -5,7 +5,7 @@ Literate matchers for better ExUnit tests.
 ## Examples
 
 ```elixir
-import ExMatchers
+use ExMatchers
 
 # You can match against literals (using == semantics)
 assert "abc" ~> "abc"

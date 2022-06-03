@@ -1,7 +1,6 @@
 defmodule LiteralListMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches empty list" do
     assert [] ~> []

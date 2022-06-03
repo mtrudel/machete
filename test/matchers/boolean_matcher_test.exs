@@ -1,7 +1,6 @@
 defmodule BooleanMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches true" do
     assert true ~> boolean()

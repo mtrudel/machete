@@ -1,7 +1,6 @@
 defmodule NaiveDateTimeMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches naive datetimes" do
     assert NaiveDateTime.utc_now() ~> naive_datetime()

@@ -1,7 +1,7 @@
 defmodule ExMatchers.ISO8601DateTimeMatcher do
   defstruct datetime_opts: nil
 
-  def new(opts \\ []) do
+  def iso8601_datetime(opts \\ []) do
     %__MODULE__{
       datetime_opts: opts
     }
@@ -13,7 +13,7 @@ defmodule ExMatchers.ISO8601DateTimeMatcher do
       |> case do
         {:ok, datetime_b, 0} ->
           a.datetime_opts
-          |> ExMatchers.DateTimeMatcher.new()
+          |> ExMatchers.DateTimeMatcher.datetime()
           |> ExMatchers.Matchable.mismatches(datetime_b)
 
         _ ->

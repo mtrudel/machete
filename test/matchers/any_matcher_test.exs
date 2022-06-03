@@ -1,7 +1,6 @@
 defmodule AnyMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches anything" do
     assert "a" ~> any()

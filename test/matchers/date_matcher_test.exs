@@ -1,7 +1,6 @@
 defmodule DateMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches dates" do
     assert Date.utc_today() ~> date()

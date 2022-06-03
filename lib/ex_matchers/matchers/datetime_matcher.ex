@@ -1,7 +1,7 @@
 defmodule ExMatchers.DateTimeMatcher do
   defstruct precision: nil
 
-  def new(opts \\ []) do
+  def datetime(opts \\ []) do
     %__MODULE__{
       precision: Keyword.get(opts, :precision)
     }

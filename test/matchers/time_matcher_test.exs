@@ -1,7 +1,6 @@
 defmodule TimeMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches times" do
     assert Time.utc_now() ~> time()

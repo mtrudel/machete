@@ -1,7 +1,7 @@
 defmodule ExMatchers.AnyMatcher do
   defstruct []
 
-  def new(), do: %__MODULE__{}
+  def any(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
     def mismatches(%ExMatchers.AnyMatcher{}, _), do: []

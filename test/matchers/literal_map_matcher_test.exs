@@ -1,7 +1,6 @@
 defmodule LiteralMapMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches empty maps" do
     assert %{} ~> %{}

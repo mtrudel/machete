@@ -1,7 +1,7 @@
 defmodule ExMatchers.IntegerMatcher do
   defstruct []
 
-  def new(), do: %__MODULE__{}
+  def integer(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
     def mismatches(%ExMatchers.IntegerMatcher{}, b) when is_integer(b), do: []

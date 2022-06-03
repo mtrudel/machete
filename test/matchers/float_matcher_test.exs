@@ -1,7 +1,6 @@
 defmodule FloatMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches floats" do
     assert 1.0 ~> float()

@@ -1,7 +1,7 @@
 defmodule ExMatchers.NaiveDateTimeMatcher do
   defstruct precision: nil
 
-  def new(opts \\ []) do
+  def naive_datetime(opts \\ []) do
     %__MODULE__{
       precision: Keyword.get(opts, :precision)
     }

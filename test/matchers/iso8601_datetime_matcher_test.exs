@@ -1,7 +1,6 @@
 defmodule ISO8601DateTimeMatcherTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   test "matches ISO8601 datetimes" do
     assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime()

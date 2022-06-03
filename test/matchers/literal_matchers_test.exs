@@ -1,7 +1,6 @@
 defmodule LiteralMatchersTest do
   use ExUnit.Case, async: true
-
-  import ExMatchers
+  use ExMatchers
 
   describe "DateTime matchers" do
     test "matches datetimes against identical datetimes" do
