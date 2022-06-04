@@ -6,6 +6,10 @@ defmodule ExMatchers.LiteralMapMatcher do
   """
 
   defimpl ExMatchers.Matchable, for: Map do
+    def mismatches(%{}, b) when is_struct(b) do
+      [%ExMatchers.Mismatch{message: "Can't match a map to a struct"}]
+    end
+
     def mismatches(%{} = a, %{} = b) do
       mismatched_keys(a, b) ++ mismatched_values(a, b)
     end

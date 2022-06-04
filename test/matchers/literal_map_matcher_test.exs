@@ -27,4 +27,14 @@ defmodule LiteralMapMatcherTest do
       refute %{a: 1.0} ~> %{a: integer()}
     end
   end
+
+  describe "struct matches" do
+    defmodule TestStruct do
+      defstruct a: nil
+    end
+
+    test "does not match against structs" do
+      refute %TestStruct{a: 1} ~> %{a: integer()}
+    end
+  end
 end

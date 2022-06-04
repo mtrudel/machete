@@ -78,6 +78,28 @@ defmodule LiteralMatchersTest do
     end
   end
 
+  describe "struct matches" do
+    defmodule TestStruct do
+      defstruct a: nil
+    end
+
+    defmodule OtherTestStruct do
+      defstruct a: nil
+    end
+
+    test "matches equivalent types" do
+      assert %TestStruct{a: 1} ~> %TestStruct{a: integer()}
+    end
+
+    test "does not match non-equivalent types" do
+      refute %TestStruct{a: 1} ~> %OtherTestStruct{a: integer()}
+    end
+
+    test "does not match comparing maps to structs" do
+      refute %{a: 1} ~> %TestStruct{a: integer()}
+    end
+  end
+
   describe "inter/intra-type literal (in)equalities)" do
     def types do
       %{

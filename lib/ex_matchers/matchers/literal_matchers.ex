@@ -36,6 +36,16 @@ defmodule ExMatchers.LiteralMatchers do
   end
 
   defimpl ExMatchers.Matchable, for: Any do
+    # We need to do struct matching in Any. Assuming that struct types match, 
+    # structs are compared based on their map equivalents
+    def mismatches(%t{} = a, %t{} = b) do
+      ExMatchers.Matchable.mismatches(Map.from_struct(a), Map.from_struct(b))
+    end
+
+    def mismatches(a, _) when is_struct(a) do
+      [%ExMatchers.Mismatch{message: "Struct types do not match"}]
+    end
+
     def mismatches(a, a), do: []
     def mismatches(_, _), do: [%ExMatchers.Mismatch{message: "Literals do not match"}]
   end
