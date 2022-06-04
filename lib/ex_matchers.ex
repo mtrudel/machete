@@ -1,7 +1,12 @@
 defmodule ExMatchers do
   defmacro __using__(_opts) do
     quote do
-      # Bring in ~> operator  
+      # Take ExUnit's builtin assert and refute macros out of scope 
+      # (we'll call to them explicitly as a fallback in ExMatchers.Assertions)
+      import ExUnit.Assertions, except: [assert: 1, assert: 2, refute: 1, refute: 2]
+      import ExMatchers.Assertions
+
+      # Bring in ~> and ~>> operators
       import ExMatchers
 
       # Bring in matcher builders
@@ -19,6 +24,10 @@ defmodule ExMatchers do
   end
 
   def a ~> b do
-    ExMatchers.Matchable.mismatches(b, a) == []
+    a ~>> b == []
+  end
+
+  def a ~>> b do
+    ExMatchers.Matchable.mismatches(b, a)
   end
 end
