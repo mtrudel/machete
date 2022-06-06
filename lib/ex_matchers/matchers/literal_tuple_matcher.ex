@@ -11,7 +11,7 @@ defmodule ExMatchers.LiteralTupleMatcher do
       |> Enum.zip()
       |> Enum.with_index()
       |> Enum.flat_map(fn {{a, b}, idx} ->
-        ExMatchers.Matchable.mismatches(a, b)
+        (ExMatchers.Matchable.mismatches(a, b) || [])
         |> Enum.map(&%{&1 | path: ["{#{idx}}" | &1.path]})
       end)
     end

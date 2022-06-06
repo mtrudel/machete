@@ -28,6 +28,6 @@ defmodule ExMatchers do
   end
 
   def a ~>> b do
-    ExMatchers.Matchable.mismatches(b, a)
+    ExMatchers.Matchable.mismatches(b, a) || []
   end
 end

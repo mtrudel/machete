@@ -33,7 +33,7 @@ defmodule ExMatchers.LiteralMapMatcher do
     defp mismatched_values(a, b) do
       Enum.flat_map(b, fn {k, v} ->
         if Map.has_key?(a, k) do
-          ExMatchers.Matchable.mismatches(a[k], v)
+          (ExMatchers.Matchable.mismatches(a[k], v) || [])
           |> Enum.map(&%{&1 | path: [k | &1.path]})
         else
           []

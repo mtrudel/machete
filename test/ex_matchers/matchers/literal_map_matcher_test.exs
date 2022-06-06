@@ -2,6 +2,8 @@ defmodule LiteralMapMatcherTest do
   use ExUnit.Case, async: true
   use ExMatchers
 
+  import TestMatcher
+
   test "matches empty maps" do
     assert %{} ~> %{}
   end
@@ -11,52 +13,30 @@ defmodule LiteralMapMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert %{}
-           ~>> %{a: 1}
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "Missing key",
-               path: [:a]
-             }
-           ]
+    assert %{} ~>> %{a: 1} ~> [%ExMatchers.Mismatch{message: "Missing key", path: [:a]}]
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert %{a: 1}
-           ~>> %{}
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "Unexpected key",
-               path: [:a]
-             }
-           ]
+    assert %{a: 1} ~>> %{} ~> [%ExMatchers.Mismatch{message: "Unexpected key", path: [:a]}]
   end
 
   test "produces a useful mismatch on non-maps" do
-    assert 1
-           ~>> %{}
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a map",
-               path: []
-             }
-           ]
+    assert 1 ~>> %{} ~> [%ExMatchers.Mismatch{message: "1 is not a map", path: []}]
   end
 
   describe "nested matchers" do
-    test "matches based on nested matchers" do
-      assert %{a: 1} ~> %{a: integer()}
+    test "matches when nested matcher returns empty list" do
+      assert %{a: 1} ~>> %{a: test_matcher(behaviour: :match_returning_list)} ~> []
+    end
+
+    test "matches when nested matcher returns nil" do
+      assert %{a: 1} ~>> %{a: test_matcher(behaviour: :match_returning_nil)} ~> []
     end
 
     test "produces a useful mismatch on nested mismatches" do
-      assert %{a: 1.0}
-             ~>> %{a: integer()}
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1.0 is not an integer",
-                 path: [:a]
-               }
-             ]
+      assert %{a: 1}
+             ~>> %{a: test_matcher(behaviour: :always_mismatch)}
+             ~> [%ExMatchers.Mismatch{message: "Always mismatch", path: [:a]}]
     end
   end
 
@@ -68,12 +48,7 @@ defmodule LiteralMapMatcherTest do
     test "produces a useful mismatch against structs" do
       assert %TestStruct{a: 1}
              ~>> %{a: integer()}
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "Can't match a map to a struct",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "Can't match a map to a struct", path: []}]
     end
   end
 end
