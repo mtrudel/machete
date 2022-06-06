@@ -27,7 +27,8 @@ defmodule AssertionTest do
                      {:%{}, [line: integer()], [a: {:integer, [line: integer()], []}]}
                    ]}
                 ]},
-             message: "Assertion with ~> failed"
+             message:
+               "Assertion with ~> failed\n\nMismatches:\n\n  1) .a: 1.0 is not an integer\n"
            }
   end
 

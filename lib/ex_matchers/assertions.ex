@@ -7,11 +7,13 @@ defmodule ExMatchers.Assertions do
         [] ->
           true
 
-        _mismatches ->
+        mismatches ->
+          formatted_mismatches = ExMatchers.Mismatch.format_mismatches(mismatches, "  ")
+
           raise ExUnit.AssertionError,
             context: :~>,
             expr: code,
-            message: "Assertion with ~> failed"
+            message: "Assertion with ~> failed\n\nMismatches:\n\n#{formatted_mismatches}"
       end
     end
   end
