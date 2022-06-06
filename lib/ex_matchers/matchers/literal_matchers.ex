@@ -10,9 +10,7 @@ defmodule ExMatchers.LiteralMatchers do
 
   defimpl ExMatchers.Matchable, for: Regex do
     def mismatches(%Regex{} = a, b) when is_binary(b) do
-      if Regex.match?(a, b) do
-        []
-      else
+      unless Regex.match?(a, b) do
         [%ExMatchers.Mismatch{message: "#{inspect(b)} does not match #{inspect(a)}"}]
       end
     end
@@ -24,9 +22,7 @@ defmodule ExMatchers.LiteralMatchers do
   for t <- [DateTime, NaiveDateTime, Date, Time] do
     defimpl ExMatchers.Matchable, for: t do
       def mismatches(%unquote(t){} = a, %unquote(t){} = b) do
-        if unquote(t).compare(a, b) == :eq do
-          []
-        else
+        if unquote(t).compare(a, b) != :eq do
           [%ExMatchers.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
         end
       end
@@ -47,7 +43,7 @@ defmodule ExMatchers.LiteralMatchers do
       [%ExMatchers.Mismatch{message: "Struct types do not match"}]
     end
 
-    def mismatches(a, a), do: []
+    def mismatches(a, a), do: nil
 
     def mismatches(a, b),
       do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]

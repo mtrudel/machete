@@ -4,9 +4,10 @@ defmodule ExMatchers.IntegerMatcher do
   def integer(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
-    def mismatches(%ExMatchers.IntegerMatcher{}, b) when is_integer(b), do: []
-
-    def mismatches(%ExMatchers.IntegerMatcher{}, b),
-      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not an integer"}]
+    def mismatches(%ExMatchers.IntegerMatcher{}, b) do
+      unless is_integer(b) do
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not an integer"}]
+      end
+    end
   end
 end

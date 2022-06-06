@@ -12,7 +12,7 @@ defmodule NaiveDateTimeMatcherTest do
 
   test "produces a useful mismatch for non NaiveDateTimes" do
     assert 1
-           ~>> naive_datetime()
+           ~>> naive_datetime(precision: 6)
            ~> [%ExMatchers.Mismatch{message: "1 is not a NaiveDateTime", path: []}]
   end
 

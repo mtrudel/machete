@@ -4,9 +4,10 @@ defmodule ExMatchers.StringMatcher do
   def string(), do: %__MODULE__{}
 
   defimpl ExMatchers.Matchable do
-    def mismatches(%ExMatchers.StringMatcher{}, b) when is_binary(b), do: []
-
-    def mismatches(%ExMatchers.StringMatcher{}, b),
-      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a string"}]
+    def mismatches(%ExMatchers.StringMatcher{}, b) do
+      unless is_binary(b) do
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a string"}]
+      end
+    end
   end
 end

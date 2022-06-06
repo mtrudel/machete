@@ -11,7 +11,9 @@ defmodule DateTimeMatcherTest do
   end
 
   test "produces a useful mismatch for non DateTimes" do
-    assert 1 ~>> datetime() ~> [%ExMatchers.Mismatch{message: "1 is not a DateTime", path: []}]
+    assert 1
+           ~>> datetime(precision: 6)
+           ~> [%ExMatchers.Mismatch{message: "1 is not a DateTime", path: []}]
   end
 
   test "produces a useful mismatch for precision mismatches" do
