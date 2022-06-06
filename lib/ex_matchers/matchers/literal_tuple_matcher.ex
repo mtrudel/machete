@@ -12,7 +12,7 @@ defmodule ExMatchers.LiteralTupleMatcher do
       |> Enum.with_index()
       |> Enum.flat_map(fn {{a, b}, idx} ->
         ExMatchers.Matchable.mismatches(a, b)
-        |> Enum.map(&%{&1 | path: [idx | &1.path]})
+        |> Enum.map(&%{&1 | path: ["{#{idx}}" | &1.path]})
       end)
     end
 
@@ -20,8 +20,8 @@ defmodule ExMatchers.LiteralTupleMatcher do
       [%ExMatchers.Mismatch{message: "Tuple sizes not equal"}]
     end
 
-    def mismatches(a, _) when is_tuple(a) do
-      [%ExMatchers.Mismatch{message: "Not a tuple"}]
+    def mismatches(a, b) when is_tuple(a) do
+      [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a tuple"}]
     end
   end
 end

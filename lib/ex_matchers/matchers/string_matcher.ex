@@ -6,7 +6,7 @@ defmodule ExMatchers.StringMatcher do
   defimpl ExMatchers.Matchable do
     def mismatches(%ExMatchers.StringMatcher{}, b) when is_binary(b), do: []
 
-    def mismatches(%ExMatchers.StringMatcher{}, _),
-      do: [%ExMatchers.Mismatch{message: "Not a string"}]
+    def mismatches(%ExMatchers.StringMatcher{}, b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a string"}]
   end
 end

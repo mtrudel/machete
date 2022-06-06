@@ -12,7 +12,7 @@ defmodule ExMatchers.LiteralListMatcher do
       |> Enum.with_index()
       |> Enum.flat_map(fn {{a, b}, idx} ->
         ExMatchers.Matchable.mismatches(a, b)
-        |> Enum.map(&%{&1 | path: [idx | &1.path]})
+        |> Enum.map(&%{&1 | path: ["[#{idx}]" | &1.path]})
       end)
     end
 
@@ -20,8 +20,8 @@ defmodule ExMatchers.LiteralListMatcher do
       [%ExMatchers.Mismatch{message: "List lengths not equal"}]
     end
 
-    def mismatches(a, _) when is_list(a) do
-      [%ExMatchers.Mismatch{message: "Not a list"}]
+    def mismatches(a, b) when is_list(a) do
+      [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a list"}]
     end
   end
 end

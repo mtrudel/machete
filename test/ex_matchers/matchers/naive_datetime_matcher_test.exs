@@ -10,7 +10,25 @@ defmodule NaiveDateTimeMatcherTest do
     assert NaiveDateTime.utc_now() ~> naive_datetime(precision: 6)
   end
 
-  test "refutes on precision mismatch" do
-    refute NaiveDateTime.utc_now() ~> naive_datetime(precision: 0)
+  test "produces a useful mismatch for non NaiveDateTimes" do
+    assert 1
+           ~>> naive_datetime()
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "1 is not a NaiveDateTime",
+               path: []
+             }
+           ]
+  end
+
+  test "produces a useful mismatch for precision mismatches" do
+    assert NaiveDateTime.utc_now()
+           ~>> naive_datetime(precision: 0)
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "Precision does not match",
+               path: []
+             }
+           ]
   end
 end

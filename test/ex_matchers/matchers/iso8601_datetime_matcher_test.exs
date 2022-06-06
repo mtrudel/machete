@@ -10,7 +10,25 @@ defmodule ISO8601DateTimeMatcherTest do
     assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(precision: 6)
   end
 
-  test "refutes on precision mismatch" do
-    refute "2020-01-01T00:00:00Z" ~> iso8601_datetime(precision: 6)
+  test "produces a useful mismatch for non strings" do
+    assert 1
+           ~>> iso8601_datetime()
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "1 is not a string",
+               path: []
+             }
+           ]
+  end
+
+  test "produces a useful mismatch for non-parseable strings" do
+    assert "abc"
+           ~>> iso8601_datetime()
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "\"abc\" is not a parseable ISO8601 datetime",
+               path: []
+             }
+           ]
   end
 end

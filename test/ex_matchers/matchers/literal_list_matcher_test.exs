@@ -10,21 +10,55 @@ defmodule LiteralListMatcherTest do
     assert [1] ~> [1]
   end
 
-  test "refutes based on missing entries" do
-    refute [] ~> [1]
+  test "produces a useful mismatch on missing entries" do
+    assert []
+           ~>> [1]
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "List lengths not equal",
+               path: []
+             }
+           ]
   end
 
-  test "refutes based on extra entries" do
-    refute [1] ~> []
+  test "produces a useful mismatch on extra entries" do
+    assert [1]
+           ~>> []
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "List lengths not equal",
+               path: []
+             }
+           ]
   end
+
+  test "produces a useful mismatch on non-lists" do
+    assert 1
+           ~>> []
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "1 is not a list",
+               path: []
+             }
+           ]
+  end
+
+  # Non-list message
 
   describe "nested matchers" do
     test "matches based on nested matchers" do
       assert [1] ~> [integer()]
     end
 
-    test "refutes based on nested matchers" do
-      refute [1.0] ~> [integer()]
+    test "produces a useful mismatch on nested mismatches" do
+      assert [1.0]
+             ~>> [integer()]
+             ~> [
+               %ExMatchers.Mismatch{
+                 message: "1.0 is not an integer",
+                 path: ["[0]"]
+               }
+             ]
     end
   end
 end

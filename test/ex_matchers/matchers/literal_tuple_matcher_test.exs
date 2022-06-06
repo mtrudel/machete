@@ -10,12 +10,37 @@ defmodule LiteralTupleMatcherTest do
     assert {1} ~> {1}
   end
 
-  test "refutes based on missing entries" do
-    refute {} ~> {1}
+  test "produces a useful mismatch on missing entries" do
+    assert {}
+           ~>> {1}
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "Tuple sizes not equal",
+               path: []
+             }
+           ]
   end
 
-  test "refutes based on extra entries" do
-    refute {1} ~> {}
+  test "produces a useful mismatch on extra entries" do
+    assert {1}
+           ~>> {}
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "Tuple sizes not equal",
+               path: []
+             }
+           ]
+  end
+
+  test "produces a useful mismatch on non-tuples" do
+    assert 1
+           ~>> {}
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "1 is not a tuple",
+               path: []
+             }
+           ]
   end
 
   describe "nested matchers" do
@@ -23,8 +48,15 @@ defmodule LiteralTupleMatcherTest do
       assert {1} ~> {integer()}
     end
 
-    test "refutes based on nested matchers" do
-      refute {1.0} ~> {integer()}
+    test "produces a useful mismatch on nested mismatches" do
+      assert {1.0}
+             ~>> {integer()}
+             ~> [
+               %ExMatchers.Mismatch{
+                 message: "1.0 is not an integer",
+                 path: ["{0}"]
+               }
+             ]
     end
   end
 end

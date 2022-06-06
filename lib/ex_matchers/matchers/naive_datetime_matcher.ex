@@ -13,7 +13,9 @@ defmodule ExMatchers.NaiveDateTimeMatcher do
     end
 
     defp matches_type(%NaiveDateTime{}), do: []
-    defp matches_type(_), do: [%ExMatchers.Mismatch{message: "Not a NaiveDateTime"}]
+
+    defp matches_type(b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a NaiveDateTime"}]
 
     defp matches_precision(_, nil), do: []
     defp matches_precision(%{microsecond: {_, precision}}, precision), do: []

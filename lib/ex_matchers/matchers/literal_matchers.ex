@@ -13,11 +13,12 @@ defmodule ExMatchers.LiteralMatchers do
       if Regex.match?(a, b) do
         []
       else
-        [%ExMatchers.Mismatch{message: "Regex does not match"}]
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} does not match #{inspect(a)}"}]
       end
     end
 
-    def mismatches(%Regex{}, _), do: [%ExMatchers.Mismatch{message: "Not a binary"}]
+    def mismatches(%Regex{}, b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a string"}]
   end
 
   for t <- [DateTime, NaiveDateTime, Date, Time] do
@@ -26,12 +27,12 @@ defmodule ExMatchers.LiteralMatchers do
         if unquote(t).compare(a, b) == :eq do
           []
         else
-          [%ExMatchers.Mismatch{message: "Not equal"}]
+          [%ExMatchers.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
         end
       end
 
-      def mismatches(%unquote(t){}, _),
-        do: [%ExMatchers.Mismatch{message: "Not a #{inspect(unquote(t))}"}]
+      def mismatches(%unquote(t){}, b),
+        do: [%ExMatchers.Mismatch{message: "#{b} is not a #{inspect(unquote(t))}"}]
     end
   end
 
@@ -47,6 +48,8 @@ defmodule ExMatchers.LiteralMatchers do
     end
 
     def mismatches(a, a), do: []
-    def mismatches(_, _), do: [%ExMatchers.Mismatch{message: "Literals do not match"}]
+
+    def mismatches(a, b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
   end
 end

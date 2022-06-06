@@ -6,7 +6,7 @@ defmodule ExMatchers.IntegerMatcher do
   defimpl ExMatchers.Matchable do
     def mismatches(%ExMatchers.IntegerMatcher{}, b) when is_integer(b), do: []
 
-    def mismatches(%ExMatchers.IntegerMatcher{}, _),
-      do: [%ExMatchers.Mismatch{message: "Not a integer"}]
+    def mismatches(%ExMatchers.IntegerMatcher{}, b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not an integer"}]
   end
 end

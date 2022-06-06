@@ -8,7 +8,7 @@ defmodule ExMatchers.ISO8601DateTimeMatcher do
   end
 
   defimpl ExMatchers.Matchable do
-    def mismatches(%ExMatchers.ISO8601DateTimeMatcher{} = a, b) do
+    def mismatches(%ExMatchers.ISO8601DateTimeMatcher{} = a, b) when is_binary(b) do
       DateTime.from_iso8601(b)
       |> case do
         {:ok, datetime_b, 0} ->
@@ -17,8 +17,11 @@ defmodule ExMatchers.ISO8601DateTimeMatcher do
           |> ExMatchers.Matchable.mismatches(datetime_b)
 
         _ ->
-          [%ExMatchers.Mismatch{message: "Not a parseable ISO8601 datetime"}]
+          [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a parseable ISO8601 datetime"}]
       end
     end
+
+    def mismatches(%ExMatchers.ISO8601DateTimeMatcher{}, b),
+      do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a string"}]
   end
 end
