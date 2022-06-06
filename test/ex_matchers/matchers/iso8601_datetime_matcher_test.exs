@@ -13,12 +13,7 @@ defmodule ISO8601DateTimeMatcherTest do
   test "produces a useful mismatch for non strings" do
     assert 1
            ~>> iso8601_datetime()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a string",
-               path: []
-             }
-           ]
+           ~> [%ExMatchers.Mismatch{message: "1 is not a string", path: []}]
   end
 
   test "produces a useful mismatch for non-parseable strings" do

@@ -11,13 +11,6 @@ defmodule BooleanMatcherTest do
   end
 
   test "produces a useful mismatch for non booleans" do
-    assert 1
-           ~>> boolean()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a boolean",
-               path: []
-             }
-           ]
+    assert 1 ~>> boolean() ~> [%ExMatchers.Mismatch{message: "1 is not a boolean", path: []}]
   end
 end

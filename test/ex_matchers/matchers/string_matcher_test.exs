@@ -7,13 +7,6 @@ defmodule StringMatcherTest do
   end
 
   test "produces a useful mismatch for non strings" do
-    assert 1
-           ~>> string()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a string",
-               path: []
-             }
-           ]
+    assert 1 ~>> string() ~> [%ExMatchers.Mismatch{message: "1 is not a string", path: []}]
   end
 end

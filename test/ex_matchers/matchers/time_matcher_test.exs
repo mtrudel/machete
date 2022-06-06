@@ -11,24 +11,12 @@ defmodule TimeMatcherTest do
   end
 
   test "produces a useful mismatch for non Times" do
-    assert 1
-           ~>> time()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a Time",
-               path: []
-             }
-           ]
+    assert 1 ~>> time() ~> [%ExMatchers.Mismatch{message: "1 is not a Time", path: []}]
   end
 
   test "produces a useful mismatch for precision mismatches" do
     assert Time.utc_now()
            ~>> time(precision: 0)
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "Precision does not match",
-               path: []
-             }
-           ]
+           ~> [%ExMatchers.Mismatch{message: "Precision does not match", path: []}]
   end
 end

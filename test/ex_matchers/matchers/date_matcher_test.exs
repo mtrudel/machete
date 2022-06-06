@@ -7,13 +7,6 @@ defmodule DateMatcherTest do
   end
 
   test "produces a useful mismatch for non Dates" do
-    assert 1
-           ~>> date()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a Date",
-               path: []
-             }
-           ]
+    assert 1 ~>> date() ~> [%ExMatchers.Mismatch{message: "1 is not a Date", path: []}]
   end
 end

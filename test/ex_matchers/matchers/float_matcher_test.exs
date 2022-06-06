@@ -7,13 +7,6 @@ defmodule FloatMatcherTest do
   end
 
   test "produces a useful mismatch for non floats" do
-    assert 1
-           ~>> float()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1 is not a float",
-               path: []
-             }
-           ]
+    assert 1 ~>> float() ~> [%ExMatchers.Mismatch{message: "1 is not a float", path: []}]
   end
 end

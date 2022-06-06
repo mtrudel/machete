@@ -16,12 +16,7 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for non DateTimes" do
       assert 1
              ~>> ~U[2021-04-26T01:23:45Z]
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1 is not a DateTime",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "1 is not a DateTime", path: []}]
     end
 
     test "produces a useful mismatch on non-equivalent values" do
@@ -44,12 +39,7 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for non NaiveDateTimes" do
       assert 1
              ~>> ~N[2021-04-26T01:23:45]
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1 is not a NaiveDateTime",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "1 is not a NaiveDateTime", path: []}]
     end
 
     test "produces a useful mismatch on non-equivalent values" do
@@ -70,14 +60,7 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non Dates" do
-      assert 1
-             ~>> ~D[2021-04-26]
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1 is not a Date",
-                 path: []
-               }
-             ]
+      assert 1 ~>> ~D[2021-04-26] ~> [%ExMatchers.Mismatch{message: "1 is not a Date", path: []}]
     end
 
     test "produces a useful mismatch on non-equivalent values" do
@@ -98,14 +81,7 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non Times" do
-      assert 1
-             ~>> ~T[01:23:45]
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1 is not a Time",
-                 path: []
-               }
-             ]
+      assert 1 ~>> ~T[01:23:45] ~> [%ExMatchers.Mismatch{message: "1 is not a Time", path: []}]
     end
 
     test "produces a useful mismatch on non-equivalent values" do
@@ -126,25 +102,13 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non strings" do
-      assert 1
-             ~>> ~r/abc/
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "1 is not a string",
-                 path: []
-               }
-             ]
+      assert 1 ~>> ~r/abc/ ~> [%ExMatchers.Mismatch{message: "1 is not a string", path: []}]
     end
 
     test "produces a useful mismatch on non-matching values" do
       assert "ABC"
              ~>> ~r/abc/
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "\"ABC\" does not match ~r/abc/",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "\"ABC\" does not match ~r/abc/", path: []}]
     end
   end
 
@@ -164,23 +128,13 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for mismatched struct types" do
       assert %TestStruct{a: 1}
              ~>> %OtherTestStruct{a: integer()}
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "Struct types do not match",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "Struct types do not match", path: []}]
     end
 
     test "produces a useful mismatch when comparing maps to structs" do
       assert %{a: 1}
              ~>> %TestStruct{a: integer()}
-             ~> [
-               %ExMatchers.Mismatch{
-                 message: "Struct types do not match",
-                 path: []
-               }
-             ]
+             ~> [%ExMatchers.Mismatch{message: "Struct types do not match", path: []}]
     end
   end
 

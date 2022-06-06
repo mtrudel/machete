@@ -7,13 +7,6 @@ defmodule IntegerMatcherTest do
   end
 
   test "produces a useful mismatch for non integers" do
-    assert 1.0
-           ~>> integer()
-           ~> [
-             %ExMatchers.Mismatch{
-               message: "1.0 is not an integer",
-               path: []
-             }
-           ]
+    assert 1.0 ~>> integer() ~> [%ExMatchers.Mismatch{message: "1.0 is not an integer", path: []}]
   end
 end
