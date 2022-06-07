@@ -14,6 +14,14 @@ defmodule DateTimeMatcherTest do
     assert context.datetime ~> datetime(precision: 6)
   end
 
+  test "matches on :utc time zone match", context do
+    assert context.datetime ~> datetime(time_zone: :utc)
+  end
+
+  test "matches on time zone match", context do
+    assert context.datetime ~> datetime(time_zone: "Etc/UTC")
+  end
+
   test "produces a useful mismatch for non DateTimes" do
     assert 1
            ~>> datetime(precision: 6)
@@ -26,6 +34,18 @@ defmodule DateTimeMatcherTest do
            ~> [
              %ExMatchers.Mismatch{
                message: "#{inspect(context.datetime)} has precision 6, expected 0",
+               path: []
+             }
+           ]
+  end
+
+  test "produces a useful mismatch for time zone mismatches", context do
+    assert context.datetime
+           ~>> datetime(time_zone: "America/Chicago")
+           ~> [
+             %ExMatchers.Mismatch{
+               message:
+                 "#{inspect(context.datetime)} has time zone Etc/UTC, expected America/Chicago",
                path: []
              }
            ]

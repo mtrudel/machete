@@ -10,6 +10,14 @@ defmodule ISO8601DateTimeMatcherTest do
     assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(precision: 6)
   end
 
+  test "matches on :utc time zone match" do
+    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(time_zone: :utc)
+  end
+
+  test "matches on time zone match" do
+    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(time_zone: "Etc/UTC")
+  end
+
   test "produces a useful mismatch for non strings" do
     assert 1
            ~>> iso8601_datetime()
@@ -33,6 +41,18 @@ defmodule ISO8601DateTimeMatcherTest do
            ~> [
              %ExMatchers.Mismatch{
                message: "~U[2020-01-01 00:00:00.000000Z] has precision 6, expected 0",
+               path: []
+             }
+           ]
+  end
+
+  test "produces a useful mismatch for timezone mismatches" do
+    assert "2020-01-01T00:00:00.000000Z"
+           ~>> iso8601_datetime(time_zone: "America/Chicago")
+           ~> [
+             %ExMatchers.Mismatch{
+               message:
+                 "~U[2020-01-01 00:00:00.000000Z] has time zone Etc/UTC, expected America/Chicago",
                path: []
              }
            ]
