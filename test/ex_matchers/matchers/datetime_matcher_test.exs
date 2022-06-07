@@ -2,12 +2,16 @@ defmodule DateTimeMatcherTest do
   use ExUnit.Case, async: true
   use ExMatchers
 
-  test "matches datetimes" do
-    assert DateTime.utc_now() ~> datetime()
+  setup do
+    {:ok, datetime: DateTime.utc_now()}
   end
 
-  test "matches on precision match" do
-    assert DateTime.utc_now() ~> datetime(precision: 6)
+  test "matches datetimes", context do
+    assert context.datetime ~> datetime()
+  end
+
+  test "matches on precision match", context do
+    assert context.datetime ~> datetime(precision: 6)
   end
 
   test "produces a useful mismatch for non DateTimes" do
@@ -16,9 +20,14 @@ defmodule DateTimeMatcherTest do
            ~> [%ExMatchers.Mismatch{message: "1 is not a DateTime", path: []}]
   end
 
-  test "produces a useful mismatch for precision mismatches" do
-    assert DateTime.utc_now()
+  test "produces a useful mismatch for precision mismatches", context do
+    assert context.datetime
            ~>> datetime(precision: 0)
-           ~> [%ExMatchers.Mismatch{message: "Precision does not match", path: []}]
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "#{inspect(context.datetime)} has precision 6, expected 0",
+               path: []
+             }
+           ]
   end
 end

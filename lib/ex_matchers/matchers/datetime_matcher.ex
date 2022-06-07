@@ -18,7 +18,13 @@ defmodule ExMatchers.DateTimeMatcher do
     defp matches_type(b), do: [%ExMatchers.Mismatch{message: "#{inspect(b)} is not a DateTime"}]
 
     defp matches_precision(_, nil), do: nil
-    defp matches_precision(%{microsecond: {_, precision}}, precision), do: nil
-    defp matches_precision(_, _), do: [%ExMatchers.Mismatch{message: "Precision does not match"}]
+    defp matches_precision(%DateTime{microsecond: {_, precision}}, precision), do: nil
+
+    defp matches_precision(%DateTime{microsecond: {_, b_precision}} = b, precision),
+      do: [
+        %ExMatchers.Mismatch{
+          message: "#{inspect(b)} has precision #{b_precision}, expected #{precision}"
+        }
+      ]
   end
 end

@@ -33,19 +33,19 @@ defmodule StringMatcherTest do
   test "produces a useful mismatch for exact length mismatches" do
     assert "a"
            ~>> string(length: 5)
-           ~> [%ExMatchers.Mismatch{message: "\"a\" is not of length 5", path: []}]
+           ~> [%ExMatchers.Mismatch{message: "\"a\" is not exactly 5 characters", path: []}]
   end
 
   test "produces a useful mismatch for min length mismatches" do
     assert "a"
            ~>> string(min: 5)
-           ~> [%ExMatchers.Mismatch{message: "\"a\" is not of length at least 5", path: []}]
+           ~> [%ExMatchers.Mismatch{message: "\"a\" is less than 5 characters", path: []}]
   end
 
   test "produces a useful mismatch for max length mismatches" do
     assert "abcdef"
            ~>> string(max: 5)
-           ~> [%ExMatchers.Mismatch{message: "\"abcdef\" is not of length at most 5", path: []}]
+           ~> [%ExMatchers.Mismatch{message: "\"abcdef\" is more than 5 characters", path: []}]
   end
 
   test "produces a useful mismatch for empty true" do

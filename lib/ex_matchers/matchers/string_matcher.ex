@@ -35,7 +35,7 @@ defmodule ExMatchers.StringMatcher do
 
     defp matches_length(b, length) do
       unless String.length(b) == length do
-        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not of length #{length}"}]
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not exactly #{length} characters"}]
       end
     end
 
@@ -43,7 +43,7 @@ defmodule ExMatchers.StringMatcher do
 
     defp matches_min(b, length) do
       unless String.length(b) >= length do
-        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not of length at least #{length}"}]
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} is less than #{length} characters"}]
       end
     end
 
@@ -51,7 +51,7 @@ defmodule ExMatchers.StringMatcher do
 
     defp matches_max(b, length) do
       unless String.length(b) <= length do
-        [%ExMatchers.Mismatch{message: "#{inspect(b)} is not of length at most #{length}"}]
+        [%ExMatchers.Mismatch{message: "#{inspect(b)} is more than #{length} characters"}]
       end
     end
   end

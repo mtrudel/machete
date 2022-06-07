@@ -2,12 +2,16 @@ defmodule NaiveDateTimeMatcherTest do
   use ExUnit.Case, async: true
   use ExMatchers
 
-  test "matches naive datetimes" do
-    assert NaiveDateTime.utc_now() ~> naive_datetime()
+  setup do
+    {:ok, datetime: NaiveDateTime.utc_now()}
   end
 
-  test "matches on precision match" do
-    assert NaiveDateTime.utc_now() ~> naive_datetime(precision: 6)
+  test "matches naive datetimes", context do
+    assert context.datetime ~> naive_datetime()
+  end
+
+  test "matches on precision match", context do
+    assert context.datetime ~> naive_datetime(precision: 6)
   end
 
   test "produces a useful mismatch for non NaiveDateTimes" do
@@ -16,9 +20,14 @@ defmodule NaiveDateTimeMatcherTest do
            ~> [%ExMatchers.Mismatch{message: "1 is not a NaiveDateTime", path: []}]
   end
 
-  test "produces a useful mismatch for precision mismatches" do
-    assert NaiveDateTime.utc_now()
+  test "produces a useful mismatch for precision mismatches", context do
+    assert context.datetime
            ~>> naive_datetime(precision: 0)
-           ~> [%ExMatchers.Mismatch{message: "Precision does not match", path: []}]
+           ~> [
+             %ExMatchers.Mismatch{
+               message: "#{inspect(context.datetime)} has precision 6, expected 0",
+               path: []
+             }
+           ]
   end
 end
