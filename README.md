@@ -1,11 +1,11 @@
-# ExMatchers
+# Machete
 
 Literate matchers for better ExUnit tests.
 
 ## Examples
 
 ```elixir
-use ExMatchers
+use Machete
 
 # You can match against literals (using == semantics)
 assert "abc" ~> "abc"
@@ -38,17 +38,17 @@ assert %{a: [1, 2.0, {:ok, "hi"}]} ~> %{a: [integer(), float(), {atom(), string(
 ## Installation
 
 If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ex_matchers` to your list of dependencies in `mix.exs`:
+by adding `machete` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:ex_matchers, "~> 0.1.0"}
+    {:machete, "~> 0.1.0"}
   ]
 end
 ```
 
 Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
 and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/ex_matchers>.
+be found at <https://hexdocs.pm/machete>.
 

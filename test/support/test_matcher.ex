@@ -7,9 +7,9 @@ defmodule TestMatcher do
     }
   end
 
-  defimpl ExMatchers.Matchable do
+  defimpl Machete.Matchable do
     def mismatches(%TestMatcher{behaviour: :always_mismatch}, _) do
-      [%ExMatchers.Mismatch{message: "Always mismatch"}]
+      [%Machete.Mismatch{message: "Always mismatch"}]
     end
 
     def mismatches(%TestMatcher{behaviour: :match_returning_list}, _), do: []
