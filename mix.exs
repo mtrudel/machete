@@ -8,7 +8,14 @@ defmodule Machete.MixProject do
       elixir: "~> 1.13",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
-      deps: deps()
+      deps: deps(),
+      description: "Literate expectation matchers for ExUnit",
+      package: [
+        files: ["lib", "test", "mix.exs", "README*", "LICENSE*"],
+        maintainers: ["Mat Trudel"],
+        licenses: ["MIT"],
+        links: %{"GitHub" => "https://github.com/mtrudel/machete"}
+      ]
     ]
   end
 
@@ -19,7 +26,9 @@ defmodule Machete.MixProject do
   end
 
   defp deps do
-    []
+    [
+      {:ex_doc, ">= 0.0.0", only: :dev, runtime: false}
+    ]
   end
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
