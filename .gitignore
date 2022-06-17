@@ -24,3 +24,6 @@ machete-*.tar
 
 # Temporary files, for example, from tests.
 /tmp/
+
+# Ignore dialyzer caches
+/priv/plts/
