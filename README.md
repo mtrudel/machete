@@ -1,5 +1,9 @@
 # Machete
 
+[![Build Status](https://github.com/mtrudel/machete/workflows/Elixir%20CI/badge.svg)](https://github.com/mtrudel/machete/actions)
+[![Docs](https://img.shields.io/badge/api-docs-green.svg?style=flat)](https://hexdocs.pm/machete)
+[![Hex.pm](https://img.shields.io/hexpm/v/machete.svg?style=flat&color=blue)](https://hex.pm/packages/machete)
+
 Literate matchers for better ExUnit tests.
 
 ## Examples
