@@ -1,4 +1,6 @@
 defmodule Machete.DateMatcher do
+  @moduledoc false
+
   defstruct roughly: nil, before: nil, after: nil
 
   def date(opts \\ []),

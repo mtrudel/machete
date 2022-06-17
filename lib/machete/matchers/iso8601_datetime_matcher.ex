@@ -1,4 +1,6 @@
 defmodule Machete.ISO8601DateTimeMatcher do
+  @moduledoc false
+
   defstruct datetime_opts: nil
 
   def iso8601_datetime(opts \\ []) do

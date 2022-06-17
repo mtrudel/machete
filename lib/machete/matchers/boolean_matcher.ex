@@ -1,7 +1,9 @@
 defmodule Machete.BooleanMatcher do
+  @moduledoc false
+
   defstruct []
 
-  def boolean(), do: %__MODULE__{}
+  def boolean, do: %__MODULE__{}
 
   defimpl Machete.Matchable do
     def mismatches(%Machete.BooleanMatcher{}, b) do

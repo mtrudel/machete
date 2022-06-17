@@ -1,4 +1,6 @@
 defmodule Machete.Assertions do
+  @moduledoc false
+
   defmacro assert({:~>, meta, [left, right]} = assertion) do
     code = escape_quoted(:assert, meta, assertion)
 

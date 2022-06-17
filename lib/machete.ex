@@ -1,7 +1,9 @@
 defmodule Machete do
+  @moduledoc false
+
   defmacro __using__(_opts) do
     quote do
-      # Take ExUnit's builtin assert and refute macros out of scope 
+      # Take ExUnit's builtin assert and refute macros out of scope
       # (we'll call to them explicitly as a fallback in Machete.Assertions)
       import ExUnit.Assertions, except: [assert: 1, assert: 2, refute: 1, refute: 2]
       import Machete.Assertions

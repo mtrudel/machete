@@ -1,4 +1,6 @@
 defmodule TestMatcher do
+  @moduledoc false
+
   defstruct behaviour: nil
 
   def test_matcher(opts \\ []) do

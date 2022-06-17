@@ -1,4 +1,6 @@
 defmodule Machete.StringMatcher do
+  @moduledoc false
+
   defstruct empty: nil, length: nil, min: nil, max: nil
 
   def string(opts \\ []) do

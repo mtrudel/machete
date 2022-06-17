@@ -1,4 +1,6 @@
 defmodule Machete.Mismatch do
+  @moduledoc false
+
   @type t :: %__MODULE__{
           path: [term()],
           message: String.t()
@@ -10,8 +12,7 @@ defmodule Machete.Mismatch do
     mismatches
     |> Enum.map(&format_mismatch/1)
     |> Enum.with_index(1)
-    |> Enum.map(fn {msg, idx} -> "#{indent}#{idx}) #{msg}\n" end)
-    |> Enum.join("")
+    |> Enum.map_join("", fn {msg, idx} -> "#{indent}#{idx}) #{msg}\n" end)
   end
 
   defp format_mismatch(%Machete.Mismatch{path: []} = mismatch) do

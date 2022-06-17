@@ -1,4 +1,6 @@
 defmodule Machete.NaiveDateTimeMatcher do
+  @moduledoc false
+
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
   def naive_datetime(opts \\ []) do

@@ -33,7 +33,7 @@ defmodule Machete.LiteralMatchers do
   end
 
   defimpl Machete.Matchable, for: Any do
-    # We need to do struct matching in Any. Assuming that struct types match, 
+    # We need to do struct matching in Any. Assuming that struct types match,
     # structs are compared based on their map equivalents
     def mismatches(%t{} = a, %t{} = b) do
       Machete.Matchable.mismatches(Map.from_struct(a), Map.from_struct(b))

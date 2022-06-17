@@ -1,4 +1,6 @@
 defmodule Machete.DateTimeMatcher do
+  @moduledoc false
+
   defstruct precision: nil, time_zone: nil, roughly: nil, before: nil, after: nil
 
   def datetime(opts \\ []) do

@@ -1,4 +1,6 @@
 defmodule Machete.FloatMatcher do
+  @moduledoc false
+
   defstruct positive: nil, negative: nil, nonzero: nil, min: nil, max: nil
 
   def float(opts \\ []) do

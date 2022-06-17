@@ -1,4 +1,6 @@
 defmodule Machete.TimeMatcher do
+  @moduledoc false
+
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
   def time(opts \\ []) do
