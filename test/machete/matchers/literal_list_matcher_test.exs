@@ -2,6 +2,8 @@ defmodule LiteralListMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
+
   import TestMatcher
 
   test "matches empty list" do
@@ -13,15 +15,15 @@ defmodule LiteralListMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert [] ~>> [1] ~> [%Machete.Mismatch{message: "List lengths not equal", path: []}]
+    assert [] ~>> [1] ~> mismatch("List lengths not equal")
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert [1] ~>> [] ~> [%Machete.Mismatch{message: "List lengths not equal", path: []}]
+    assert [1] ~>> [] ~> mismatch("List lengths not equal")
   end
 
   test "produces a useful mismatch on non-lists" do
-    assert 1 ~>> [] ~> [%Machete.Mismatch{message: "1 is not a list", path: []}]
+    assert 1 ~>> [] ~> mismatch("1 is not a list")
   end
 
   describe "nested matchers" do
@@ -36,7 +38,7 @@ defmodule LiteralListMatcherTest do
     test "produces a useful mismatch on nested mismatches" do
       assert [1]
              ~>> [test_matcher(behaviour: :always_mismatch)]
-             ~> [%Machete.Mismatch{message: "Always mismatch", path: ["[0]"]}]
+             ~> mismatch("Always mismatch", "[0]")
     end
   end
 end

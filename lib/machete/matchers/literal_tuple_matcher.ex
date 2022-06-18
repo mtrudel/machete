@@ -5,6 +5,8 @@ defmodule Machete.LiteralTupleMatcher do
   elements of the tuples matches based on the Machete.Matchable protocol.
   """
 
+  import Machete.Mismatch
+
   defimpl Machete.Matchable, for: Tuple do
     def mismatches(a, b) when is_tuple(a) and is_tuple(b) and tuple_size(a) == tuple_size(b) do
       [Tuple.to_list(a), Tuple.to_list(b)]
@@ -16,12 +18,7 @@ defmodule Machete.LiteralTupleMatcher do
       end)
     end
 
-    def mismatches(a, b) when is_tuple(a) and is_tuple(b) do
-      [%Machete.Mismatch{message: "Tuple sizes not equal"}]
-    end
-
-    def mismatches(a, b) when is_tuple(a) do
-      [%Machete.Mismatch{message: "#{inspect(b)} is not a tuple"}]
-    end
+    def mismatches(a, b) when is_tuple(a) and is_tuple(b), do: mismatch("Tuple sizes not equal")
+    def mismatches(a, b) when is_tuple(a), do: mismatch("#{inspect(b)} is not a tuple")
   end
 end

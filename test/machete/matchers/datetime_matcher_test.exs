@@ -2,6 +2,8 @@ defmodule DateTimeMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
+
   setup do
     {:ok, datetime: DateTime.utc_now()}
   end
@@ -49,65 +51,44 @@ defmodule DateTimeMatcherTest do
   test "produces a useful mismatch for non DateTimes" do
     assert 1
            ~>> datetime(precision: 6)
-           ~> [%Machete.Mismatch{message: "1 is not a DateTime", path: []}]
+           ~> mismatch("1 is not a DateTime")
   end
 
   test "produces a useful mismatch for precision mismatches", context do
     assert context.datetime
            ~>> datetime(precision: 0)
-           ~> [
-             %Machete.Mismatch{
-               message: "#{inspect(context.datetime)} has precision 6, expected 0",
-               path: []
-             }
-           ]
+           ~> mismatch("#{inspect(context.datetime)} has precision 6, expected 0")
   end
 
   test "produces a useful mismatch for time zone mismatches", context do
     assert context.datetime
            ~>> datetime(time_zone: "America/Chicago")
-           ~> [
-             %Machete.Mismatch{
-               message:
-                 "#{inspect(context.datetime)} has time zone Etc/UTC, expected America/Chicago",
-               path: []
-             }
-           ]
+           ~> mismatch(
+             "#{inspect(context.datetime)} has time zone Etc/UTC, expected America/Chicago"
+           )
   end
 
   test "produces a useful mismatch for roughly mismatches" do
     assert ~U[2020-01-01 00:00:00.000000Z]
            ~>> datetime(roughly: ~U[3000-01-01 00:00:00.000000Z])
-           ~> [
-             %Machete.Mismatch{
-               message:
-                 "~U[2020-01-01 00:00:00.000000Z] is not within 10 seconds of ~U[3000-01-01 00:00:00.000000Z]",
-               path: []
-             }
-           ]
+           ~> mismatch(
+             "~U[2020-01-01 00:00:00.000000Z] is not within 10 seconds of ~U[3000-01-01 00:00:00.000000Z]"
+           )
   end
 
   test "produces a useful mismatch for before mismatches" do
     assert ~U[3000-01-01 00:00:00.000000Z]
            ~>> datetime(before: ~U[2020-01-01 00:00:00.000000Z])
-           ~> [
-             %Machete.Mismatch{
-               message:
-                 "~U[3000-01-01 00:00:00.000000Z] is not before ~U[2020-01-01 00:00:00.000000Z]",
-               path: []
-             }
-           ]
+           ~> mismatch(
+             "~U[3000-01-01 00:00:00.000000Z] is not before ~U[2020-01-01 00:00:00.000000Z]"
+           )
   end
 
   test "produces a useful mismatch for after mismatches" do
     assert ~U[2020-01-01 00:00:00.000000Z]
            ~>> datetime(after: ~U[3000-01-01 00:00:00.000000Z])
-           ~> [
-             %Machete.Mismatch{
-               message:
-                 "~U[2020-01-01 00:00:00.000000Z] is not after ~U[3000-01-01 00:00:00.000000Z]",
-               path: []
-             }
-           ]
+           ~> mismatch(
+             "~U[2020-01-01 00:00:00.000000Z] is not after ~U[3000-01-01 00:00:00.000000Z]"
+           )
   end
 end

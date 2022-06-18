@@ -5,15 +5,16 @@ defmodule Machete.LiteralMapMatcher do
   pair of elements of the maps matches based on the Machete.Matchable protocol.
   """
 
+  import Machete.Mismatch
+
   defimpl Machete.Matchable, for: Map do
-    def mismatches(%{}, b) when is_struct(b),
-      do: [%Machete.Mismatch{message: "Can't match a map to a struct"}]
+    def mismatches(%{}, b) when is_struct(b), do: mismatch("Can't match a map to a struct")
 
     def mismatches(%{} = a, %{} = b) do
       mismatched_keys(a, b) ++ mismatched_values(a, b)
     end
 
-    def mismatches(%{}, b), do: [%Machete.Mismatch{message: "#{inspect(b)} is not a map"}]
+    def mismatches(%{}, b), do: mismatch("#{inspect(b)} is not a map")
 
     defp mismatched_keys(a, b) do
       a_keys = a |> Map.keys() |> MapSet.new()
@@ -21,11 +22,11 @@ defmodule Machete.LiteralMapMatcher do
 
       extra_keys =
         MapSet.difference(b_keys, a_keys)
-        |> Enum.map(&%Machete.Mismatch{message: "Unexpected key", path: [&1]})
+        |> Enum.flat_map(&mismatch("Unexpected key", &1))
 
       missing_keys =
         MapSet.difference(a_keys, b_keys)
-        |> Enum.map(&%Machete.Mismatch{message: "Missing key", path: [&1]})
+        |> Enum.flat_map(&mismatch("Missing key", &1))
 
       extra_keys ++ missing_keys
     end

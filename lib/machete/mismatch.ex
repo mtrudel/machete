@@ -8,6 +8,10 @@ defmodule Machete.Mismatch do
 
   defstruct path: [], message: nil
 
+  def mismatch(message, path \\ nil)
+  def mismatch(message, nil), do: [%__MODULE__{message: message}]
+  def mismatch(message, path), do: [%__MODULE__{message: message, path: [path]}]
+
   def format_mismatches(mismatches, indent \\ "") do
     mismatches
     |> Enum.map(&format_mismatch/1)
@@ -15,7 +19,7 @@ defmodule Machete.Mismatch do
     |> Enum.map_join("", fn {msg, idx} -> "#{indent}#{idx}) #{msg}\n" end)
   end
 
-  defp format_mismatch(%Machete.Mismatch{path: []} = mismatch) do
+  defp format_mismatch(%__MODULE__{path: []} = mismatch) do
     mismatch.message
   end
 

@@ -5,6 +5,8 @@ defmodule Machete.LiteralListMatcher do
   elements of the lists matches based on the Machete.Matchable protocol.
   """
 
+  import Machete.Mismatch
+
   defimpl Machete.Matchable, for: List do
     def mismatches(a, b) when is_list(a) and is_list(b) and length(a) == length(b) do
       [a, b]
@@ -16,12 +18,7 @@ defmodule Machete.LiteralListMatcher do
       end)
     end
 
-    def mismatches(a, b) when is_list(a) and is_list(b) do
-      [%Machete.Mismatch{message: "List lengths not equal"}]
-    end
-
-    def mismatches(a, b) when is_list(a) do
-      [%Machete.Mismatch{message: "#{inspect(b)} is not a list"}]
-    end
+    def mismatches(a, b) when is_list(a) and is_list(b), do: mismatch("List lengths not equal")
+    def mismatches(a, b) when is_list(a), do: mismatch("#{inspect(b)} is not a list")
   end
 end

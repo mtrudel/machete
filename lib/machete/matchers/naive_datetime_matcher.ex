@@ -1,6 +1,8 @@
 defmodule Machete.NaiveDateTimeMatcher do
   @moduledoc false
 
+  import Machete.Mismatch
+
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
   def naive_datetime(opts \\ []), do: struct!(__MODULE__, opts)
@@ -16,30 +18,20 @@ defmodule Machete.NaiveDateTimeMatcher do
     end
 
     defp matches_type(%NaiveDateTime{}), do: nil
-
-    defp matches_type(b),
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is not a NaiveDateTime"}]
+    defp matches_type(b), do: mismatch("#{inspect(b)} is not a NaiveDateTime")
 
     defp matches_precision(_, nil), do: nil
     defp matches_precision(%NaiveDateTime{microsecond: {_, precision}}, precision), do: nil
 
     defp matches_precision(%NaiveDateTime{microsecond: {_, b_precision}} = b, precision),
-      do: [
-        %Machete.Mismatch{
-          message: "#{inspect(b)} has precision #{b_precision}, expected #{precision}"
-        }
-      ]
+      do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :now), do: matches_roughly(b, NaiveDateTime.utc_now())
 
     defp matches_roughly(b, roughly) do
       if NaiveDateTime.diff(b, roughly, :microsecond) not in -10_000_000..10_000_000 do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}")
       end
     end
 
@@ -48,11 +40,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_before(b, before) do
       if NaiveDateTime.compare(b, before) != :lt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not before #{inspect(before)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not before #{inspect(before)}")
       end
     end
 
@@ -61,11 +49,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_after(b, after_var) do
       if NaiveDateTime.compare(b, after_var) != :gt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not after #{inspect(after_var)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
       end
     end
   end

@@ -1,6 +1,8 @@
 defmodule Machete.StringMatcher do
   @moduledoc false
 
+  import Machete.Mismatch
+
   defstruct empty: nil, length: nil, min: nil, max: nil
 
   def string(opts \\ []), do: struct!(__MODULE__, opts)
@@ -16,21 +18,17 @@ defmodule Machete.StringMatcher do
     end
 
     defp matches_type(b) when is_binary(b), do: nil
-    defp matches_type(b), do: [%Machete.Mismatch{message: "#{inspect(b)} is not a string"}]
+    defp matches_type(b), do: mismatch("#{inspect(b)} is not a string")
 
-    defp matches_empty("" = b, false),
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is empty"}]
-
-    defp matches_empty(b, true) when b != "",
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is not empty"}]
-
+    defp matches_empty("" = b, false), do: mismatch("#{inspect(b)} is empty")
+    defp matches_empty(b, true) when b != "", do: mismatch("#{inspect(b)} is not empty")
     defp matches_empty(_, _), do: nil
 
     defp matches_length(_, nil), do: nil
 
     defp matches_length(b, length) do
       unless String.length(b) == length do
-        [%Machete.Mismatch{message: "#{inspect(b)} is not exactly #{length} characters"}]
+        mismatch("#{inspect(b)} is not exactly #{length} characters")
       end
     end
 
@@ -38,7 +36,7 @@ defmodule Machete.StringMatcher do
 
     defp matches_min(b, length) do
       unless String.length(b) >= length do
-        [%Machete.Mismatch{message: "#{inspect(b)} is less than #{length} characters"}]
+        mismatch("#{inspect(b)} is less than #{length} characters")
       end
     end
 
@@ -46,7 +44,7 @@ defmodule Machete.StringMatcher do
 
     defp matches_max(b, length) do
       unless String.length(b) <= length do
-        [%Machete.Mismatch{message: "#{inspect(b)} is more than #{length} characters"}]
+        mismatch("#{inspect(b)} is more than #{length} characters")
       end
     end
   end

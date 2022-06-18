@@ -8,26 +8,22 @@ defmodule Machete.LiteralMatchers do
   literal matcher module defined separately.
   """
 
+  import Machete.Mismatch
+
   defimpl Machete.Matchable, for: Regex do
     def mismatches(%Regex{} = a, b) when is_binary(b) do
-      unless Regex.match?(a, b) do
-        [%Machete.Mismatch{message: "#{inspect(b)} does not match #{inspect(a)}"}]
-      end
+      unless Regex.match?(a, b), do: mismatch("#{inspect(b)} does not match #{inspect(a)}")
     end
 
-    def mismatches(%Regex{}, b),
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is not a string"}]
+    def mismatches(%Regex{}, b), do: mismatch("#{inspect(b)} is not a string")
   end
 
   defimpl Machete.Matchable, for: [DateTime, NaiveDateTime, Date, Time] do
     def mismatches(%@for{} = a, %@for{} = b) do
-      if @for.compare(a, b) != :eq do
-        [%Machete.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
-      end
+      if @for.compare(a, b) != :eq, do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
     end
 
-    def mismatches(%@for{}, b),
-      do: [%Machete.Mismatch{message: "#{b} is not a #{inspect(@for)}"}]
+    def mismatches(%@for{}, b), do: mismatch("#{b} is not a #{inspect(@for)}")
   end
 
   defimpl Machete.Matchable, for: Any do
@@ -37,13 +33,9 @@ defmodule Machete.LiteralMatchers do
       Machete.Matchable.mismatches(Map.from_struct(a), Map.from_struct(b))
     end
 
-    def mismatches(a, _) when is_struct(a) do
-      [%Machete.Mismatch{message: "Struct types do not match"}]
-    end
-
+    def mismatches(%_{}, %_{}), do: mismatch("Struct types do not match")
+    def mismatches(%_{}, b), do: mismatch("#{inspect(b)} is not a struct")
     def mismatches(a, a), do: nil
-
-    def mismatches(a, b),
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
+    def mismatches(a, b), do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
   end
 end

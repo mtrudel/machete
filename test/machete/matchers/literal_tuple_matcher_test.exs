@@ -2,6 +2,7 @@ defmodule LiteralTupleMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
   import TestMatcher
 
   test "matches empty tuple" do
@@ -13,15 +14,15 @@ defmodule LiteralTupleMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert {} ~>> {1} ~> [%Machete.Mismatch{message: "Tuple sizes not equal", path: []}]
+    assert {} ~>> {1} ~> mismatch("Tuple sizes not equal")
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert {1} ~>> {} ~> [%Machete.Mismatch{message: "Tuple sizes not equal", path: []}]
+    assert {1} ~>> {} ~> mismatch("Tuple sizes not equal")
   end
 
   test "produces a useful mismatch on non-tuples" do
-    assert 1 ~>> {} ~> [%Machete.Mismatch{message: "1 is not a tuple", path: []}]
+    assert 1 ~>> {} ~> mismatch("1 is not a tuple")
   end
 
   describe "nested matchers" do
@@ -36,7 +37,7 @@ defmodule LiteralTupleMatcherTest do
     test "produces a useful mismatch on nested mismatches" do
       assert {1}
              ~>> {test_matcher(behaviour: :always_mismatch)}
-             ~> [%Machete.Mismatch{message: "Always mismatch", path: ["{0}"]}]
+             ~> mismatch("Always mismatch", "{0}")
     end
   end
 end

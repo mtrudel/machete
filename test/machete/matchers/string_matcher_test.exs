@@ -2,6 +2,8 @@ defmodule StringMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
+
   test "matches strings" do
     assert "" ~> string()
   end
@@ -27,36 +29,26 @@ defmodule StringMatcherTest do
   end
 
   test "produces a useful mismatch for non strings" do
-    assert 1 ~>> string() ~> [%Machete.Mismatch{message: "1 is not a string", path: []}]
+    assert 1 ~>> string() ~> mismatch("1 is not a string")
   end
 
   test "produces a useful mismatch for exact length mismatches" do
-    assert "a"
-           ~>> string(length: 5)
-           ~> [%Machete.Mismatch{message: "\"a\" is not exactly 5 characters", path: []}]
+    assert "a" ~>> string(length: 5) ~> mismatch("\"a\" is not exactly 5 characters")
   end
 
   test "produces a useful mismatch for min length mismatches" do
-    assert "a"
-           ~>> string(min: 5)
-           ~> [%Machete.Mismatch{message: "\"a\" is less than 5 characters", path: []}]
+    assert "a" ~>> string(min: 5) ~> mismatch("\"a\" is less than 5 characters")
   end
 
   test "produces a useful mismatch for max length mismatches" do
-    assert "abcdef"
-           ~>> string(max: 5)
-           ~> [%Machete.Mismatch{message: "\"abcdef\" is more than 5 characters", path: []}]
+    assert "abcdef" ~>> string(max: 5) ~> mismatch("\"abcdef\" is more than 5 characters")
   end
 
   test "produces a useful mismatch for empty true" do
-    assert "a"
-           ~>> string(empty: true)
-           ~> [%Machete.Mismatch{message: "\"a\" is not empty", path: []}]
+    assert "a" ~>> string(empty: true) ~> mismatch("\"a\" is not empty")
   end
 
   test "produces a useful mismatch for empty false" do
-    assert ""
-           ~>> string(empty: false)
-           ~> [%Machete.Mismatch{message: "\"\" is empty", path: []}]
+    assert "" ~>> string(empty: false) ~> mismatch("\"\" is empty")
   end
 end

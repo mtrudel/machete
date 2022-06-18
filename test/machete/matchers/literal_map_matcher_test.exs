@@ -2,6 +2,7 @@ defmodule LiteralMapMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
   import TestMatcher
 
   test "matches empty maps" do
@@ -13,15 +14,15 @@ defmodule LiteralMapMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert %{} ~>> %{a: 1} ~> [%Machete.Mismatch{message: "Missing key", path: [:a]}]
+    assert %{} ~>> %{a: 1} ~> mismatch("Missing key", :a)
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert %{a: 1} ~>> %{} ~> [%Machete.Mismatch{message: "Unexpected key", path: [:a]}]
+    assert %{a: 1} ~>> %{} ~> mismatch("Unexpected key", :a)
   end
 
   test "produces a useful mismatch on non-maps" do
-    assert 1 ~>> %{} ~> [%Machete.Mismatch{message: "1 is not a map", path: []}]
+    assert 1 ~>> %{} ~> mismatch("1 is not a map")
   end
 
   describe "nested matchers" do
@@ -36,7 +37,7 @@ defmodule LiteralMapMatcherTest do
     test "produces a useful mismatch on nested mismatches" do
       assert %{a: 1}
              ~>> %{a: test_matcher(behaviour: :always_mismatch)}
-             ~> [%Machete.Mismatch{message: "Always mismatch", path: [:a]}]
+             ~> mismatch("Always mismatch", :a)
     end
   end
 
@@ -46,9 +47,7 @@ defmodule LiteralMapMatcherTest do
     end
 
     test "produces a useful mismatch against structs" do
-      assert %TestStruct{a: 1}
-             ~>> %{a: integer()}
-             ~> [%Machete.Mismatch{message: "Can't match a map to a struct", path: []}]
+      assert %TestStruct{a: 1} ~>> %{a: integer()} ~> mismatch("Can't match a map to a struct")
     end
   end
 end

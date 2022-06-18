@@ -2,6 +2,8 @@ defmodule LiteralMatchersTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
+
   describe "DateTime matchers" do
     test "matches datetimes against identical datetimes" do
       assert ~U[2022-04-26T01:23:45Z] ~> ~U[2022-04-26T01:23:45Z]
@@ -16,18 +18,13 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for non DateTimes" do
       assert 1
              ~>> ~U[2021-04-26T01:23:45Z]
-             ~> [%Machete.Mismatch{message: "1 is not a DateTime", path: []}]
+             ~> mismatch("1 is not a DateTime")
     end
 
     test "produces a useful mismatch on non-equivalent values" do
       assert ~U[2021-05-27T02:24:46Z]
              ~>> ~U[2021-04-26T01:23:45Z]
-             ~> [
-               %Machete.Mismatch{
-                 message: "~U[2021-05-27 02:24:46Z] is not equal to ~U[2021-04-26 01:23:45Z]",
-                 path: []
-               }
-             ]
+             ~> mismatch("~U[2021-05-27 02:24:46Z] is not equal to ~U[2021-04-26 01:23:45Z]")
     end
   end
 
@@ -39,18 +36,13 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for non NaiveDateTimes" do
       assert 1
              ~>> ~N[2021-04-26T01:23:45]
-             ~> [%Machete.Mismatch{message: "1 is not a NaiveDateTime", path: []}]
+             ~> mismatch("1 is not a NaiveDateTime")
     end
 
     test "produces a useful mismatch on non-equivalent values" do
       assert ~N[2021-05-27T02:24:46]
              ~>> ~N[2021-04-26T01:23:45]
-             ~> [
-               %Machete.Mismatch{
-                 message: "~N[2021-05-27 02:24:46] is not equal to ~N[2021-04-26 01:23:45]",
-                 path: []
-               }
-             ]
+             ~> mismatch("~N[2021-05-27 02:24:46] is not equal to ~N[2021-04-26 01:23:45]")
     end
   end
 
@@ -60,18 +52,13 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non Dates" do
-      assert 1 ~>> ~D[2021-04-26] ~> [%Machete.Mismatch{message: "1 is not a Date", path: []}]
+      assert 1 ~>> ~D[2021-04-26] ~> mismatch("1 is not a Date")
     end
 
     test "produces a useful mismatch on non-equivalent values" do
       assert ~D[2021-05-27]
              ~>> ~D[2021-04-26]
-             ~> [
-               %Machete.Mismatch{
-                 message: "~D[2021-05-27] is not equal to ~D[2021-04-26]",
-                 path: []
-               }
-             ]
+             ~> mismatch("~D[2021-05-27] is not equal to ~D[2021-04-26]")
     end
   end
 
@@ -81,18 +68,13 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non Times" do
-      assert 1 ~>> ~T[01:23:45] ~> [%Machete.Mismatch{message: "1 is not a Time", path: []}]
+      assert 1 ~>> ~T[01:23:45] ~> mismatch("1 is not a Time")
     end
 
     test "produces a useful mismatch on non-equivalent values" do
       assert ~T[02:24:46]
              ~>> ~T[01:23:45]
-             ~> [
-               %Machete.Mismatch{
-                 message: "~T[02:24:46] is not equal to ~T[01:23:45]",
-                 path: []
-               }
-             ]
+             ~> mismatch("~T[02:24:46] is not equal to ~T[01:23:45]")
     end
   end
 
@@ -102,13 +84,13 @@ defmodule LiteralMatchersTest do
     end
 
     test "produces a useful mismatch for non strings" do
-      assert 1 ~>> ~r/abc/ ~> [%Machete.Mismatch{message: "1 is not a string", path: []}]
+      assert 1 ~>> ~r/abc/ ~> mismatch("1 is not a string")
     end
 
     test "produces a useful mismatch on non-matching values" do
       assert "ABC"
              ~>> ~r/abc/
-             ~> [%Machete.Mismatch{message: "\"ABC\" does not match ~r/abc/", path: []}]
+             ~> mismatch("\"ABC\" does not match ~r/abc/")
     end
   end
 
@@ -128,13 +110,19 @@ defmodule LiteralMatchersTest do
     test "produces a useful mismatch for mismatched struct types" do
       assert %TestStruct{a: 1}
              ~>> %OtherTestStruct{a: integer()}
-             ~> [%Machete.Mismatch{message: "Struct types do not match", path: []}]
+             ~> mismatch("Struct types do not match")
+    end
+
+    test "produces a useful mismatch for non-struct types" do
+      assert 1
+             ~>> %OtherTestStruct{a: integer()}
+             ~> mismatch("1 is not a struct")
     end
 
     test "produces a useful mismatch when comparing maps to structs" do
       assert %{a: 1}
              ~>> %TestStruct{a: integer()}
-             ~> [%Machete.Mismatch{message: "Struct types do not match", path: []}]
+             ~> mismatch("%{a: 1} is not a struct")
     end
   end
 
@@ -164,17 +152,11 @@ defmodule LiteralMatchersTest do
           type_example_a <- type_examples,
           type_example_b <- type_examples,
           type_example_a != type_example_b do
-        refute type_example_a ~> type_example_b
-
         assert type_example_a
                ~>> type_example_b
-               ~> [
-                 %Machete.Mismatch{
-                   message:
-                     "#{inspect(type_example_a)} is not equal to #{inspect(type_example_b)}",
-                   path: []
-                 }
-               ]
+               ~> mismatch(
+                 "#{inspect(type_example_a)} is not equal to #{inspect(type_example_b)}"
+               )
       end
     end
 
@@ -188,13 +170,9 @@ defmodule LiteralMatchersTest do
 
         assert type_a_example
                ~>> type_b_example
-               ~> [
-                 %Machete.Mismatch{
-                   message:
-                     "#{inspect(type_a_example)} is not equal to #{inspect(type_b_example)}",
-                   path: []
-                 }
-               ]
+               ~> mismatch(
+                 "#{inspect(type_a_example)} is not equal to #{inspect(type_b_example)}"
+               )
       end
     end
   end

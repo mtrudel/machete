@@ -2,6 +2,7 @@ defmodule OperatorTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
   import TestMatcher
 
   test "the ~> operator is defined and returns success" do
@@ -15,7 +16,7 @@ defmodule OperatorTest do
   test "the ~>> operator returns mismatches" do
     assert 1
            ~>> test_matcher(behaviour: :always_mismatch)
-           ~> [%Machete.Mismatch{message: "Always mismatch", path: []}]
+           ~> mismatch("Always mismatch")
   end
 
   test "the ~>> operator returns empty list when matcher returns empty list" do

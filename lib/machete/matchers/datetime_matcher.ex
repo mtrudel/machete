@@ -1,6 +1,8 @@
 defmodule Machete.DateTimeMatcher do
   @moduledoc false
 
+  import Machete.Mismatch
+
   defstruct precision: nil, time_zone: nil, roughly: nil, before: nil, after: nil
 
   def datetime(opts \\ []), do: struct!(__MODULE__, opts)
@@ -17,39 +19,27 @@ defmodule Machete.DateTimeMatcher do
     end
 
     defp matches_type(%DateTime{}), do: nil
-    defp matches_type(b), do: [%Machete.Mismatch{message: "#{inspect(b)} is not a DateTime"}]
+    defp matches_type(b), do: mismatch("#{inspect(b)} is not a DateTime")
 
     defp matches_precision(_, nil), do: nil
     defp matches_precision(%DateTime{microsecond: {_, precision}}, precision), do: nil
 
     defp matches_precision(%DateTime{microsecond: {_, b_precision}} = b, precision),
-      do: [
-        %Machete.Mismatch{
-          message: "#{inspect(b)} has precision #{b_precision}, expected #{precision}"
-        }
-      ]
+      do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
 
     defp matches_time_zone(_, nil), do: nil
     defp matches_time_zone(b, :utc), do: matches_time_zone(b, "Etc/UTC")
     defp matches_time_zone(%DateTime{time_zone: time_zone}, time_zone), do: nil
 
     defp matches_time_zone(b, time_zone),
-      do: [
-        %Machete.Mismatch{
-          message: "#{inspect(b)} has time zone #{b.time_zone}, expected #{time_zone}"
-        }
-      ]
+      do: mismatch("#{inspect(b)} has time zone #{b.time_zone}, expected #{time_zone}")
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :now), do: matches_roughly(b, DateTime.utc_now())
 
     defp matches_roughly(b, roughly) do
       if DateTime.diff(b, roughly, :microsecond) not in -10_000_000..10_000_000 do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}")
       end
     end
 
@@ -58,11 +48,7 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_before(b, before) do
       if DateTime.compare(b, before) != :lt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not before #{inspect(before)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not before #{inspect(before)}")
       end
     end
 
@@ -71,11 +57,7 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_after(b, after_var) do
       if DateTime.compare(b, after_var) != :gt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not after #{inspect(after_var)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
       end
     end
   end

@@ -2,6 +2,8 @@ defmodule BooleanMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
+  import Machete.Mismatch
+
   test "matches true" do
     assert true ~> boolean()
   end
@@ -11,6 +13,6 @@ defmodule BooleanMatcherTest do
   end
 
   test "produces a useful mismatch for non booleans" do
-    assert 1 ~>> boolean() ~> [%Machete.Mismatch{message: "1 is not a boolean", path: []}]
+    assert 1 ~>> boolean() ~> mismatch("1 is not a boolean")
   end
 end

@@ -1,6 +1,8 @@
 defmodule Machete.ISO8601DateTimeMatcher do
   @moduledoc false
 
+  import Machete.Mismatch
+
   defstruct datetime_opts: nil
 
   def iso8601_datetime(opts \\ []), do: struct!(__MODULE__, datetime_opts: opts)
@@ -15,11 +17,10 @@ defmodule Machete.ISO8601DateTimeMatcher do
           |> Machete.Matchable.mismatches(datetime_b)
 
         _ ->
-          [%Machete.Mismatch{message: "#{inspect(b)} is not a parseable ISO8601 datetime"}]
+          mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
       end
     end
 
-    def mismatches(%@for{}, b),
-      do: [%Machete.Mismatch{message: "#{inspect(b)} is not a string"}]
+    def mismatches(%@for{}, b), do: mismatch("#{inspect(b)} is not a string")
   end
 end

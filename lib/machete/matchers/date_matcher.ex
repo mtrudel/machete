@@ -1,6 +1,8 @@
 defmodule Machete.DateMatcher do
   @moduledoc false
 
+  import Machete.Mismatch
+
   defstruct roughly: nil, before: nil, after: nil
 
   def date(opts \\ []), do: struct!(__MODULE__, opts)
@@ -15,18 +17,14 @@ defmodule Machete.DateMatcher do
     end
 
     defp matches_type(%Date{}), do: nil
-    defp matches_type(b), do: [%Machete.Mismatch{message: "#{inspect(b)} is not a Date"}]
+    defp matches_type(b), do: mismatch("#{inspect(b)} is not a Date")
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :today), do: matches_roughly(b, Date.utc_today())
 
     defp matches_roughly(b, roughly) do
       if Date.diff(b, roughly) not in -1..1 do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not within 1 day of #{inspect(roughly)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not within 1 day of #{inspect(roughly)}")
       end
     end
 
@@ -35,11 +33,7 @@ defmodule Machete.DateMatcher do
 
     defp matches_before(b, before) do
       if Date.compare(b, before) != :lt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not before #{inspect(before)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not before #{inspect(before)}")
       end
     end
 
@@ -48,11 +42,7 @@ defmodule Machete.DateMatcher do
 
     defp matches_after(b, after_var) do
       if Date.compare(b, after_var) != :gt do
-        [
-          %Machete.Mismatch{
-            message: "#{inspect(b)} is not after #{inspect(after_var)}"
-          }
-        ]
+        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
       end
     end
   end
