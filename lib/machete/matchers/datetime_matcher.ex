@@ -3,18 +3,10 @@ defmodule Machete.DateTimeMatcher do
 
   defstruct precision: nil, time_zone: nil, roughly: nil, before: nil, after: nil
 
-  def datetime(opts \\ []) do
-    %__MODULE__{
-      precision: Keyword.get(opts, :precision),
-      time_zone: Keyword.get(opts, :time_zone),
-      roughly: Keyword.get(opts, :roughly),
-      before: Keyword.get(opts, :before),
-      after: Keyword.get(opts, :after)
-    }
-  end
+  def datetime(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.DateTimeMatcher{} = a, b) do
+    def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_precision(b, a.precision),
            nil <- matches_time_zone(b, a.time_zone),

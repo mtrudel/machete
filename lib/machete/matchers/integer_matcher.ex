@@ -3,18 +3,10 @@ defmodule Machete.IntegerMatcher do
 
   defstruct positive: nil, negative: nil, nonzero: nil, min: nil, max: nil
 
-  def integer(opts \\ []) do
-    %__MODULE__{
-      positive: Keyword.get(opts, :positive),
-      negative: Keyword.get(opts, :negative),
-      nonzero: Keyword.get(opts, :nonzero),
-      min: Keyword.get(opts, :min),
-      max: Keyword.get(opts, :max)
-    }
-  end
+  def integer(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.IntegerMatcher{} = a, b) do
+    def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_positive(b, a.positive),
            nil <- matches_negative(b, a.negative),

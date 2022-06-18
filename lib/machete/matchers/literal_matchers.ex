@@ -19,17 +19,15 @@ defmodule Machete.LiteralMatchers do
       do: [%Machete.Mismatch{message: "#{inspect(b)} is not a string"}]
   end
 
-  for t <- [DateTime, NaiveDateTime, Date, Time] do
-    defimpl Machete.Matchable, for: t do
-      def mismatches(%unquote(t){} = a, %unquote(t){} = b) do
-        if unquote(t).compare(a, b) != :eq do
-          [%Machete.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
-        end
+  defimpl Machete.Matchable, for: [DateTime, NaiveDateTime, Date, Time] do
+    def mismatches(%@for{} = a, %@for{} = b) do
+      if @for.compare(a, b) != :eq do
+        [%Machete.Mismatch{message: "#{inspect(b)} is not equal to #{inspect(a)}"}]
       end
-
-      def mismatches(%unquote(t){}, b),
-        do: [%Machete.Mismatch{message: "#{b} is not a #{inspect(unquote(t))}"}]
     end
+
+    def mismatches(%@for{}, b),
+      do: [%Machete.Mismatch{message: "#{b} is not a #{inspect(@for)}"}]
   end
 
   defimpl Machete.Matchable, for: Any do

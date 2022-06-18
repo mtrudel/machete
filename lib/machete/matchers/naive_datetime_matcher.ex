@@ -3,17 +3,10 @@ defmodule Machete.NaiveDateTimeMatcher do
 
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
-  def naive_datetime(opts \\ []) do
-    %__MODULE__{
-      precision: Keyword.get(opts, :precision),
-      roughly: Keyword.get(opts, :roughly),
-      before: Keyword.get(opts, :before),
-      after: Keyword.get(opts, :after)
-    }
-  end
+  def naive_datetime(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.NaiveDateTimeMatcher{} = a, b) do
+    def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_precision(b, a.precision),
            nil <- matches_roughly(b, a.roughly),

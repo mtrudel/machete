@@ -3,10 +3,10 @@ defmodule Machete.BooleanMatcher do
 
   defstruct []
 
-  def boolean, do: %__MODULE__{}
+  def boolean(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.BooleanMatcher{}, b) do
+    def mismatches(%@for{}, b) do
       unless is_boolean(b) do
         [%Machete.Mismatch{message: "#{inspect(b)} is not a boolean"}]
       end

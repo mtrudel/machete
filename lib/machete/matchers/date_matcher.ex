@@ -3,15 +3,10 @@ defmodule Machete.DateMatcher do
 
   defstruct roughly: nil, before: nil, after: nil
 
-  def date(opts \\ []),
-    do: %__MODULE__{
-      roughly: Keyword.get(opts, :roughly),
-      before: Keyword.get(opts, :before),
-      after: Keyword.get(opts, :after)
-    }
+  def date(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.DateMatcher{} = a, b) do
+    def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_roughly(b, a.roughly),
            nil <- matches_before(b, a.before),

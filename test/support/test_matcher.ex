@@ -3,11 +3,7 @@ defmodule TestMatcher do
 
   defstruct behaviour: nil
 
-  def test_matcher(opts \\ []) do
-    %__MODULE__{
-      behaviour: Keyword.get(opts, :behaviour)
-    }
-  end
+  def test_matcher(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
     def mismatches(%TestMatcher{behaviour: :always_mismatch}, _) do

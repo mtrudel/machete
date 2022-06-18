@@ -3,14 +3,10 @@ defmodule Machete.ISO8601DateTimeMatcher do
 
   defstruct datetime_opts: nil
 
-  def iso8601_datetime(opts \\ []) do
-    %__MODULE__{
-      datetime_opts: opts
-    }
-  end
+  def iso8601_datetime(opts \\ []), do: struct!(__MODULE__, datetime_opts: opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.ISO8601DateTimeMatcher{} = a, b) when is_binary(b) do
+    def mismatches(%@for{} = a, b) when is_binary(b) do
       DateTime.from_iso8601(b)
       |> case do
         {:ok, datetime_b, 0} ->
@@ -23,7 +19,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
       end
     end
 
-    def mismatches(%Machete.ISO8601DateTimeMatcher{}, b),
+    def mismatches(%@for{}, b),
       do: [%Machete.Mismatch{message: "#{inspect(b)} is not a string"}]
   end
 end

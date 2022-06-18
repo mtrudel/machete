@@ -3,17 +3,10 @@ defmodule Machete.StringMatcher do
 
   defstruct empty: nil, length: nil, min: nil, max: nil
 
-  def string(opts \\ []) do
-    %__MODULE__{
-      empty: Keyword.get(opts, :empty),
-      length: Keyword.get(opts, :length),
-      min: Keyword.get(opts, :min),
-      max: Keyword.get(opts, :max)
-    }
-  end
+  def string(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%Machete.StringMatcher{} = a, b) do
+    def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_empty(b, a.empty),
            nil <- matches_length(b, a.length),
