@@ -9,7 +9,7 @@ defmodule Machete do
       import Machete.Assertions
 
       # Bring in ~> and ~>> operators
-      import Machete
+      import Machete.Operators
 
       # Bring in matcher builders
       import Machete.AnyMatcher
@@ -23,13 +23,5 @@ defmodule Machete do
       import Machete.StringMatcher
       import Machete.TimeMatcher
     end
-  end
-
-  def a ~> b do
-    a ~>> b == []
-  end
-
-  def a ~>> b do
-    Machete.Matchable.mismatches(b, a) || []
   end
 end

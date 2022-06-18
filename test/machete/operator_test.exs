@@ -1,4 +1,4 @@
-defmodule MacheteTest do
+defmodule OperatorTest do
   use ExUnit.Case, async: true
   use Machete
 
