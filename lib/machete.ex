@@ -21,6 +21,7 @@ defmodule Machete do
       import Machete.IndifferentAccessMatcher
       import Machete.IntegerMatcher
       import Machete.ISO8601DateTimeMatcher
+      import Machete.ListOfMatcher
       import Machete.MapMatcher
       import Machete.MaybeMatcher
       import Machete.NaiveDateTimeMatcher
