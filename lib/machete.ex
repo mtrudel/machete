@@ -25,6 +25,7 @@ defmodule Machete do
       import Machete.MaybeMatcher
       import Machete.NaiveDateTimeMatcher
       import Machete.StringMatcher
+      import Machete.SubsetMatcher
       import Machete.SupersetMatcher
       import Machete.TimeMatcher
       import Machete.TruthyMatcher
