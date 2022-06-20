@@ -16,12 +16,14 @@ defmodule Machete do
       import Machete.BooleanMatcher
       import Machete.DateMatcher
       import Machete.DateTimeMatcher
+      import Machete.FalsyMatcher
       import Machete.FloatMatcher
       import Machete.IntegerMatcher
       import Machete.ISO8601DateTimeMatcher
       import Machete.NaiveDateTimeMatcher
       import Machete.StringMatcher
       import Machete.TimeMatcher
+      import Machete.TruthyMatcher
     end
   end
 end
