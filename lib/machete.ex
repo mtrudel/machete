@@ -20,6 +20,7 @@ defmodule Machete do
       import Machete.FloatMatcher
       import Machete.IntegerMatcher
       import Machete.ISO8601DateTimeMatcher
+      import Machete.MaybeMatcher
       import Machete.NaiveDateTimeMatcher
       import Machete.StringMatcher
       import Machete.TimeMatcher
