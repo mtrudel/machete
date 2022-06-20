@@ -41,6 +41,8 @@ defmodule Machete.Assertions do
           context: :~>,
           expr: unquote(code),
           message: "Refute with ~> failed, both sides match"
+      else
+        false
       end
     end
   end

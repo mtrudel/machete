@@ -3,11 +3,13 @@ defmodule AssertionTest do
   use Machete
 
   test "matcher assertions pass" do
-    assert %{a: 1} ~> %{a: integer()}
+    result = assert %{a: 1} ~> %{a: integer()}
+    assert result === true
   end
 
   test "ExUnit assertions pass" do
-    assert true == true
+    result = assert true == true
+    assert result === true
   end
 
   test "matcher assertions fail with useful exceptions" do
@@ -63,11 +65,13 @@ defmodule AssertionTest do
   end
 
   test "matcher refutations pass" do
-    refute %{a: 1.0} ~> %{a: integer()}
+    result = refute %{a: 1.0} ~> %{a: integer()}
+    assert result === false
   end
 
   test "ExUnit refutations pass" do
-    refute true == false
+    result = refute true == false
+    assert result === false
   end
 
   test "matcher refutations fail with useful exceptions" do
