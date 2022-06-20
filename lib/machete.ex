@@ -18,6 +18,7 @@ defmodule Machete do
       import Machete.DateTimeMatcher
       import Machete.FalsyMatcher
       import Machete.FloatMatcher
+      import Machete.IndifferentAccessMatcher
       import Machete.IntegerMatcher
       import Machete.ISO8601DateTimeMatcher
       import Machete.MapMatcher
