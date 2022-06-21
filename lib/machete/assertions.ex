@@ -2,7 +2,7 @@ defmodule Machete.Assertions do
   @moduledoc false
 
   defmacro assert({:~>, meta, [left, right]} = assertion) do
-    code = escape_quoted(:assert, meta, assertion)
+    code = Macro.escape({:assert, meta, [assertion]}, prune_metadata: true)
 
     quote bind_quoted: [left: left, right: right, code: code] do
       case(left ~>> right) do
@@ -26,14 +26,8 @@ defmodule Machete.Assertions do
     end
   end
 
-  defmacro assert(assert, message) do
-    quote do
-      ExUnit.Assertions.assert(unquote(assert), unquote(message))
-    end
-  end
-
   defmacro refute({:~>, meta, [_left, _right]} = assertion) do
-    code = escape_quoted(:refute, meta, assertion)
+    code = Macro.escape({:refute, meta, [assertion]}, prune_metadata: true)
 
     quote do
       if unquote(assertion) do
@@ -51,15 +45,5 @@ defmodule Machete.Assertions do
     quote do
       ExUnit.Assertions.refute(unquote(assert))
     end
-  end
-
-  defmacro refute(assert, message) do
-    quote do
-      ExUnit.Assertions.refute(unquote(assert), unquote(message))
-    end
-  end
-
-  defp escape_quoted(kind, meta, expr) do
-    Macro.escape({kind, meta, [expr]}, prune_metadata: true)
   end
 end
