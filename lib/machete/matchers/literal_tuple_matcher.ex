@@ -1,9 +1,9 @@
 defmodule Machete.LiteralTupleMatcher do
-  @moduledoc """
-  This module defines Machete.Matchable protocol conformance for literal tuples. Matching is 
-  determined based on whether or not the tuples are the same size, and whether or not each pair of
-  elements of the tuples matches based on the Machete.Matchable protocol.
-  """
+  @moduledoc false
+
+  # This module defines Machete.Matchable protocol conformance for literal tuples. Matching is
+  # determined based on whether or not the tuples are the same size, and whether or not each pair of
+  # elements of the tuples matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
 

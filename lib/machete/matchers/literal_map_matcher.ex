@@ -1,9 +1,9 @@
 defmodule Machete.LiteralMapMatcher do
-  @moduledoc """
-  This module defines Machete.Matchable protocol conformance for literal maps. Matching is 
-  determined based on whether or not the maps have the same set of keys, and whether or not each 
-  pair of elements of the maps matches based on the Machete.Matchable protocol.
-  """
+  @moduledoc false
+
+  # This module defines Machete.Matchable protocol conformance for literal maps. Matching is
+  # determined based on whether or not the maps have the same set of keys, and whether or not each
+  # pair of elements of the maps matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
 

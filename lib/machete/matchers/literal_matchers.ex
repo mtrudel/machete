@@ -1,12 +1,12 @@
 defmodule Machete.LiteralMatchers do
-  @moduledoc """
-  This module defines Machete.Matchable protocol conformance for a number of 
-  literal types. We use whichever equality semantic is indicated for the type (`match?/2` for
-  Regex, `compare/2` for date-like types, `===` for everything else).
+  @moduledoc false
 
-  Note that literal collection matching is not handled here; each collection type has their own
-  literal matcher module defined separately.
-  """
+  # This module defines Machete.Matchable protocol conformance for a number of
+  # literal types. We use whichever equality semantic is indicated for the type (`match?/2` for
+  # Regex, `compare/2` for date-like types, `===` for everything else).
+
+  # Note that literal collection matching is not handled here; each collection type has their own
+  # literal matcher module defined separately.
 
   import Machete.Mismatch
 

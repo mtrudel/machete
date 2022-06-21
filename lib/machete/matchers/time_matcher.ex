@@ -1,10 +1,67 @@
 defmodule Machete.TimeMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches Time values
+  """
 
   import Machete.Mismatch
 
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @typedoc """
+  Describes the arguments that can be passed to this matcher
+  """
+  @type opts :: [
+          {:precision, 0..6},
+          {:roughly, Time.t() | :now},
+          {:before, Time.t() | :now},
+          {:after, Time.t() | :now}
+        ]
+
+  @doc """
+  Matches against Time values
+
+  Takes the following arguments:
+
+  * `precision`: Requires the matched Time to have the specified microsecond precision
+  * `roughly`: Requires the matched Time to be within +/- 10 seconds of the specified Time. The
+    atom `:now` can be used to use the current time as the specified Time
+  * `before`: Requires the matched Time to be before or equal to the specified Time. The atom
+    `:now` can be used to use the current time as the specified Time
+  * `after`: Requires the matched Time to be after or equal to the specified Time. The atom `:now`
+    can be used to use the current time as the specified Time
+
+  Examples:
+
+      iex> assert Time.utc_now() ~> time()
+      true
+
+      iex> assert Time.utc_now() ~> time(precision: 6)
+      true
+
+      iex> assert Time.utc_now() ~> time(roughly: :now)
+      true
+
+      iex> assert ~T[00:00:00.000000] ~> time(roughly: ~T[00:00:05.000000])
+      true
+
+      iex> assert ~T[00:00:00.000000] ~> time(before: :now)
+      true
+
+      iex> assert ~T[00:00:00.000000] ~> time(before: ~T[00:00:01.000000])
+      true
+
+      iex> assert ~T[23:59:59.999999] ~> time(after: :now)
+      true
+
+      iex> assert ~T[00:00:01.000000] ~> time(after: ~T[00:00:00.000000])
+      true
+  """
+  @spec time(opts()) :: t()
   def time(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do

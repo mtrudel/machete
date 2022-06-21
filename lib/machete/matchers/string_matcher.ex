@@ -1,5 +1,7 @@
 defmodule Machete.StringMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches string values
+  """
 
   import Machete.Mismatch
 
@@ -15,6 +17,106 @@ defmodule Machete.StringMatcher do
             numeric: nil,
             hexadecimal: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @typedoc """
+  Describes the arguments that can be passed to this matcher
+  """
+  @type opts :: [
+          {:empty, boolean()},
+          {:length, non_neg_integer()},
+          {:min, non_neg_integer()},
+          {:max, non_neg_integer()},
+          {:matches, Regex.t()},
+          {:alphabetic, boolean()},
+          {:lowercase, boolean()},
+          {:uppercase, boolean()},
+          {:alphanumeric, boolean()},
+          {:numeric, boolean()},
+          {:hexdecimal, boolean()}
+        ]
+
+  @doc """
+  Matches against string values
+
+  Takes the following arguments:
+
+  * `empty`: When `true`, requires the matched string be empty. When false, requires the matched
+    string to be non-empty
+  * `length`: Requires the matched string to be exactly the specified length
+  * `min`: Requires the matched string to be greater than or equal to the specified length
+  * `max`: Requires the matched string to be less than or equal to the specified length
+  * `matches`: Requires the matched string to match the specified regex
+  * `alphabetic`: When `true`, requires the matched string to consist of alphabetic characters
+  * `lowercase`: When `true`, requires the matched string to consist of lowercase characters
+  * `uppercase`: When `true`, requires the matched string to consist of uppercase characters
+  * `alphanumeric`: When `true`, requires the matched string to consist of alphanumeric characters
+  * `numeric`: When `true`, requires the matched string to consist of numeric characters
+  * `hexadecimal`: When `true`, requires the matched string to consist of hexadecimal characters
+
+  Examples:
+
+      iex> assert "" ~> string()
+      true
+
+      iex> assert "abc" ~> string(length: 3)
+      true
+
+      iex> assert "abc" ~> string(min: 3)
+      true
+
+      iex> assert "abc" ~> string(max: 3)
+      true
+
+      iex> assert "" ~> string(empty: true)
+      true
+
+      iex> assert "abc" ~> string(empty: false)
+      true
+
+      iex> assert "abc" ~> string(matches: ~r/abc/)
+      true
+
+      iex> assert "abc" ~> string(alphabetic: true)
+      true
+
+      iex> assert "123" ~> string(alphabetic: false)
+      true
+
+      iex> assert "abc" ~> string(lowercase: true)
+      true
+
+      iex> assert "ABC" ~> string(lowercase: false)
+      true
+
+      iex> assert "ABC" ~> string(uppercase: true)
+      true
+
+      iex> assert "abc" ~> string(uppercase: false)
+      true
+
+      iex> assert "abc123" ~> string(alphanumeric: true)
+      true
+
+      iex> assert "$" ~> string(alphanumeric: false)
+      true
+
+      iex> assert "123" ~> string(numeric: true)
+      true
+
+      iex> assert "abc" ~> string(numeric: false)
+      true
+
+      iex> assert "deadbeef0123" ~> string(hexadecimal: true)
+      true
+
+      iex> assert "ghi" ~> string(hexadecimal: false)
+      true
+  """
+  @spec string(opts()) :: t()
   def string(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do

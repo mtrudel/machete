@@ -4,13 +4,7 @@ defmodule SupersetMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches on exact match" do
-    assert %{a: 1} ~> superset(%{a: 1})
-  end
-
-  test "matches on superset when proper superset" do
-    assert %{a: 1, b: 1} ~> superset(%{a: 1})
-  end
+  doctest Machete.SupersetMatcher
 
   test "produces a useful mismatch for subset mismatches" do
     assert %{b: 1} ~>> superset(%{a: 1}) ~> mismatch("Missing key", :a)

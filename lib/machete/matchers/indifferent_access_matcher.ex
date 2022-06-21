@@ -1,10 +1,42 @@
 defmodule Machete.IndifferentAccessMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches indifferently (that is, it considers similar atom and string keys
+  to be equivalent)
+  """
 
   import Machete.Mismatch
 
   defstruct map: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @doc """
+  Defines a matcher that matches indifferently (that is, it considers similar atom and string keys
+  to be equivalent)
+
+  Takes a map as its sole (mandatory) argument
+
+  Examples:
+
+      iex> assert %{a: 1} ~> indifferent_access(%{a: 1})
+      true
+
+      iex> assert %{"a" => 1} ~> indifferent_access(%{"a" => 1})
+      true
+
+      iex> assert %{a: 1} ~> indifferent_access(%{"a" => 1})
+      true
+
+      iex> assert %{"a" => 1} ~> indifferent_access(%{a: 1})
+      true
+
+      iex> assert %{1 => 1} ~> indifferent_access(%{1 => 1})
+      true
+  """
+  @spec indifferent_access(map()) :: t()
   def indifferent_access(map), do: struct!(__MODULE__, map: map)
 
   defimpl Machete.Matchable do

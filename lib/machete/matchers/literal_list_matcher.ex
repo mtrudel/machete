@@ -1,9 +1,9 @@
 defmodule Machete.LiteralListMatcher do
-  @moduledoc """
-  This module defines Machete.Matchable protocol conformance for literal lists. Matching is 
-  determined based on whether or not the lists are the same size, and whether or not each pair of
-  elements of the lists matches based on the Machete.Matchable protocol.
-  """
+  @moduledoc false
+
+  # This module defines Machete.Matchable protocol conformance for literal lists. Matching is
+  # determined based on whether or not the lists are the same size, and whether or not each pair of
+  # elements of the lists matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
 

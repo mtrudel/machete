@@ -1,6 +1,11 @@
 defmodule Machete.Mismatch do
-  @moduledoc false
+  @moduledoc """
+  Data and functions to deal with representing mismatches
+  """
 
+  @typedoc """
+  Describes the details of a mismatch
+  """
   @type t :: %__MODULE__{
           path: [term()],
           message: String.t()

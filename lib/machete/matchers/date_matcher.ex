@@ -1,10 +1,62 @@
 defmodule Machete.DateMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches Date values
+  """
 
   import Machete.Mismatch
 
   defstruct roughly: nil, before: nil, after: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @typedoc """
+  Describes the arguments that can be passed to this matcher
+  """
+  @type opts :: [
+          {:roughly, Date.t() | :today},
+          {:before, Date.t() | :today},
+          {:after, Date.t() | :today}
+        ]
+
+  @doc """
+  Matches against Date values
+
+  Takes the following arguments:
+
+  * `roughly`: Requires the matched Date to be within +/- 1 day of the specified Date. The atom
+    `:today` can be used to use today as the specified Date
+  * `before`: Requires the matched Date to be before or equal to the specified Date. The atom
+    `:today` can be used to use today as the specified Date
+  * `after`: Requires the matched Date to be after or equal to the specified Date. The atom
+    `:today` can be used to use today as the specified Date
+
+  Examples:
+      
+      iex> assert Date.utc_today() ~> date()
+      true
+
+      iex> assert Date.utc_today() ~> date(roughly: :today)
+      true
+
+      iex> assert ~D[2020-01-01] ~> date(roughly: ~D[2020-01-02])
+      true
+
+      iex> assert ~D[2020-01-01] ~> date(before: :today)
+      true
+
+      iex> assert ~D[2020-01-01] ~> date(before: ~D[3000-01-01])
+      true
+
+      iex> assert ~D[3000-01-01] ~> date(after: :today)
+      true
+
+      iex> assert ~D[3000-01-01] ~> date(after: ~D[2020-01-01])
+      true
+  """
+  @spec date(opts()) :: t()
   def date(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do

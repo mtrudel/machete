@@ -1,10 +1,70 @@
 defmodule Machete.NaiveDateTimeMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches NaiveDateTime values
+  """
 
   import Machete.Mismatch
 
   defstruct precision: nil, roughly: nil, before: nil, after: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @typedoc """
+  Describes the arguments that can be passed to this matcher
+  """
+  @type opts :: [
+          {:precision, 0..6},
+          {:roughly, NaiveDateTime.t() | :now},
+          {:before, NaiveDateTime.t() | :now},
+          {:after, NaiveDateTime.t() | :now}
+        ]
+
+  @doc """
+  Matches against NaiveDateTime values
+
+  Takes the following arguments:
+
+  * `precision`: Requires the matched NaiveDateTime to have the specified microsecond precision
+  * `roughly`: Requires the matched NaiveDateTime to be within +/- 10 seconds of the specified
+     NaiveDateTime. The atom `:now` can be used to use the current time as the specified
+     NaiveDateTime
+  * `before`: Requires the matched NaiveDateTime to be before or equal to the specified
+    NaiveDateTime. The atom `:now` can be used to use the current time as the specified
+    NaiveDateTime
+  * `after`: Requires the matched NaiveDateTime to be after or equal to the specified
+    NaiveDateTime. The atom `:now` can be used to use the current time as the specified
+    NaiveDateTime
+
+  Examples:
+
+      iex> assert NaiveDateTime.utc_now() ~> naive_datetime()
+      true
+
+      iex> assert NaiveDateTime.utc_now() ~> naive_datetime(precision: 6)
+      true
+
+      iex> assert NaiveDateTime.utc_now() ~> naive_datetime(roughly: :now)
+      true
+
+      iex> assert ~N[2020-01-01 00:00:00.000000] ~> naive_datetime(roughly: ~N[2020-01-01 00:00:05.000000])
+      true
+
+      iex> assert ~N[2020-01-01 00:00:00.000000] ~> naive_datetime(before: :now)
+      true
+
+      iex> assert ~N[2020-01-01 00:00:00.000000] ~> naive_datetime(before: ~N[3000-01-01 00:00:00.000000])
+      true
+
+      iex> assert ~N[3000-01-01 00:00:00.000000] ~> naive_datetime(after: :now)
+      true
+
+      iex> assert ~N[3000-01-01 00:00:00.000000] ~> naive_datetime(after: ~N[2020-01-01 00:00:00.000000])
+      true
+  """
+  @spec naive_datetime(opts()) :: t()
   def naive_datetime(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do

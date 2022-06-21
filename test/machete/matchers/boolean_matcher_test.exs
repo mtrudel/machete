@@ -4,13 +4,7 @@ defmodule BooleanMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches true" do
-    assert true ~> boolean()
-  end
-
-  test "matches false" do
-    assert false ~> boolean()
-  end
+  doctest Machete.BooleanMatcher
 
   test "produces a useful mismatch for non booleans" do
     assert 1 ~>> boolean() ~> mismatch("1 is not a boolean")

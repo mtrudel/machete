@@ -4,45 +4,7 @@ defmodule FloatMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches floats" do
-    assert 1.0 ~> float()
-  end
-
-  test "matches positive test when true" do
-    assert 1.0 ~> float(positive: true)
-    assert 0.0 ~> float(positive: true)
-  end
-
-  test "matches positive test when false" do
-    assert -1.0 ~> float(positive: false)
-    refute 0.0 ~> float(positive: false)
-  end
-
-  test "matches negative test when true" do
-    assert -1.0 ~> float(negative: true)
-    assert 0.0 ~> float(negative: true)
-  end
-
-  test "matches negative test when false" do
-    assert 1.0 ~> float(negative: false)
-    refute 0.0 ~> float(negative: false)
-  end
-
-  test "matches nonzero test when true" do
-    assert 1.0 ~> float(nonzero: true)
-  end
-
-  test "matches nonzero test when false" do
-    assert 0.0 ~> float(nonzero: false)
-  end
-
-  test "matches min test" do
-    assert 2.0 ~> float(min: 2.0)
-  end
-
-  test "matches max test" do
-    assert 2.0 ~> float(max: 2.0)
-  end
+  doctest Machete.FloatMatcher
 
   test "produces a useful mismatch for non floats" do
     assert 1 ~>> float() ~> mismatch("1 is not a float")

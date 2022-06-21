@@ -1,10 +1,81 @@
 defmodule Machete.FloatMatcher do
-  @moduledoc false
+  @moduledoc """
+  Defines a matcher that matches float values
+  """
 
   import Machete.Mismatch
 
   defstruct positive: nil, negative: nil, nonzero: nil, min: nil, max: nil
 
+  @typedoc """
+  Describes an instance of this matcher
+  """
+  @opaque t :: %__MODULE__{}
+
+  @typedoc """
+  Describes the arguments that can be passed to this matcher
+  """
+  @type opts :: [
+          {:positive, boolean()},
+          {:negative, boolean()},
+          {:nonzero, boolean()},
+          {:min, float()},
+          {:max, float()}
+        ]
+
+  @doc """
+  Matches against float values
+
+  Takes the following arguments:
+
+  * `positive`: When `true`, requires the matched float be positive or zero
+  * `negative`: When `true`, requires the matched float be negative or zero
+  * `nonzero`: When `true`, requires the matched float be nonzero
+  * `min`: Requires the matched float be greater than or equal to the specified value
+  * `max`: Requires the matched float be less than or equal to the specified value
+
+  Examples:
+
+      iex> assert 1.0 ~> float()
+      true
+
+      iex> assert 1.0 ~> float(positive: true)
+      true
+
+      iex> assert 0.0 ~> float(positive: true)
+      true
+
+      iex> assert -1.0 ~> float(positive: false)
+      true
+
+      iex> refute 0.0 ~> float(positive: false)
+      false
+
+      iex> assert -1.0 ~> float(negative: true)
+      true
+
+      iex> assert 0.0 ~> float(negative: true)
+      true
+
+      iex> assert 1.0 ~> float(negative: false)
+      true
+
+      iex> refute 0.0 ~> float(negative: false)
+      false
+
+      iex> assert 1.0 ~> float(nonzero: true)
+      true
+
+      iex> assert 0.0 ~> float(nonzero: false)
+      true
+
+      iex> assert 2.0 ~> float(min: 2.0)
+      true
+
+      iex> assert 2.0 ~> float(max: 2.0)
+      true
+  """
+  @spec float(opts()) :: t()
   def float(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do

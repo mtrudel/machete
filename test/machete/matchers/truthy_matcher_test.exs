@@ -4,9 +4,7 @@ defmodule TruthyMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches truthy" do
-    assert "abc" ~> truthy()
-  end
+  doctest Machete.TruthyMatcher
 
   test "produces a useful mismatch for nil" do
     assert nil ~>> truthy() ~> mismatch("nil is not truthy")

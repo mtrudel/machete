@@ -4,45 +4,7 @@ defmodule IntegerMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches integers" do
-    assert 1 ~> integer()
-  end
-
-  test "matches positive test when true" do
-    assert 1 ~> integer(positive: true)
-    assert 0 ~> integer(positive: true)
-  end
-
-  test "matches positive test when false" do
-    assert -1 ~> integer(positive: false)
-    refute 0 ~> integer(positive: false)
-  end
-
-  test "matches negative test when true" do
-    assert -1 ~> integer(negative: true)
-    assert 0 ~> integer(negative: true)
-  end
-
-  test "matches negative test when false" do
-    assert 1 ~> integer(negative: false)
-    refute 0 ~> integer(negative: false)
-  end
-
-  test "matches nonzero test when true" do
-    assert 1 ~> integer(nonzero: true)
-  end
-
-  test "matches nonzero test when false" do
-    assert 0 ~> integer(nonzero: false)
-  end
-
-  test "matches min test" do
-    assert 2 ~> integer(min: 2)
-  end
-
-  test "matches max test" do
-    assert 2 ~> integer(max: 2)
-  end
+  doctest Machete.IntegerMatcher
 
   test "produces a useful mismatch for non integers" do
     assert 1.0 ~>> integer() ~> mismatch("1.0 is not an integer")

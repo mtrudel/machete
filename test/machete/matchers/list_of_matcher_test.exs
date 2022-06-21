@@ -4,21 +4,7 @@ defmodule ListOfMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches on type match" do
-    assert [1] ~> list_of(integer())
-  end
-
-  test "matches on min length" do
-    assert [1] ~> list_of(integer(), min: 1)
-  end
-
-  test "matches on max length" do
-    assert [1] ~> list_of(integer(), max: 2)
-  end
-
-  test "matches on length" do
-    assert [1] ~> list_of(integer(), length: 1)
-  end
+  doctest Machete.ListOfMatcher
 
   test "produces a useful mismatch for type mismatches" do
     assert [1] ~>> list_of(string()) ~> mismatch("1 is not a string", "[0]")

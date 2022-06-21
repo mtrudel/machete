@@ -4,40 +4,10 @@ defmodule TimeMatcherTest do
 
   import Machete.Mismatch
 
+  doctest Machete.TimeMatcher
+
   setup do
     {:ok, time: Time.utc_now()}
-  end
-
-  test "matches times", context do
-    assert context.time ~> time()
-  end
-
-  test "matches on precision match", context do
-    assert context.time ~> time(precision: 6)
-  end
-
-  test "matches on :now roughly match" do
-    assert Time.utc_now() ~> time(roughly: :now)
-  end
-
-  test "matches on roughly match" do
-    assert ~T[00:00:00.000000] ~> time(roughly: ~T[00:00:05.000000])
-  end
-
-  test "matches on :now before match" do
-    assert ~T[00:00:00.000000] ~> time(before: :now)
-  end
-
-  test "matches on before match" do
-    assert ~T[00:00:00.000000] ~> time(before: ~T[00:00:01.000000])
-  end
-
-  test "matches on :now after match" do
-    assert ~T[23:59:59.999999] ~> time(after: :now)
-  end
-
-  test "matches on after match" do
-    assert ~T[00:00:01.000000] ~> time(after: ~T[00:00:00.000000])
   end
 
   test "produces a useful mismatch for non Times" do

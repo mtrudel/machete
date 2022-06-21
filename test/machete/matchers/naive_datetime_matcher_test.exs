@@ -4,42 +4,10 @@ defmodule NaiveDateTimeMatcherTest do
 
   import Machete.Mismatch
 
+  doctest Machete.NaiveDateTimeMatcher
+
   setup do
     {:ok, datetime: NaiveDateTime.utc_now()}
-  end
-
-  test "matches naive datetimes", context do
-    assert context.datetime ~> naive_datetime()
-  end
-
-  test "matches on precision match", context do
-    assert context.datetime ~> naive_datetime(precision: 6)
-  end
-
-  test "matches on :now roughly match" do
-    assert NaiveDateTime.utc_now() ~> naive_datetime(roughly: :now)
-  end
-
-  test "matches on roughly match" do
-    assert ~N[2020-01-01 00:00:00.000000]
-           ~> naive_datetime(roughly: ~N[2020-01-01 00:00:05.000000])
-  end
-
-  test "matches on :now before match" do
-    assert ~N[2020-01-01 00:00:00.000000] ~> naive_datetime(before: :now)
-  end
-
-  test "matches on before match" do
-    assert ~N[2020-01-01 00:00:00.000000]
-           ~> naive_datetime(before: ~N[3000-01-01 00:00:00.000000])
-  end
-
-  test "matches on :now after match" do
-    assert ~N[3000-01-01 00:00:00.000000] ~> naive_datetime(after: :now)
-  end
-
-  test "matches on after match" do
-    assert ~N[3000-01-01 00:00:00.000000] ~> naive_datetime(after: ~N[2020-01-01 00:00:00.000000])
   end
 
   test "produces a useful mismatch for non NaiveDateTimes" do

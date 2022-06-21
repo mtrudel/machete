@@ -4,48 +4,7 @@ defmodule ISO8601DateTimeMatcherTest do
 
   import Machete.Mismatch
 
-  test "matches ISO8601 datetimes" do
-    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime()
-  end
-
-  test "matches on precision match" do
-    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(precision: 6)
-  end
-
-  test "matches on :utc time zone match" do
-    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(time_zone: :utc)
-  end
-
-  test "matches on time zone match" do
-    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(time_zone: "Etc/UTC")
-  end
-
-  test "matches on :now roughly match" do
-    assert DateTime.utc_now() |> DateTime.to_iso8601() ~> iso8601_datetime(roughly: :now)
-  end
-
-  test "matches on roughly match" do
-    assert "2020-01-01T00:00:00.000000Z"
-           ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:05.000000Z])
-  end
-
-  test "matches on :now before match" do
-    assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(before: :now)
-  end
-
-  test "matches on before match" do
-    assert "2020-01-01T00:00:00.000000Z"
-           ~> iso8601_datetime(before: ~U[3000-01-01 00:00:00.000000Z])
-  end
-
-  test "matches on :now after match" do
-    assert "3000-01-01T00:00:00.000000Z" ~> iso8601_datetime(after: :now)
-  end
-
-  test "matches on after match" do
-    assert "3000-01-01T00:00:00.000000Z"
-           ~> iso8601_datetime(after: ~U[2020-01-01 00:00:00.000000Z])
-  end
+  doctest Machete.ISO8601DateTimeMatcher
 
   test "produces a useful mismatch for non strings" do
     assert 1 ~>> iso8601_datetime() ~> mismatch("1 is not a string")
