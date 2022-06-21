@@ -5,6 +5,8 @@ defmodule OperatorTest do
   import Machete.Mismatch
   import TestMatcher
 
+  doctest Machete.Operators
+
   test "the ~> operator is defined and returns success" do
     assert 1 ~> 1
   end

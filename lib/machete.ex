@@ -1,11 +1,25 @@
 defmodule Machete do
-  @moduledoc false
+  @moduledoc """
+  Typical usage of the Machete library is to `use` it in an ExUnit test like so:
 
+  ```elixir
+  defmodule ExampleTest do
+    use ExUnit.Case
+    use Machete
+
+    test "example test" do
+      assert %{a: 1} ~> %{a: integer()}
+    end
+  end
+  ```
+  """
+
+  @doc false
   defmacro __using__(_opts) do
     quote do
-      # Take ExUnit's builtin assert and refute macros out of scope
+      # Take ExUnit's builtin assert/1 and refute/1 macros out of scope
       # (we'll call to them explicitly as a fallback in Machete.Assertions)
-      import ExUnit.Assertions, except: [assert: 1, assert: 2, refute: 1, refute: 2]
+      import ExUnit.Assertions, except: [assert: 1, refute: 1]
       import Machete.Assertions
 
       # Bring in ~> and ~>> operators

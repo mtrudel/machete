@@ -13,10 +13,18 @@ defmodule Machete.Mismatch do
 
   defstruct path: [], message: nil
 
+  @doc """
+  Constructs an instance of `Matchable.Mismatch` with the given message and path, wrapped in
+  a list and suitable for return from a `Machete.Matchable.mismatches/2` call
+  """
   def mismatch(message, path \\ nil)
   def mismatch(message, nil), do: [%__MODULE__{message: message}]
   def mismatch(message, path), do: [%__MODULE__{message: message, path: [path]}]
 
+  @doc """
+  Pretty prints the specified list of mismatches, in a manner suitable for presentation to the
+  user
+  """
   def format_mismatches(mismatches, indent \\ "") do
     mismatches
     |> Enum.map(&format_mismatch/1)

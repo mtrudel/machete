@@ -16,7 +16,8 @@ defmodule Machete.MixProject do
         maintainers: ["Mat Trudel"],
         licenses: ["MIT"],
         links: %{"GitHub" => "https://github.com/mtrudel/machete"}
-      ]
+      ],
+      docs: docs()
     ]
   end
 
@@ -40,4 +41,32 @@ defmodule Machete.MixProject do
 
   defp elixirc_paths(:test), do: ["lib", "test/support"]
   defp elixirc_paths(_), do: ["lib"]
+
+  defp docs do
+    [
+      main: "Machete",
+      groups_for_modules: [
+        Matchers: [
+          Machete.AnyMatcher,
+          Machete.BooleanMatcher,
+          Machete.DateMatcher,
+          Machete.DateTimeMatcher,
+          Machete.FalsyMatcher,
+          Machete.FloatMatcher,
+          Machete.IndifferentAccessMatcher,
+          Machete.IntegerMatcher,
+          Machete.ISO8601DateTimeMatcher,
+          Machete.ListOfMatcher,
+          Machete.MapMatcher,
+          Machete.MaybeMatcher,
+          Machete.NaiveDateTimeMatcher,
+          Machete.StringMatcher,
+          Machete.SubsetMatcher,
+          Machete.SupersetMatcher,
+          Machete.TimeMatcher,
+          Machete.TruthyMatcher
+        ]
+      ]
+    ]
+  end
 end
