@@ -1,4 +1,4 @@
-defmodule Machete.AnyMatcher do
+defmodule Machete.TermMatcher do
   @moduledoc """
   Defines a matcher that matches everything
   """
@@ -22,23 +22,23 @@ defmodule Machete.AnyMatcher do
 
   Examples:
 
-      iex> assert "a" ~> any()
+      iex> assert "a" ~> term()
       true
 
-      iex> assert :a ~> any()
+      iex> assert :a ~> term()
       true
 
-      iex> assert 1 ~> any()
+      iex> assert 1 ~> term()
       true
 
-      iex> assert %{} ~> any()
+      iex> assert %{} ~> term()
       true
 
-      iex> assert nil ~> any()
+      iex> assert nil ~> term()
       true
   """
-  @spec any(opts()) :: t()
-  def any(opts \\ []), do: struct!(__MODULE__, opts)
+  @spec term(opts()) :: t()
+  def term(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, _), do: nil

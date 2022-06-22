@@ -26,7 +26,6 @@ defmodule Machete do
       import Machete.Operators
 
       # Bring in matcher builders
-      import Machete.AnyMatcher
       import Machete.AtomMatcher
       import Machete.BooleanMatcher
       import Machete.DateMatcher
@@ -43,6 +42,7 @@ defmodule Machete do
       import Machete.StringMatcher
       import Machete.SubsetMatcher
       import Machete.SupersetMatcher
+      import Machete.TermMatcher
       import Machete.TimeMatcher
       import Machete.TruthyMatcher
     end
