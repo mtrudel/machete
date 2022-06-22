@@ -9,6 +9,7 @@ defmodule Machete.LiteralMatchers do
   # literal matcher module defined separately.
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defimpl Machete.Matchable, for: Regex do
     def mismatches(%Regex{} = a, b) when is_binary(b) do
@@ -29,10 +30,7 @@ defmodule Machete.LiteralMatchers do
   defimpl Machete.Matchable, for: Any do
     # We need to do struct matching in Any. Assuming that struct types match,
     # structs are compared based on their map equivalents
-    def mismatches(%t{} = a, %t{} = b) do
-      Machete.Matchable.mismatches(Map.from_struct(a), Map.from_struct(b))
-    end
-
+    def mismatches(%t{} = a, %t{} = b), do: Map.from_struct(b) ~>> Map.from_struct(a)
     def mismatches(%_{}, %_{}), do: mismatch("Struct types do not match")
     def mismatches(%_{}, b), do: mismatch("#{inspect(b)} is not a struct")
     def mismatches(a, a), do: nil

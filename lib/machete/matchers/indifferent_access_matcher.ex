@@ -5,6 +5,7 @@ defmodule Machete.IndifferentAccessMatcher do
   """
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defstruct map: nil
 
@@ -54,7 +55,7 @@ defmodule Machete.IndifferentAccessMatcher do
         end)
         |> Enum.into(%{})
 
-      Machete.Matchable.mismatches(a.map, mapped_b)
+      mapped_b ~>> a.map
     end
   end
 end

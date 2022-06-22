@@ -6,6 +6,7 @@ defmodule Machete.LiteralTupleMatcher do
   # elements of the tuples matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defimpl Machete.Matchable, for: Tuple do
     def mismatches(a, b) when is_tuple(a) and is_tuple(b) and tuple_size(a) == tuple_size(b) do
@@ -13,8 +14,7 @@ defmodule Machete.LiteralTupleMatcher do
       |> Enum.zip()
       |> Enum.with_index()
       |> Enum.flat_map(fn {{a, b}, idx} ->
-        (Machete.Matchable.mismatches(a, b) || [])
-        |> Enum.map(&%{&1 | path: ["{#{idx}}" | &1.path]})
+        Enum.map(b ~>> a, &%{&1 | path: ["{#{idx}}" | &1.path]})
       end)
     end
 

@@ -4,6 +4,7 @@ defmodule Machete.SupersetMatcher do
   """
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defstruct map: nil
 
@@ -29,8 +30,6 @@ defmodule Machete.SupersetMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{inspect(b)} is not a map")
-
-    def mismatches(%@for{} = a, b),
-      do: Machete.Matchable.mismatches(a.map, Map.take(b, Map.keys(a.map)))
+    def mismatches(%@for{} = a, b), do: Map.take(b, Map.keys(a.map)) ~>> a.map
   end
 end

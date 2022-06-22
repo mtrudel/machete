@@ -4,6 +4,7 @@ defmodule Machete.MapMatcher do
   """
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defstruct keys: nil, values: nil, size: nil, min: nil, max: nil
 
@@ -91,10 +92,7 @@ defmodule Machete.MapMatcher do
     defp matches_keys(b, matcher) do
       b
       |> Map.keys()
-      |> Enum.flat_map(fn k ->
-        (Machete.Matchable.mismatches(matcher, k) || [])
-        |> Enum.map(&%{&1 | path: [k | &1.path]})
-      end)
+      |> Enum.flat_map(fn k -> Enum.map(k ~>> matcher, &%{&1 | path: [k | &1.path]}) end)
     end
 
     defp matches_values(_, nil), do: nil
@@ -102,10 +100,7 @@ defmodule Machete.MapMatcher do
     defp matches_values(b, matcher) do
       b
       |> Map.keys()
-      |> Enum.flat_map(fn k ->
-        (Machete.Matchable.mismatches(matcher, b[k]) || [])
-        |> Enum.map(&%{&1 | path: [k | &1.path]})
-      end)
+      |> Enum.flat_map(fn k -> Enum.map(b[k] ~>> matcher, &%{&1 | path: [k | &1.path]}) end)
     end
   end
 end

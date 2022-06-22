@@ -3,6 +3,8 @@ defmodule Machete.MaybeMatcher do
   Defines a matcher that matches against another matcher & also matches nil
   """
 
+  import Machete.Operators
+
   defstruct matcher: nil
 
   @typedoc """
@@ -28,6 +30,6 @@ defmodule Machete.MaybeMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, nil), do: nil
-    def mismatches(%@for{} = a, b), do: Machete.Matchable.mismatches(a.matcher, b)
+    def mismatches(%@for{} = a, b), do: b ~>> a.matcher
   end
 end

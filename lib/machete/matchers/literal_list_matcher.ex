@@ -6,6 +6,7 @@ defmodule Machete.LiteralListMatcher do
   # elements of the lists matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defimpl Machete.Matchable, for: List do
     def mismatches(a, b) when is_list(a) and is_list(b) and length(a) == length(b) do
@@ -13,8 +14,7 @@ defmodule Machete.LiteralListMatcher do
       |> Enum.zip()
       |> Enum.with_index()
       |> Enum.flat_map(fn {{a, b}, idx} ->
-        (Machete.Matchable.mismatches(a, b) || [])
-        |> Enum.map(&%{&1 | path: ["[#{idx}]" | &1.path]})
+        Enum.map(b ~>> a, &%{&1 | path: ["[#{idx}]" | &1.path]})
       end)
     end
 

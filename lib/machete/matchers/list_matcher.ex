@@ -4,6 +4,7 @@ defmodule Machete.ListMatcher do
   """
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defstruct elements: nil, length: nil, min: nil, max: nil
 
@@ -77,10 +78,6 @@ defmodule Machete.ListMatcher do
     defp matches_max(_, _), do: nil
 
     defp matches_elements(_, nil), do: nil
-
-    defp matches_elements(b, matcher) do
-      matchers = [matcher] |> Stream.cycle() |> Enum.take(length(b))
-      Machete.Matchable.mismatches(matchers, b)
-    end
+    defp matches_elements(b, matcher), do: b ~>> List.duplicate(matcher, length(b))
   end
 end

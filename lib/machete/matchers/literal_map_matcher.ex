@@ -6,6 +6,7 @@ defmodule Machete.LiteralMapMatcher do
   # pair of elements of the maps matches based on the Machete.Matchable protocol.
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defimpl Machete.Matchable, for: Map do
     def mismatches(%{}, b) when is_struct(b), do: mismatch("Can't match a map to a struct")
@@ -32,13 +33,9 @@ defmodule Machete.LiteralMapMatcher do
     end
 
     defp mismatched_values(a, b) do
-      Enum.flat_map(b, fn {k, v} ->
-        if Map.has_key?(a, k) do
-          (Machete.Matchable.mismatches(a[k], v) || [])
-          |> Enum.map(&%{&1 | path: [k | &1.path]})
-        else
-          []
-        end
+      Enum.flat_map(b, fn
+        {k, v} when is_map_key(a, k) -> Enum.map(v ~>> a[k], &%{&1 | path: [k | &1.path]})
+        _ -> []
       end)
     end
   end

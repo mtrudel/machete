@@ -4,6 +4,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   """
 
   import Machete.Mismatch
+  import Machete.Operators
 
   defstruct datetime_opts: nil
 
@@ -80,13 +81,8 @@ defmodule Machete.ISO8601DateTimeMatcher do
     def mismatches(%@for{} = a, b) when is_binary(b) do
       DateTime.from_iso8601(b)
       |> case do
-        {:ok, datetime_b, 0} ->
-          a.datetime_opts
-          |> Machete.DateTimeMatcher.datetime()
-          |> Machete.Matchable.mismatches(datetime_b)
-
-        _ ->
-          mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
+        {:ok, datetime_b, 0} -> datetime_b ~>> Machete.DateTimeMatcher.datetime(a.datetime_opts)
+        _ -> mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
       end
     end
 
