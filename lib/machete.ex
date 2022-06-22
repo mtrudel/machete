@@ -42,6 +42,7 @@ defmodule Machete do
       import Machete.NaiveDateTimeMatcher
       import Machete.PIDMatcher
       import Machete.PortMatcher
+      import Machete.ReferenceMatcher
       import Machete.StringMatcher
       import Machete.SubsetMatcher
       import Machete.SupersetMatcher

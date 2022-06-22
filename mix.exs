@@ -63,6 +63,7 @@ defmodule Machete.MixProject do
           Machete.NaiveDateTimeMatcher,
           Machete.PIDMatcher,
           Machete.PortMatcher,
+          Machete.ReferenceMatcher,
           Machete.StringMatcher,
           Machete.SubsetMatcher,
           Machete.SupersetMatcher,
