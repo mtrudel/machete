@@ -56,7 +56,7 @@ defmodule Machete.MixProject do
           Machete.IndifferentAccessMatcher,
           Machete.IntegerMatcher,
           Machete.ISO8601DateTimeMatcher,
-          Machete.ListOfMatcher,
+          Machete.ListMatcher,
           Machete.MapMatcher,
           Machete.MaybeMatcher,
           Machete.NaiveDateTimeMatcher,
