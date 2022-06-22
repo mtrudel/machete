@@ -48,6 +48,7 @@ defmodule Machete.MixProject do
       groups_for_modules: [
         Matchers: [
           Machete.AnyMatcher,
+          Machete.AtomMatcher,
           Machete.BooleanMatcher,
           Machete.DateMatcher,
           Machete.DateTimeMatcher,
