@@ -15,7 +15,8 @@ defmodule Machete.StringMatcher do
             uppercase: nil,
             alphanumeric: nil,
             numeric: nil,
-            hexadecimal: nil
+            hexadecimal: nil,
+            whitespace: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -36,7 +37,8 @@ defmodule Machete.StringMatcher do
           {:uppercase, boolean()},
           {:alphanumeric, boolean()},
           {:numeric, boolean()},
-          {:hexdecimal, boolean()}
+          {:hexdecimal, boolean()},
+          {:whitespace, boolean()}
         ]
 
   @doc """
@@ -50,12 +52,14 @@ defmodule Machete.StringMatcher do
   * `min`: Requires the matched string to be greater than or equal to the specified length
   * `max`: Requires the matched string to be less than or equal to the specified length
   * `matches`: Requires the matched string to match the specified regex
-  * `alphabetic`: When `true`, requires the matched string to consist of alphabetic characters
-  * `lowercase`: When `true`, requires the matched string to consist of lowercase characters
-  * `uppercase`: When `true`, requires the matched string to consist of uppercase characters
-  * `alphanumeric`: When `true`, requires the matched string to consist of alphanumeric characters
-  * `numeric`: When `true`, requires the matched string to consist of numeric characters
-  * `hexadecimal`: When `true`, requires the matched string to consist of hexadecimal characters
+  * `alphabetic`: When `true`, requires the matched string to consist of only alphabetic characters
+  * `lowercase`: When `true`, requires the matched string to consist of only lowercase characters
+  * `uppercase`: When `true`, requires the matched string to consist of only uppercase characters
+  * `alphanumeric`: When `true`, requires the matched string to consist of only alphanumeric characters
+  * `numeric`: When `true`, requires the matched string to consist of only numeric characters
+  * `hexadecimal`: When `true`, requires the matched string to consist of only hexadecimal characters
+  * `whitespace`: When `true`, requires the string to contain whitespace (possibly in addition to
+    other characters). When `false`, requires the matched string to not contain any whitespace
 
   Examples:
 
@@ -115,6 +119,12 @@ defmodule Machete.StringMatcher do
 
       iex> assert "ghi" ~> string(hexadecimal: false)
       true
+
+      iex> assert "abc def" ~> string(whitespace: true)
+      true
+
+      iex> assert "abcdef" ~> string(whitespace: false)
+      true
   """
   @spec string(opts()) :: t()
   def string(opts \\ []), do: struct!(__MODULE__, opts)
@@ -132,7 +142,8 @@ defmodule Machete.StringMatcher do
            nil <- matches_uppercase(b, a.uppercase),
            nil <- matches_alphanumeric(b, a.alphanumeric),
            nil <- matches_numeric(b, a.numeric),
-           nil <- matches_hexadecimal(b, a.hexadecimal) do
+           nil <- matches_hexadecimal(b, a.hexadecimal),
+           nil <- matches_whitespace(b, a.whitespace) do
       end
     end
 
@@ -185,19 +196,29 @@ defmodule Machete.StringMatcher do
         ] do
       fn_name = String.to_atom("matches_#{name}")
 
-      def unquote(fn_name)(_, nil), do: nil
+      defp unquote(fn_name)(_, nil), do: nil
 
-      def unquote(fn_name)(b, false) do
+      defp unquote(fn_name)(b, false) do
         if b =~ Regex.compile!(unquote(regex)) do
           mismatch("#{inspect(b)} is #{unquote(name)}")
         end
       end
 
-      def unquote(fn_name)(b, true) do
+      defp unquote(fn_name)(b, true) do
         unless b =~ Regex.compile!(unquote(regex)) do
           mismatch("#{inspect(b)} is not #{unquote(name)}")
         end
       end
+    end
+
+    defp matches_whitespace(_, nil), do: nil
+
+    defp matches_whitespace(b, false) do
+      if b =~ ~r/[[:blank:]]/, do: mismatch("#{inspect(b)} contains whitespace")
+    end
+
+    defp matches_whitespace(b, true) do
+      unless b =~ ~r/[[:blank:]]/, do: mismatch("#{inspect(b)} does not contain whitespace")
     end
   end
 end

@@ -83,4 +83,12 @@ defmodule StringMatcherTest do
            ~>> string(hexadecimal: false)
            ~> mismatch("\"deadbeef0123\" is hexadecimal")
   end
+
+  test "produces a useful mismatch for whitespace true" do
+    assert "abc" ~>> string(whitespace: true) ~> mismatch("\"abc\" does not contain whitespace")
+  end
+
+  test "produces a useful mismatch for whitespace false" do
+    assert "abc def" ~>> string(whitespace: false) ~> mismatch("\"abc def\" contains whitespace")
+  end
 end
