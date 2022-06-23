@@ -4,7 +4,8 @@ defmodule Machete.Assertions do
   `refute/1` macros. Because macros cannot be defined in multiple modules, proper use of this
   module requires the user to take `ExUnit.Assertions`' version of `assert/1` and `refute/1` out
   of scope, and to allow this module's versions of those macros to call through to
-  `ExUnit.Assertions`' version for conditions other than `~>`
+  `ExUnit.Assertions`' version for conditions other than `~>`. See `Machete.__using__/1` for
+  details.
   """
 
   @doc """
