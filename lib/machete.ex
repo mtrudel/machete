@@ -10,12 +10,14 @@ defmodule Machete do
     use Machete
 
     test "example test" do
-      assert %{
+      response = %{
         id: 1,
         name: "Moe Fonebone",
         is_admin: false,
         created_at: DateTime.utc_now()
-      } ~> %{
+      }
+
+      assert response ~> %{
         id: integer(positive: true),
         name: string(),
         is_admin: false,

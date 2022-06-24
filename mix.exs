@@ -10,7 +10,7 @@ defmodule Machete.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       dialyzer: dialyzer(),
-      description: "Literate expectation matchers for ExUnit",
+      description: "Literate test matchers for ExUnit",
       package: [
         files: ["lib", "test", "mix.exs", "README*", "LICENSE*"],
         maintainers: ["Mat Trudel"],
@@ -21,11 +21,7 @@ defmodule Machete.MixProject do
     ]
   end
 
-  def application do
-    [
-      extra_applications: [:logger]
-    ]
-  end
+  def application, do: []
 
   defp deps do
     [

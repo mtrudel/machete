@@ -4,45 +4,52 @@
 [![Docs](https://img.shields.io/badge/api-docs-green.svg?style=flat)](https://hexdocs.pm/machete)
 [![Hex.pm](https://img.shields.io/hexpm/v/machete.svg?style=flat&color=blue)](https://hex.pm/packages/machete)
 
-Literate matchers for better ExUnit tests.
+Machete provides ergonomic match operators to help make your ExUnit tests more literate
 
-## Examples
+The easiest way to explain Machete is to show it in action:
 
 ```elixir
-use Machete
+defmodule ExampleTest do
+  use ExUnit.Case
+  use Machete
 
-# You can match against literals (using == semantics)
-assert "abc" ~> "abc"
-assert %{a: 1} ~> %{a: 1}
+  test "example test" do
+    response = %{
+      id: 1,
+      name: "Moe Fonebone",
+      is_admin: false,
+      created_at: DateTime.utc_now()
+    }
 
-# ...or against regexes
-assert %{a: "abc"} ~> %{a: ~r/abc/}
-
-# ...or against types
-assert %{a: 1} ~> %{a: integer()}
-assert %{a: DateTime.utc_now()} ~> %{a: datetime(precision: 6)}
-
-# ...it also nests
-assert %{a: [1, 2.0, {:ok, "hi"}]} ~> %{a: [integer(), float(), {atom(), string()}]}
+    assert response ~> %{
+      id: integer(positive: true),
+      name: string(),
+      is_admin: false,
+      created_at: datetime(roughly: :now, time_zone: :utc)
+    }
+  end
+end
 ```
 
-### Coming Soon
+At its heart, Machete provides the following two things:
 
-* More parametrized type matchers:
-    ```elixir
-    assert %{a: 1} ~> %{a: integer(odd: true)}
-    assert %{a: "abcd"} ~> %{a: string(length: 4)}
-    ```
-* Flexible collection matchers:
-    ```elixir
-    assert %{a: 1} ~> map(at_least: %{a: integer(odd: true)})
-    assert [3,2,1] ~> list(any_order: [1,2,3])
-    ``` 
+* A new `~>` operator (the 'squiggle arrow') that does flexible matching of 
+  its left operator with its right operator
+* A set of parametric matchers such as `string()` or `integer()` which can match
+  against general types. A comprehensive list of Machete's built-in matchers is
+  available [in the Machete
+  documentation](https://hexdocs.pm/machete/Machete.html)
+
+These building blocks let you define test expectations that can match data against any
+combination of literals, variables, or parametrically defined matchers
+
+When your matches fail, Machete provides useful error messages in ExUnit that point you directly
+at any failing matches using [jq syntax](https://stedolan.github.io/jq/manual/#Basicfilters)
 
 ## Installation
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `machete` to your list of dependencies in `mix.exs`:
+Machete is [available in Hex](https://hex.pm/packages/machete), and can be
+installed by adding `machete` to your list of dependencies in `mix.exs`:
 
 ```elixir
 def deps do
@@ -52,7 +59,8 @@ def deps do
 end
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/machete>.
+Documentation is published on [HexDocs](https://hexdocs.pm/machete)
 
+## License
+
+MIT
