@@ -30,6 +30,14 @@ defmodule DateTimeMatcherTest do
            )
   end
 
+  test "produces a useful mismatch for exactly mismatches" do
+    assert ~U[2020-01-01 00:00:00.000000Z]
+           ~>> datetime(exactly: ~U[3000-01-01 00:00:00.000000Z])
+           ~> mismatch(
+             "~U[2020-01-01 00:00:00.000000Z] is not equal to ~U[3000-01-01 00:00:00.000000Z]"
+           )
+  end
+
   test "produces a useful mismatch for roughly mismatches" do
     assert ~U[2020-01-01 00:00:00.000000Z]
            ~>> datetime(roughly: ~U[3000-01-01 00:00:00.000000Z])

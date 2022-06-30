@@ -19,6 +19,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   @type opts :: [
           {:precision, 0..6},
           {:time_zone, Calendar.time_zone() | :utc},
+          {:exactly, DateTime.t()},
           {:roughly, DateTime.t() | :now},
           {:before, DateTime.t() | :now},
           {:after, DateTime.t() | :now}
@@ -32,6 +33,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   * `precision`: Requires the matched ISO8601 string to have the specified microsecond precision
   * `time_zone`: Requires the matched ISO8601 string to have the specified time zone. The atom
     `:utc` can be used to specify the "Etc/UTC" time zone
+  * `exactly`: Requires the matched ISO8601 string to be exactly equal to the specified DateTime
   * `roughly`: Requires the matched ISO8601 string to be within +/- 10 seconds of the specified 
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
     current time as the specified DateTime
@@ -54,6 +56,9 @@ defmodule Machete.ISO8601DateTimeMatcher do
       true
 
       iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(time_zone: "Etc/UTC")
+      true
+
+      iex> assert "2020-01-01 00:00:00.000000Z" ~> iso8601_datetime(exactly: ~U[2020-01-01 00:00:00.000000Z])
       true
 
       iex> assert DateTime.utc_now() |> DateTime.to_iso8601() ~> iso8601_datetime(roughly: :now)

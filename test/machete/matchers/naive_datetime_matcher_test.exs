@@ -20,6 +20,14 @@ defmodule NaiveDateTimeMatcherTest do
            ~> mismatch("#{inspect(context.datetime)} has precision 6, expected 0")
   end
 
+  test "produces a useful mismatch for exactly mismatches" do
+    assert ~N[2020-01-01 00:00:00.000000]
+           ~>> naive_datetime(exactly: ~N[3000-01-01 00:00:00.000000])
+           ~> mismatch(
+             "~N[2020-01-01 00:00:00.000000] is not equal to ~N[3000-01-01 00:00:00.000000]"
+           )
+  end
+
   test "produces a useful mismatch for roughly mismatches" do
     assert ~N[2020-01-01 00:00:00.000000]
            ~>> naive_datetime(roughly: ~N[3000-01-01 00:00:00.000000])

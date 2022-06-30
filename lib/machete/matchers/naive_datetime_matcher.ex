@@ -5,7 +5,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
   import Machete.Mismatch
 
-  defstruct precision: nil, roughly: nil, before: nil, after: nil
+  defstruct precision: nil, exactly: nil, roughly: nil, before: nil, after: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -17,6 +17,7 @@ defmodule Machete.NaiveDateTimeMatcher do
   """
   @type opts :: [
           {:precision, 0..6},
+          {:exactly, NaiveDateTime.t()},
           {:roughly, NaiveDateTime.t() | :now},
           {:before, NaiveDateTime.t() | :now},
           {:after, NaiveDateTime.t() | :now}
@@ -28,6 +29,7 @@ defmodule Machete.NaiveDateTimeMatcher do
   Takes the following arguments:
 
   * `precision`: Requires the matched NaiveDateTime to have the specified microsecond precision
+  * `exactly`: Requires the matched NaiveDateTime to be exactly equal to the specified NaiveDateTime
   * `roughly`: Requires the matched NaiveDateTime to be within +/- 10 seconds of the specified
      NaiveDateTime. The atom `:now` can be used to use the current time as the specified
      NaiveDateTime
@@ -44,6 +46,9 @@ defmodule Machete.NaiveDateTimeMatcher do
       true
 
       iex> assert NaiveDateTime.utc_now() ~> naive_datetime(precision: 6)
+      true
+
+      iex> assert ~N[2020-01-01 00:00:00.000000] ~> naive_datetime(exactly: ~N[2020-01-01 00:00:00.000000])
       true
 
       iex> assert NaiveDateTime.utc_now() ~> naive_datetime(roughly: :now)
@@ -71,6 +76,7 @@ defmodule Machete.NaiveDateTimeMatcher do
     def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_precision(b, a.precision),
+           nil <- matches_exactly(b, a.exactly),
            nil <- matches_roughly(b, a.roughly),
            nil <- matches_before(b, a.before),
            nil <- matches_after(b, a.after) do
@@ -85,6 +91,14 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_precision(%NaiveDateTime{microsecond: {_, b_precision}} = b, precision),
       do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
+
+    defp matches_exactly(_, nil), do: nil
+
+    defp matches_exactly(b, exactly) do
+      if NaiveDateTime.diff(b, exactly, :microsecond) != 0 do
+        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+      end
+    end
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :now), do: matches_roughly(b, NaiveDateTime.utc_now())

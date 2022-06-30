@@ -5,7 +5,7 @@ defmodule Machete.TimeMatcher do
 
   import Machete.Mismatch
 
-  defstruct precision: nil, roughly: nil, before: nil, after: nil
+  defstruct precision: nil, exactly: nil, roughly: nil, before: nil, after: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -17,6 +17,7 @@ defmodule Machete.TimeMatcher do
   """
   @type opts :: [
           {:precision, 0..6},
+          {:exactly, Time.t()},
           {:roughly, Time.t() | :now},
           {:before, Time.t() | :now},
           {:after, Time.t() | :now}
@@ -28,6 +29,7 @@ defmodule Machete.TimeMatcher do
   Takes the following arguments:
 
   * `precision`: Requires the matched Time to have the specified microsecond precision
+  * `exactly`: Requires the matched Time to be exactly equal to the specified Time
   * `roughly`: Requires the matched Time to be within +/- 10 seconds of the specified Time. The
     atom `:now` can be used to use the current time as the specified Time
   * `before`: Requires the matched Time to be before or equal to the specified Time. The atom
@@ -41,6 +43,9 @@ defmodule Machete.TimeMatcher do
       true
 
       iex> assert Time.utc_now() ~> time(precision: 6)
+      true
+
+      iex> assert ~T[00:00:00.000000] ~> time(exactly: ~T[00:00:00.000000])
       true
 
       iex> assert Time.utc_now() ~> time(roughly: :now)
@@ -68,6 +73,7 @@ defmodule Machete.TimeMatcher do
     def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_precision(b, a.precision),
+           nil <- matches_exactly(b, a.exactly),
            nil <- matches_roughly(b, a.roughly),
            nil <- matches_before(b, a.before),
            nil <- matches_after(b, a.after) do
@@ -82,6 +88,14 @@ defmodule Machete.TimeMatcher do
 
     defp matches_precision(%Time{microsecond: {_, b_precision}} = b, precision),
       do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
+
+    defp matches_exactly(_, nil), do: nil
+
+    defp matches_exactly(b, exactly) do
+      if Time.diff(b, exactly, :microsecond) != 0 do
+        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+      end
+    end
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :now), do: matches_roughly(b, Time.utc_now())

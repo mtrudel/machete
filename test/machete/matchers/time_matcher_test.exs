@@ -20,6 +20,12 @@ defmodule TimeMatcherTest do
            ~> mismatch("#{inspect(context.time)} has precision 6, expected 0")
   end
 
+  test "produces a useful mismatch for exactly mismatches" do
+    assert ~T[00:00:00.000000]
+           ~>> time(exactly: ~T[00:00:20.000000])
+           ~> mismatch("~T[00:00:00.000000] is not equal to ~T[00:00:20.000000]")
+  end
+
   test "produces a useful mismatch for roughly mismatches" do
     assert ~T[00:00:00.000000]
            ~>> time(roughly: ~T[00:00:20.000000])

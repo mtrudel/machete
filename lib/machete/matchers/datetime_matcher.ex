@@ -5,7 +5,7 @@ defmodule Machete.DateTimeMatcher do
 
   import Machete.Mismatch
 
-  defstruct precision: nil, time_zone: nil, roughly: nil, before: nil, after: nil
+  defstruct precision: nil, time_zone: nil, exactly: nil, roughly: nil, before: nil, after: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -18,6 +18,7 @@ defmodule Machete.DateTimeMatcher do
   @type opts :: [
           {:precision, 0..6},
           {:time_zone, Calendar.time_zone() | :utc},
+          {:exactly, DateTime.t()},
           {:roughly, DateTime.t() | :now},
           {:before, DateTime.t() | :now},
           {:after, DateTime.t() | :now}
@@ -31,6 +32,7 @@ defmodule Machete.DateTimeMatcher do
   * `precision`: Requires the matched DateTime to have the specified microsecond precision
   * `time_zone`: Requires the matched DateTime to have the specified time zone. The atom `:utc`
     can be used to specify the "Etc/UTC" time zone
+  * `exactly`: Requires the matched DateTime to be exactly equal to the specified DateTime
   * `roughly`: Requires the matched DateTime to be within +/- 10 seconds of the specified DateTime. 
     The atom `:now` can be used to use the current time as the specified DateTime
   * `before`: Requires the matched DateTime to be before or equal to the specified DateTime. The 
@@ -50,6 +52,9 @@ defmodule Machete.DateTimeMatcher do
       true
 
       iex> assert DateTime.utc_now() ~> datetime(time_zone: "Etc/UTC")
+      true
+
+      iex> assert ~U[2020-01-01 00:00:00.000000Z] ~> datetime(exactly: ~U[2020-01-01 00:00:00.000000Z])
       true
 
       iex> assert DateTime.utc_now() ~> datetime(roughly: :now)
@@ -78,6 +83,7 @@ defmodule Machete.DateTimeMatcher do
       with nil <- matches_type(b),
            nil <- matches_precision(b, a.precision),
            nil <- matches_time_zone(b, a.time_zone),
+           nil <- matches_exactly(b, a.exactly),
            nil <- matches_roughly(b, a.roughly),
            nil <- matches_before(b, a.before),
            nil <- matches_after(b, a.after) do
@@ -99,6 +105,14 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_time_zone(b, time_zone),
       do: mismatch("#{inspect(b)} has time zone #{b.time_zone}, expected #{time_zone}")
+
+    defp matches_exactly(_, nil), do: nil
+
+    defp matches_exactly(b, exactly) do
+      if DateTime.diff(b, exactly, :microsecond) != 0 do
+        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+      end
+    end
 
     defp matches_roughly(_, nil), do: nil
     defp matches_roughly(b, :now), do: matches_roughly(b, DateTime.utc_now())

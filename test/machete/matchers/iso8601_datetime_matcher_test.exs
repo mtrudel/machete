@@ -28,6 +28,14 @@ defmodule ISO8601DateTimeMatcherTest do
            )
   end
 
+  test "produces a useful mismatch for exactly mismatches" do
+    assert "2020-01-01T00:00:00.000000Z"
+           ~>> iso8601_datetime(exactly: ~U[3000-01-01 00:00:00.000000Z])
+           ~> mismatch(
+             "~U[2020-01-01 00:00:00.000000Z] is not equal to ~U[3000-01-01 00:00:00.000000Z]"
+           )
+  end
+
   test "produces a useful mismatch for roughly mismatches" do
     assert "2020-01-01T00:00:00.000000Z"
            ~>> iso8601_datetime(roughly: ~U[3000-01-01 00:00:00.000000Z])
