@@ -91,4 +91,12 @@ defmodule StringMatcherTest do
   test "produces a useful mismatch for whitespace false" do
     assert "abc def" ~>> string(whitespace: false) ~> mismatch("\"abc def\" contains whitespace")
   end
+
+  test "produces a useful mismatch for starts_with mismatches" do
+    assert "abc" ~>> string(starts_with: "def") ~> mismatch(~s("abc" does not start with "def"))
+  end
+
+  test "produces a useful mismatch for ends_with mismatches" do
+    assert "abc" ~>> string(ends_with: "def") ~> mismatch(~s("abc" does not end with "def"))
+  end
 end

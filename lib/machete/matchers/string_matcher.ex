@@ -16,7 +16,9 @@ defmodule Machete.StringMatcher do
             alphanumeric: nil,
             numeric: nil,
             hexadecimal: nil,
-            whitespace: nil
+            whitespace: nil,
+            starts_with: nil,
+            ends_with: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -38,7 +40,9 @@ defmodule Machete.StringMatcher do
           {:alphanumeric, boolean()},
           {:numeric, boolean()},
           {:hexdecimal, boolean()},
-          {:whitespace, boolean()}
+          {:whitespace, boolean()},
+          {:starts_with, String.t()},
+          {:ends_with, String.t()}
         ]
 
   @doc """
@@ -60,6 +64,8 @@ defmodule Machete.StringMatcher do
   * `hexadecimal`: When `true`, requires the matched string to consist of only hexadecimal characters
   * `whitespace`: When `true`, requires the string to contain whitespace (possibly in addition to
     other characters). When `false`, requires the matched string to not contain any whitespace
+  * `starts_with`: Requires the matched string to start with the given prefix
+  * `ends_with`: Requires the matched string to end with the given suffix
 
   Examples:
 
@@ -125,6 +131,12 @@ defmodule Machete.StringMatcher do
 
       iex> assert "abcdef" ~> string(whitespace: false)
       true
+
+      iex> assert "abc" ~> string(starts_with: "ab")
+      true
+
+      iex> assert "abc" ~> string(ends_with: "bc")
+      true
   """
   @spec string(opts()) :: t()
   def string(opts \\ []), do: struct!(__MODULE__, opts)
@@ -143,7 +155,9 @@ defmodule Machete.StringMatcher do
            nil <- matches_alphanumeric(b, a.alphanumeric),
            nil <- matches_numeric(b, a.numeric),
            nil <- matches_hexadecimal(b, a.hexadecimal),
-           nil <- matches_whitespace(b, a.whitespace) do
+           nil <- matches_whitespace(b, a.whitespace),
+           nil <- matches_starts_with(b, a.starts_with),
+           nil <- matches_ends_with(b, a.ends_with) do
       end
     end
 
@@ -219,6 +233,20 @@ defmodule Machete.StringMatcher do
 
     defp matches_whitespace(b, true) do
       unless b =~ ~r/[[:blank:]]/, do: mismatch("#{inspect(b)} does not contain whitespace")
+    end
+
+    defp matches_starts_with(_, nil), do: nil
+
+    defp matches_starts_with(b, prefix) do
+      unless String.starts_with?(b, prefix),
+        do: mismatch("#{inspect(b)} does not start with #{inspect(prefix)}")
+    end
+
+    defp matches_ends_with(_, nil), do: nil
+
+    defp matches_ends_with(b, suffix) do
+      unless String.ends_with?(b, suffix),
+        do: mismatch("#{inspect(b)} does not end with #{inspect(suffix)}")
     end
   end
 end
