@@ -9,7 +9,7 @@ defmodule Machete.LiteralTupleMatcher do
   import Machete.Operators
 
   defimpl Machete.Matchable, for: Tuple do
-    def mismatches(a, b) when is_tuple(a) and is_tuple(b) and tuple_size(a) == tuple_size(b) do
+    def mismatches(a, b) when is_tuple(b) and tuple_size(a) == tuple_size(b) do
       [Tuple.to_list(a), Tuple.to_list(b)]
       |> Enum.zip()
       |> Enum.with_index()
@@ -18,7 +18,9 @@ defmodule Machete.LiteralTupleMatcher do
       end)
     end
 
-    def mismatches(a, b) when is_tuple(a) and is_tuple(b), do: mismatch("Tuple sizes not equal")
-    def mismatches(a, b) when is_tuple(a), do: mismatch("#{inspect(b)} is not a tuple")
+    def mismatches(a, b) when is_tuple(b),
+      do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+
+    def mismatches(_, b), do: mismatch("#{inspect(b)} is not a tuple")
   end
 end

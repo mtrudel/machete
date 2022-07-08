@@ -9,7 +9,7 @@ defmodule Machete.LiteralListMatcher do
   import Machete.Operators
 
   defimpl Machete.Matchable, for: List do
-    def mismatches(a, b) when is_list(a) and is_list(b) and length(a) == length(b) do
+    def mismatches(a, b) when is_list(b) and length(a) == length(b) do
       [a, b]
       |> Enum.zip()
       |> Enum.with_index()
@@ -18,7 +18,9 @@ defmodule Machete.LiteralListMatcher do
       end)
     end
 
-    def mismatches(a, b) when is_list(a) and is_list(b), do: mismatch("List lengths not equal")
-    def mismatches(a, b) when is_list(a), do: mismatch("#{inspect(b)} is not a list")
+    def mismatches(a, b) when is_list(b),
+      do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+
+    def mismatches(_, b), do: mismatch("#{inspect(b)} is not a list")
   end
 end
