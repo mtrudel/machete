@@ -54,7 +54,7 @@ installed by adding `machete` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:machete, "~> 0.1.0"}
+    {:machete, "~> 0.2.0"}
   ]
 end
 ```
