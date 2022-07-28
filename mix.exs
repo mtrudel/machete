@@ -10,7 +10,9 @@ defmodule Machete.MixProject do
       elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       dialyzer: dialyzer(),
+      name: "Machete",
       description: "Literate test matchers for ExUnit",
+      source_url: "https://github.com/mtrudel/machete",
       package: [
         files: ["lib", "test", "mix.exs", "README*", "LICENSE*"],
         maintainers: ["Mat Trudel"],
