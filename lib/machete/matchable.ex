@@ -7,10 +7,12 @@ defprotocol Machete.Matchable do
   @fallback_to_any true
 
   @doc """
-  Examines the value of the passed term and returns the way(s) in which it does not
-  conform to the base type instance's requirements. If there are no such mismatches (that is, if
-  the passed term 'matches' against the base type instance), implementations of this protocol may
-  return an empty list or `nil`; they are semantically equivalent
+  Examines the value of the passed term and returns the way(s) in which it does not conform to the
+  base type instance's requirements, expressed as a list of `Machete.Mismatch` structs. If there
+  are no such mismatches (that is, if the passed term 'matches' against the base type instance),
+  implementations of this protocol may return an empty list or `nil`; they are semantically
+  equivalent. Implementors of this protocol may be interested in the `Machete.Mismatch.mismatch/2`
+  function to easily create mismatches
   """
   @spec mismatches(t, term()) :: [Machete.Mismatch.t()] | nil
   def mismatches(a, b)
