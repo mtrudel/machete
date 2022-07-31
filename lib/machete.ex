@@ -109,6 +109,7 @@ defmodule Machete do
   * [`all()`](`Machete.AllMatcher.all/1`) matches the value against a set of matchers, requiring all of them to match
   * [`any()`](`Machete.AnyMatcher.any/1`) matches the value against a set of matchers, requiring at least one of them to match
   * [`maybe()`](`Machete.MaybeMatcher.maybe/1`) matches using a specified matcher, but also matches nil
+  * [`none()`](`Machete.NoneMatcher.none/1`) matches the value against a set of matchers, requiring none of them to match
 
   ## Write your own matchers
 
@@ -168,6 +169,7 @@ defmodule Machete do
       import Machete.MapMatcher
       import Machete.MaybeMatcher
       import Machete.NaiveDateTimeMatcher
+      import Machete.NoneMatcher
       import Machete.PIDMatcher
       import Machete.PortMatcher
       import Machete.ReferenceMatcher
