@@ -106,6 +106,7 @@ defmodule Machete do
 
   ## Miscellaneous matchers
 
+  * [`all()`](`Machete.AllMatcher.all/1`) matches the value against a set of matchers, requiring all of them to match
   * [`any()`](`Machete.AnyMatcher.any/1`) matches the value against a set of matchers, requiring at least one of them to match
   * [`maybe()`](`Machete.MaybeMatcher.maybe/1`) matches using a specified matcher, but also matches nil
 
@@ -152,6 +153,7 @@ defmodule Machete do
       import Machete.Operators
 
       # Bring in matcher builders
+      import Machete.AllMatcher
       import Machete.AnyMatcher
       import Machete.AtomMatcher
       import Machete.BooleanMatcher
