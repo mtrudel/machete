@@ -53,6 +53,7 @@ defmodule Machete.MixProject do
           Machete.DateTimeMatcher,
           Machete.FalsyMatcher,
           Machete.FloatMatcher,
+          Machete.InAnyOrderMatcher,
           Machete.IndifferentAccessMatcher,
           Machete.IntegerMatcher,
           Machete.IsAMatcher,

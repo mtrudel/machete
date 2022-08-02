@@ -98,6 +98,7 @@ defmodule Machete do
   suitable. For cases where you may need more flexible collection matching, Machete provides the
   following matchers:
 
+  * [`in_any_order()`](`Machete.InAnyOrderMatcher.in_any_order/1`) matches lists in any order
   * [`indifferent_access()`](`Machete.IndifferentAccessMatcher.indifferent_access/1`) matches maps, considering similar atom and string keys to be
     equivalent
   * [`list()`](`Machete.ListMatcher.list/1`) matches lists, with optional constraints on element type & list length
@@ -163,6 +164,7 @@ defmodule Machete do
       import Machete.DateTimeMatcher
       import Machete.FalsyMatcher
       import Machete.FloatMatcher
+      import Machete.InAnyOrderMatcher
       import Machete.IndifferentAccessMatcher
       import Machete.IntegerMatcher
       import Machete.IsAMatcher
