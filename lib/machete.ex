@@ -81,6 +81,7 @@ defmodule Machete do
   * [`float()`](`Machete.FloatMatcher.float/1`) matches float values
   * [`integer()`](`Machete.IntegerMatcher.integer/1`) matches integer values
   * [`iso8601_datetime()`](`Machete.ISO8601DateTimeMatcher.iso8601_datetime/1`) matches ISO8601 formatted strings
+  * [`is_a()`](`Machete.IsAMatcher.is_a/1`) matches against a struct type
   * [`naive_datetime()`](`Machete.NaiveDateTimeMatcher.naive_datetime/1`) matches `NaiveDateTime` instances
   * [`pid()`](`Machete.PIDMatcher.pid/1`) matches process IDs
   * [`port()`](`Machete.PortMatcher.port/1`) matches Erlang ports
@@ -164,6 +165,7 @@ defmodule Machete do
       import Machete.FloatMatcher
       import Machete.IndifferentAccessMatcher
       import Machete.IntegerMatcher
+      import Machete.IsAMatcher
       import Machete.ISO8601DateTimeMatcher
       import Machete.ListMatcher
       import Machete.MapMatcher
