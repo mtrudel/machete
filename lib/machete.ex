@@ -87,6 +87,7 @@ defmodule Machete do
   * [`port()`](`Machete.PortMatcher.port/1`) matches Erlang ports
   * [`reference()`](`Machete.ReferenceMatcher.reference/1`) matches Erlang references
   * [`string()`](`Machete.StringMatcher.string/1`) matches UTF-8 binaries
+  * [`struct_like()`](`Machete.StructMatcher.struct_like/2`) matches structs based on type and a set of fields
   * [`term()`](`Machete.TermMatcher.term/1`) matches any term (including nil)
   * [`time()`](`Machete.TimeMatcher.time/1`) matches `Time` instances
   * [`truthy()`](`Machete.TruthyMatcher.truthy/1`) matches truthy values
@@ -178,6 +179,7 @@ defmodule Machete do
       import Machete.PortMatcher
       import Machete.ReferenceMatcher
       import Machete.StringMatcher
+      import Machete.StructMatcher
       import Machete.SubsetMatcher
       import Machete.SupersetMatcher
       import Machete.TermMatcher

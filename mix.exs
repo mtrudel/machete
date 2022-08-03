@@ -67,6 +67,7 @@ defmodule Machete.MixProject do
           Machete.PortMatcher,
           Machete.ReferenceMatcher,
           Machete.StringMatcher,
+          Machete.StructMatcher,
           Machete.SubsetMatcher,
           Machete.SupersetMatcher,
           Machete.TermMatcher,
