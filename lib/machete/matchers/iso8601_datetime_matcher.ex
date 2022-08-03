@@ -3,6 +3,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   Defines a matcher that matches ISO8601 formatted strings
   """
 
+  import Machete.DateTimeMatcher
   import Machete.Mismatch
   import Machete.Operators
 
@@ -86,7 +87,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
     def mismatches(%@for{} = a, b) when is_binary(b) do
       DateTime.from_iso8601(b)
       |> case do
-        {:ok, datetime_b, 0} -> datetime_b ~>> Machete.DateTimeMatcher.datetime(a.datetime_opts)
+        {:ok, datetime_b, 0} -> datetime_b ~>> datetime(a.datetime_opts)
         _ -> mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
       end
     end
