@@ -1,4 +1,4 @@
-defmodule Machete.StructMatcher do
+defmodule Machete.StructLikeMatcher do
   @moduledoc """
   Defines a matcher that matches structs only on a specified list of fields
   """
@@ -16,12 +16,14 @@ defmodule Machete.StructMatcher do
   @opaque t :: %__MODULE__{}
 
   @doc """
-  Matches structs only on a specified list of fields. Structs can be tricky to match because they
-  have default values for fields which are not specified at the point of creation. After creation
-  these default values are otherwise indistinguishable from user-specified ones, and often get in
-  the way of effective matching. This matcher provides a convenient way around this by allowing
-  the user to describe both the type of struct expected as well as a set of matchers for fields
-  within the struct; only the fields explicitly listed in the matcher are examined.
+  Matches structs only on a specified list of fields
+
+  Structs can be tricky to match because they have default values for fields which are not
+  specified at the point of creation. After creation these default values are otherwise
+  indistinguishable from user-specified ones, and often get in the way of effective matching. This
+  matcher provides a convenient way around this by allowing the user to describe both the type of
+  struct expected as well as a set of matchers for fields within the struct; only the fields
+  explicitly listed in the matcher are examined.
 
   Fields can be specified via a map or keyword list in a manner identical to that of
   `Kernel.struct/2`. Fields may be matched using any matcher, not just literal values.

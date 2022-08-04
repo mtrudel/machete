@@ -1,10 +1,10 @@
-defmodule StructMatcherTest do
+defmodule StructLikeMatcherTest do
   use ExUnit.Case, async: true
   use Machete
 
   import Machete.Mismatch
 
-  doctest Machete.StructMatcher
+  doctest Machete.StructLikeMatcher
 
   test "produces a useful mismatch for type mismatches" do
     assert %URI{}

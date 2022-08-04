@@ -64,13 +64,16 @@ defmodule Machete do
 
   # Regexes match using =~ semantics:
   assert "abc" ~> ~r/abc/
+
+  # Structs can be matched on a subset of their fields:
+  assert %User{name: "Moe"} ~> struct_like(User, name: string())
   ```
 
   ## Type-based matchers
 
   Machete comes with parametric matchers defined for a variety of types. Many of these matchers
   take optional arguments to further refine matches (for example, `integer(positive: true)` will
-  match positive integers). For details, see the documentation of specific matchers below. The
+  match positive integers). For details, see the documentation of specific matchers below. Thmache
   following matchers are defined by Machete:
 
   * [`atom()`](`Machete.AtomMatcher.atom/1`) matches atoms
@@ -87,7 +90,7 @@ defmodule Machete do
   * [`port()`](`Machete.PortMatcher.port/1`) matches Erlang ports
   * [`reference()`](`Machete.ReferenceMatcher.reference/1`) matches Erlang references
   * [`string()`](`Machete.StringMatcher.string/1`) matches UTF-8 binaries
-  * [`struct_like()`](`Machete.StructMatcher.struct_like/2`) matches structs based on type and a set of fields
+  * [`struct_like()`](`Machete.StructLikeMatcher.struct_like/2`) matches structs based on type and a set of fields
   * [`term()`](`Machete.TermMatcher.term/1`) matches any term (including nil)
   * [`time()`](`Machete.TimeMatcher.time/1`) matches `Time` instances
   * [`truthy()`](`Machete.TruthyMatcher.truthy/1`) matches truthy values
@@ -179,7 +182,7 @@ defmodule Machete do
       import Machete.PortMatcher
       import Machete.ReferenceMatcher
       import Machete.StringMatcher
-      import Machete.StructMatcher
+      import Machete.StructLikeMatcher
       import Machete.SubsetMatcher
       import Machete.SupersetMatcher
       import Machete.TermMatcher
