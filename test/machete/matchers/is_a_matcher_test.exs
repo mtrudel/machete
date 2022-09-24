@@ -9,8 +9,6 @@ defmodule IsAMatcherTest do
   test "produces a useful mismatch for type mismatches" do
     assert %URI{}
            ~>> is_a(DateTime)
-           ~> mismatch(
-             "%URI{authority: nil, fragment: nil, host: nil, path: nil, port: nil, query: nil, scheme: nil, userinfo: nil} is not a DateTime"
-           )
+           ~> mismatch("#{inspect(%URI{})} is not a DateTime")
   end
 end
