@@ -11,8 +11,12 @@ defprotocol Machete.Matchable do
   base type instance's requirements, expressed as a list of `Machete.Mismatch` structs. If there
   are no such mismatches (that is, if the passed term 'matches' against the base type instance),
   implementations of this protocol may return an empty list or `nil`; they are semantically
-  equivalent. Implementors of this protocol may be interested in the `Machete.Mismatch.mismatch/2`
+  equivalent and are both allowed for ease of implementation. Implementors of this protocol may be interested in the `Machete.Mismatch.mismatch/2`
   function to easily create mismatches
+
+  Note that the argument order to this function is the opposite of that for the `~>` and `~>>`
+  operators; conformance to this protocol is a property of the match, and not the term being
+  matched
   """
   @spec mismatches(t, term()) :: [Machete.Mismatch.t()] | nil
   def mismatches(a, b)
