@@ -73,7 +73,7 @@ defmodule Machete do
 
   Machete comes with parametric matchers defined for a variety of types. Many of these matchers
   take optional arguments to further refine matches (for example, `integer(positive: true)` will
-  match positive integers). For details, see the documentation of specific matchers below. Thmache
+  match positive integers). For details, see the documentation of specific matchers below. The
   following matchers are defined by Machete:
 
   * [`atom()`](`Machete.AtomMatcher.atom/1`) matches atoms
