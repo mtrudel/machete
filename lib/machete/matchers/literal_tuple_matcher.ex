@@ -19,8 +19,8 @@ defmodule Machete.LiteralTupleMatcher do
     end
 
     def mismatches(a, b) when is_tuple(b),
-      do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+      do: mismatch("Tuple is #{tuple_size(b)} elements in size, expected #{tuple_size(a)}")
 
-    def mismatches(_, b), do: mismatch("#{inspect(b)} is not a tuple")
+    def mismatches(_, _), do: mismatch("Value is not a tuple")
   end
 end

@@ -22,7 +22,7 @@ defmodule LiteralMapMatcherTest do
   end
 
   test "produces a useful mismatch on non-maps" do
-    assert 1 ~>> %{} ~> mismatch("1 is not a map")
+    assert 1 ~>> %{} ~> mismatch("Value is not a map")
   end
 
   describe "nested matchers" do

@@ -15,7 +15,7 @@ defmodule Machete.LiteralMapMatcher do
       mismatched_keys(a, b) ++ mismatched_values(a, b)
     end
 
-    def mismatches(%{}, b), do: mismatch("#{inspect(b)} is not a map")
+    def mismatches(%{}, _), do: mismatch("Value is not a map")
 
     defp mismatched_keys(a, b) do
       a_keys = a |> Map.keys() |> MapSet.new()

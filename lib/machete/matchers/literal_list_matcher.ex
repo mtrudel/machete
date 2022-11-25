@@ -19,8 +19,8 @@ defmodule Machete.LiteralListMatcher do
     end
 
     def mismatches(a, b) when is_list(b),
-      do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+      do: mismatch("List is #{length(b)} elements in length, expected #{length(a)}")
 
-    def mismatches(_, b), do: mismatch("#{inspect(b)} is not a list")
+    def mismatches(_, _), do: mismatch("Value is not a list")
   end
 end

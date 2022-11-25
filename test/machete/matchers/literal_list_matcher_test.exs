@@ -15,15 +15,15 @@ defmodule LiteralListMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert [] ~>> [1] ~> mismatch("[] is not equal to [1]")
+    assert [] ~>> [1] ~> mismatch("List is 0 elements in length, expected 1")
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert [1] ~>> [] ~> mismatch("[1] is not equal to []")
+    assert [1] ~>> [] ~> mismatch("List is 1 elements in length, expected 0")
   end
 
   test "produces a useful mismatch on non-lists" do
-    assert 1 ~>> [] ~> mismatch("1 is not a list")
+    assert 1 ~>> [] ~> mismatch("Value is not a list")
   end
 
   describe "nested matchers" do

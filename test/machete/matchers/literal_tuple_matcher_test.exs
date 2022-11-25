@@ -14,15 +14,15 @@ defmodule LiteralTupleMatcherTest do
   end
 
   test "produces a useful mismatch on missing entries" do
-    assert {} ~>> {1} ~> mismatch("{} is not equal to {1}")
+    assert {} ~>> {1} ~> mismatch("Tuple is 0 elements in size, expected 1")
   end
 
   test "produces a useful mismatch on extra entries" do
-    assert {1} ~>> {} ~> mismatch("{1} is not equal to {}")
+    assert {1} ~>> {} ~> mismatch("Tuple is 1 elements in size, expected 0")
   end
 
   test "produces a useful mismatch on non-tuples" do
-    assert 1 ~>> {} ~> mismatch("1 is not a tuple")
+    assert 1 ~>> {} ~> mismatch("Value is not a tuple")
   end
 
   describe "nested matchers" do
