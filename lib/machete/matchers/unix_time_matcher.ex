@@ -16,10 +16,10 @@ defmodule Machete.UnixTimeMatcher do
   Describes the arguments that can be passed to this matcher
   """
   @type opts :: [
-          {:exactly, Time.t()},
-          {:roughly, Time.t() | :now},
-          {:before, Time.t() | :now},
-          {:after, Time.t() | :now}
+          {:exactly, integer()},
+          {:roughly, integer() | :now},
+          {:before, integer() | :now},
+          {:after, integer() | :now}
         ]
 
   @doc """
