@@ -23,7 +23,7 @@ defmodule Machete.UnixTimeMatcher do
         ]
 
   @doc """
-  Matches against integers that represent Unix time values
+  Matches against integers that represent Unix time values in milliseconds
 
   Takes the following arguments:
 
