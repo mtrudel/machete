@@ -75,7 +75,9 @@ defmodule Machete.UnixTimeMatcher do
     end
 
     defp matches_type(b) when is_integer(b), do: nil
-    defp matches_type(b), do: mismatch("#{inspect(b)} is not an integer that represents a unix time")
+
+    defp matches_type(b),
+      do: mismatch("#{inspect(b)} is not an integer that represents a unix time")
 
     defp matches_exactly(_, nil), do: nil
 
