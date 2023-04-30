@@ -94,6 +94,7 @@ defmodule Machete do
   * [`term()`](`Machete.TermMatcher.term/1`) matches any term (including nil)
   * [`time()`](`Machete.TimeMatcher.time/1`) matches `Time` instances
   * [`truthy()`](`Machete.TruthyMatcher.truthy/1`) matches truthy values
+  * [`unix_time()`](`Machete.UnixTimeMatcher.unix_time/1`) matches integers that represent unix time
 
   ## Collection matchers
 
@@ -188,6 +189,7 @@ defmodule Machete do
       import Machete.TermMatcher
       import Machete.TimeMatcher
       import Machete.TruthyMatcher
+      import Machete.UnixTimeMatcher
     end
   end
 end

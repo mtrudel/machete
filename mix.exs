@@ -72,7 +72,8 @@ defmodule Machete.MixProject do
           Machete.SupersetMatcher,
           Machete.TermMatcher,
           Machete.TimeMatcher,
-          Machete.TruthyMatcher
+          Machete.TruthyMatcher,
+          Machete.UnixTimeMatcher
         ]
       ]
     ]
