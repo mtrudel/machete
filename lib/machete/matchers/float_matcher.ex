@@ -5,7 +5,13 @@ defmodule Machete.FloatMatcher do
 
   import Machete.Mismatch
 
-  defstruct positive: nil, negative: nil, nonzero: nil, min: nil, max: nil
+  defstruct positive: nil,
+            strictly_positive: nil,
+            negative: nil,
+            strictly_negative: nil,
+            nonzero: nil,
+            min: nil,
+            max: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -17,7 +23,9 @@ defmodule Machete.FloatMatcher do
   """
   @type opts :: [
           {:positive, boolean()},
+          {:strictly_positive, boolean()},
           {:negative, boolean()},
+          {:strictly_negative, boolean()},
           {:nonzero, boolean()},
           {:min, float()},
           {:max, float()}
@@ -29,7 +37,9 @@ defmodule Machete.FloatMatcher do
   Takes the following arguments:
 
   * `positive`: When `true`, requires the matched float be positive or zero
+  * `strictly_positive`: When `true`, requires the matched float be positive and nonzero
   * `negative`: When `true`, requires the matched float be negative or zero
+  * `strictly_negative`: When `true`, requires the matched float be negative and nonzero
   * `nonzero`: When `true`, requires the matched float be nonzero
   * `min`: Requires the matched float be greater than or equal to the specified value
   * `max`: Requires the matched float be less than or equal to the specified value
@@ -51,6 +61,18 @@ defmodule Machete.FloatMatcher do
       iex> refute 0.0 ~> float(positive: false)
       false
 
+      iex> assert 1.0 ~> float(strictly_positive: true)
+      true
+
+      iex> refute 0.0 ~> float(strictly_positive: true)
+      false
+
+      iex> assert -1.0 ~> float(strictly_positive: false)
+      true
+
+      iex> assert 0.0 ~> float(strictly_positive: false)
+      true
+
       iex> assert -1.0 ~> float(negative: true)
       true
 
@@ -62,6 +84,18 @@ defmodule Machete.FloatMatcher do
 
       iex> refute 0.0 ~> float(negative: false)
       false
+
+      iex> assert -1.0 ~> float(strictly_negative: true)
+      true
+
+      iex> refute 0.0 ~> float(strictly_negative: true)
+      false
+
+      iex> assert 1.0 ~> float(strictly_negative: false)
+      true
+
+      iex> assert 0.0 ~> float(strictly_negative: false)
+      true
 
       iex> assert 1.0 ~> float(nonzero: true)
       true
@@ -82,7 +116,9 @@ defmodule Machete.FloatMatcher do
     def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_positive(b, a.positive),
+           nil <- matches_strictly_positive(b, a.strictly_positive),
            nil <- matches_negative(b, a.negative),
+           nil <- matches_strictly_negative(b, a.strictly_negative),
            nil <- matches_nonzero(b, a.nonzero),
            nil <- matches_min(b, a.min),
            nil <- matches_max(b, a.max) do
@@ -96,9 +132,25 @@ defmodule Machete.FloatMatcher do
     defp matches_positive(b, false) when b >= 0.0, do: mismatch("#{inspect(b)} is positive")
     defp matches_positive(_, _), do: nil
 
+    defp matches_strictly_positive(b, true) when b <= 0.0,
+      do: mismatch("#{inspect(b)} is not strictly positive")
+
+    defp matches_strictly_positive(b, false) when b > 0.0,
+      do: mismatch("#{inspect(b)} is strictly positive")
+
+    defp matches_strictly_positive(_, _), do: nil
+
     defp matches_negative(b, true) when b > 0.0, do: mismatch("#{inspect(b)} is not negative")
     defp matches_negative(b, false) when b <= 0.0, do: mismatch("#{inspect(b)} is negative")
     defp matches_negative(_, _), do: nil
+
+    defp matches_strictly_negative(b, true) when b >= 0.0,
+      do: mismatch("#{inspect(b)} is not strictly negative")
+
+    defp matches_strictly_negative(b, false) when b < 0.0,
+      do: mismatch("#{inspect(b)} is strictly negative")
+
+    defp matches_strictly_negative(_, _), do: nil
 
     defp matches_nonzero(b, true) when b == 0.0, do: mismatch("#{inspect(b)} is zero")
     defp matches_nonzero(b, false) when b != 0.0, do: mismatch("#{inspect(b)} is not zero")

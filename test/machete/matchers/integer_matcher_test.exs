@@ -18,12 +18,28 @@ defmodule IntegerMatcherTest do
     assert 1 ~>> integer(positive: false) ~> mismatch("1 is positive")
   end
 
+  test "produces a useful mismatch for strictly positive mismatch (true)" do
+    assert -1 ~>> integer(strictly_positive: true) ~> mismatch("-1 is not strictly positive")
+  end
+
+  test "produces a useful mismatch for strictly positive mismatch (false)" do
+    assert 1 ~>> integer(strictly_positive: false) ~> mismatch("1 is strictly positive")
+  end
+
   test "produces a useful mismatch for negative mismatch (true)" do
     assert 1 ~>> integer(negative: true) ~> mismatch("1 is not negative")
   end
 
   test "produces a useful mismatch for negative mismatch (false)" do
     assert -1 ~>> integer(negative: false) ~> mismatch("-1 is negative")
+  end
+
+  test "produces a useful mismatch for strictly negative mismatch (true)" do
+    assert 1 ~>> integer(strictly_negative: true) ~> mismatch("1 is not strictly negative")
+  end
+
+  test "produces a useful mismatch for strictly negative mismatch (false)" do
+    assert -1 ~>> integer(strictly_negative: false) ~> mismatch("-1 is strictly negative")
   end
 
   test "produces a useful mismatch for nonzero mismatch (true)" do
