@@ -27,6 +27,7 @@ defmodule Machete.MixProject do
 
   defp deps do
     [
+      {:jason, "~> 1.4"},
       {:ex_doc, ">= 0.0.0", only: :dev, runtime: false},
       {:credo, "~> 1.6", only: [:dev, :test], runtime: false},
       {:dialyxir, "~> 1.0", only: [:dev, :test], runtime: false}
@@ -58,6 +59,7 @@ defmodule Machete.MixProject do
           Machete.IntegerMatcher,
           Machete.IsAMatcher,
           Machete.ISO8601DateTimeMatcher,
+          Machete.JSONMatcher,
           Machete.ListMatcher,
           Machete.MapMatcher,
           Machete.MaybeMatcher,

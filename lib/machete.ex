@@ -29,7 +29,7 @@ defmodule Machete do
 
   At its heart, Machete provides the following two things:
 
-  * A new `~>` operator (the 'squiggle arrow') that does flexible matching of 
+  * A new `~>` operator (the 'squiggle arrow') that does flexible matching of
     its left operator with its right operator
   * A set of parametric matchers such as `string()` or `integer()` which can match
     against general types
@@ -84,6 +84,7 @@ defmodule Machete do
   * [`float()`](`Machete.FloatMatcher.float/1`) matches float values
   * [`integer()`](`Machete.IntegerMatcher.integer/1`) matches integer values
   * [`iso8601_datetime()`](`Machete.ISO8601DateTimeMatcher.iso8601_datetime/1`) matches ISO8601 formatted strings
+  * [`json()`](`Machete.JSONMatcher.json/1`) matches JSON formatted structures
   * [`is_a()`](`Machete.IsAMatcher.is_a/1`) matches against a struct type
   * [`naive_datetime()`](`Machete.NaiveDateTimeMatcher.naive_datetime/1`) matches `NaiveDateTime` instances
   * [`pid()`](`Machete.PIDMatcher.pid/1`) matches process IDs
@@ -174,6 +175,7 @@ defmodule Machete do
       import Machete.IntegerMatcher
       import Machete.IsAMatcher
       import Machete.ISO8601DateTimeMatcher
+      import Machete.JSONMatcher
       import Machete.ListMatcher
       import Machete.MapMatcher
       import Machete.MaybeMatcher
