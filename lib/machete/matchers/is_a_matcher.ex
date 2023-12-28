@@ -1,3 +1,4 @@
+# credo:disable-for-this-file Credo.Check.Readability.PredicateFunctionNames
 defmodule Machete.IsAMatcher do
   @moduledoc """
   Defines a matcher that matches againt a type of struct
