@@ -5,6 +5,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
 
   import Machete.DateTimeMatcher
   import Machete.Mismatch
+  import Machete.NaiveDateTimeMatcher
   import Machete.Operators
 
   defstruct datetime_opts: nil
@@ -65,6 +66,9 @@ defmodule Machete.ISO8601DateTimeMatcher do
       iex> assert DateTime.utc_now() |> DateTime.to_iso8601() ~> iso8601_datetime(roughly: :now)
       true
 
+      iex> assert NaiveDateTime.utc_now() |> NaiveDateTime.to_iso8601() ~> iso8601_datetime(roughly: :now)
+      true
+
       iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:05.000000Z])
       true
 
@@ -85,10 +89,15 @@ defmodule Machete.ISO8601DateTimeMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{} = a, b) when is_binary(b) do
-      DateTime.from_iso8601(b)
-      |> case do
-        {:ok, datetime_b, 0} -> datetime_b ~>> datetime(a.datetime_opts)
-        _ -> mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
+      case DateTime.from_iso8601(b) do
+        {:ok, datetime_b, 0} ->
+          datetime_b ~>> datetime(a.datetime_opts)
+
+        _ ->
+          case NaiveDateTime.from_iso8601(b) do
+            {:ok, naive_datetime_b} -> naive_datetime_b ~>> naive_datetime(a.datetime_opts)
+            _ -> mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
+          end
       end
     end
 

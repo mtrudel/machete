@@ -28,6 +28,12 @@ defmodule ISO8601DateTimeMatcherTest do
            )
   end
 
+  test "supports ISO8601 without timezones" do
+    assert "2020-01-01T00:00:00.000000"
+           ~>> iso8601_datetime(roughly: ~N[2020-01-01 00:00:00])
+           ~> []
+  end
+
   test "produces a useful mismatch for exactly mismatches" do
     assert "2020-01-01T00:00:00.000000Z"
            ~>> iso8601_datetime(exactly: ~U[3000-01-01 00:00:00.000000Z])
