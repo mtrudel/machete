@@ -21,7 +21,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   @type opts :: [
           {:precision, 0..6},
           {:time_zone, Calendar.time_zone() | :utc},
-          {:time_zone_required, boolean()},
+          {:offset_required, boolean()},
           {:exactly, DateTime.t()},
           {:roughly, DateTime.t() | :now},
           {:before, DateTime.t() | :now},
@@ -36,7 +36,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
   * `precision`: Requires the matched ISO8601 string to have the specified microsecond precision
   * `time_zone`: Requires the matched ISO8601 string to have the specified time zone. The atom
     `:utc` can be used to specify the "Etc/UTC" time zone
-  * `time_zone_required`: Requires the matched ISO8601 string to have a timezone. Defaults to true
+  * `offset_required`: Requires the matched ISO8601 string to have a timezone. Defaults to true
   * `exactly`: Requires the matched ISO8601 string to be exactly equal to the specified DateTime
   * `roughly`: Requires the matched ISO8601 string to be within +/- 10 seconds of the specified 
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
@@ -68,7 +68,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
       iex> assert DateTime.utc_now() |> DateTime.to_iso8601() ~> iso8601_datetime(roughly: :now)
       true
 
-      iex> assert NaiveDateTime.utc_now() |> NaiveDateTime.to_iso8601() ~> iso8601_datetime(roughly: :now, time_zone_required: false)
+      iex> assert NaiveDateTime.utc_now() |> NaiveDateTime.to_iso8601() ~> iso8601_datetime(roughly: :now, offset_required: false)
       true
 
       iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:05.000000Z])
@@ -106,11 +106,11 @@ defmodule Machete.ISO8601DateTimeMatcher do
     end
 
     defp matches_naive_date_time(b, datetime_opts) do
-      {time_zone_required, datetime_opts} = Keyword.pop(datetime_opts, :time_zone_required, true)
+      {offset_required, datetime_opts} = Keyword.pop(datetime_opts, :offset_required, true)
 
       case NaiveDateTime.from_iso8601(b) do
         {:ok, naive_datetime_b} ->
-          if time_zone_required do
+          if offset_required do
             mismatch("#{inspect(b)} does not have a time zone offset")
           else
             naive_datetime_b ~>> naive_datetime(datetime_opts)
