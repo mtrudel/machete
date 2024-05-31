@@ -10,6 +10,24 @@ defmodule ListMatcherTest do
     assert [1] ~>> list(elements: string()) ~> mismatch("1 is not a string", "[0]")
   end
 
+  test "produces a useful mismatch for type mismatches in any mode" do
+    assert ["a", "b"]
+           ~>> list(elements: integer(), match_mode: :any)
+           ~> mismatch("No elements match the specified matcher")
+  end
+
+  test "produces a useful mismatch for type mismatches in none mode" do
+    assert [1]
+           ~>> list(elements: integer(), match_mode: :none)
+           ~> mismatch("1 element(s) match the specified matcher")
+  end
+
+  test "produces a useful mismatch for type mismatches in integer mode" do
+    assert [1]
+           ~>> list(elements: integer(), match_mode: 2)
+           ~> mismatch("Only 1 element(s) match the specified matcher")
+  end
+
   test "produces a useful mismatch for length mismatches" do
     assert [1] ~>> list(length: 2) ~> mismatch("[1] is not exactly 2 elements in length")
   end

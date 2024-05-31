@@ -6,7 +6,7 @@ defmodule Machete.ListMatcher do
   import Machete.Mismatch
   import Machete.Operators
 
-  defstruct elements: nil, length: nil, min: nil, max: nil
+  defstruct elements: nil, match_mode: :all, length: nil, min: nil, max: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -18,6 +18,7 @@ defmodule Machete.ListMatcher do
   """
   @type opts :: [
           {:elements, Machete.Matchable.t()},
+          {:match_mode, :all | :any | :none | non_neg_integer()},
           {:length, non_neg_integer()},
           {:min, non_neg_integer()},
           {:max, non_neg_integer()}
@@ -30,12 +31,25 @@ defmodule Machete.ListMatcher do
   Takes the following arguments:
 
   * `elements`: A matcher to use against all elements in the list
+  * `match_mode`: How to apply the `elements` matcher to the elements in the list. `:all`, `:any`,
+    and `:none` each match if all, any, or none of the list's elements match the `elements` matcher,
+    respectively. A non-negative integer requires at least `n` of the elements in the list to match.
+    Defaults to `:all`
   * `length`: Requires the matched list to be exactly the specified length
   * `min`: Requires the matched list to be greater than or equal to the specified length
   * `max`: Requires the matched list to be less than or equal to the specified length
 
   Examples:
       iex> assert [1] ~> list(elements: integer())
+      true
+
+      iex> assert [1, "a", :b] ~> list(elements: integer(), match_mode: :any)
+      true
+
+      iex> assert ["a", "b", :c] ~> list(elements: integer(), match_mode: :none)
+      true
+
+      iex> assert [1, 2, 3] ~> list(elements: integer(), match_mode: 2)
       true
 
       iex> assert [1] ~> list(length: 1)
@@ -58,7 +72,7 @@ defmodule Machete.ListMatcher do
       with nil <- matches_length(b, a.length),
            nil <- matches_min(b, a.min),
            nil <- matches_max(b, a.max),
-           nil <- matches_elements(b, a.elements) do
+           nil <- matches_elements(b, a.elements, a.match_mode) do
       end
     end
 
@@ -77,7 +91,24 @@ defmodule Machete.ListMatcher do
 
     defp matches_max(_, _), do: nil
 
-    defp matches_elements(_, nil), do: nil
-    defp matches_elements(b, matcher), do: b ~>> List.duplicate(matcher, length(b))
+    defp matches_elements(_, nil, _), do: nil
+    defp matches_elements(b, matcher, :all), do: b ~>> List.duplicate(matcher, length(b))
+
+    defp matches_elements(b, matcher, :any) do
+      num_matches = Enum.count(b, &(&1 ~> matcher))
+      if num_matches == 0, do: mismatch("No elements match the specified matcher")
+    end
+
+    defp matches_elements(b, matcher, :none) do
+      num_matches = Enum.count(b, &(&1 ~> matcher))
+      if num_matches != 0, do: mismatch("#{num_matches} element(s) match the specified matcher")
+    end
+
+    defp matches_elements(b, matcher, min_matches) when is_integer(min_matches) do
+      num_matches = Enum.count(b, &(&1 ~> matcher))
+
+      if num_matches < min_matches,
+        do: mismatch("Only #{num_matches} element(s) match the specified matcher")
+    end
   end
 end
