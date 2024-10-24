@@ -27,7 +27,7 @@ defmodule Machete.DateMatcher do
 
   Takes the following arguments:
 
-  * `exactly`: Requires the matched Date to be exactly equal to the specified Date. The atom `:today` can 
+  * `exactly`: Requires the matched Date to be exactly equal to the specified Date. The atom `:today` can
     be used to use today as the specified Date
   * `roughly`: Requires the matched Date to be within +/- 1 day of the specified Date. The atom
     `:today` can be used to use today as the specified Date
@@ -37,7 +37,7 @@ defmodule Machete.DateMatcher do
     `:today` can be used to use today as the specified Date
 
   Examples:
-      
+
       iex> assert Date.utc_today() ~> date()
       true
 
@@ -79,14 +79,14 @@ defmodule Machete.DateMatcher do
     end
 
     defp matches_type(%Date{}), do: nil
-    defp matches_type(b), do: mismatch("#{inspect(b)} is not a Date")
+    defp matches_type(b), do: mismatch("#{safe_inspect(b)} is not a Date")
 
     defp matches_exactly(_, nil), do: nil
     defp matches_exactly(b, :today), do: matches_exactly(b, Date.utc_today())
 
     defp matches_exactly(b, exactly) do
       if Date.diff(b, exactly) != 0,
-        do: mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+        do: mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(exactly)}")
     end
 
     defp matches_roughly(_, nil), do: nil
@@ -94,7 +94,7 @@ defmodule Machete.DateMatcher do
 
     defp matches_roughly(b, roughly) do
       if Date.diff(b, roughly) not in -1..1 do
-        mismatch("#{inspect(b)} is not within 1 day of #{inspect(roughly)}")
+        mismatch("#{safe_inspect(b)} is not within 1 day of #{safe_inspect(roughly)}")
       end
     end
 
@@ -103,7 +103,7 @@ defmodule Machete.DateMatcher do
 
     defp matches_before(b, before) do
       if Date.compare(b, before) != :lt do
-        mismatch("#{inspect(b)} is not before #{inspect(before)}")
+        mismatch("#{safe_inspect(b)} is not before #{safe_inspect(before)}")
       end
     end
 
@@ -112,7 +112,7 @@ defmodule Machete.DateMatcher do
 
     defp matches_after(b, after_var) do
       if Date.compare(b, after_var) != :gt do
-        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
+        mismatch("#{safe_inspect(b)} is not after #{safe_inspect(after_var)}")
       end
     end
   end

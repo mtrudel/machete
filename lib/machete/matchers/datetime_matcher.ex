@@ -33,9 +33,9 @@ defmodule Machete.DateTimeMatcher do
   * `time_zone`: Requires the matched DateTime to have the specified time zone. The atom `:utc`
     can be used to specify the "Etc/UTC" time zone
   * `exactly`: Requires the matched DateTime to be exactly equal to the specified DateTime
-  * `roughly`: Requires the matched DateTime to be within +/- 10 seconds of the specified DateTime. 
+  * `roughly`: Requires the matched DateTime to be within +/- 10 seconds of the specified DateTime.
     The atom `:now` can be used to use the current time as the specified DateTime
-  * `before`: Requires the matched DateTime to be before or equal to the specified DateTime. The 
+  * `before`: Requires the matched DateTime to be before or equal to the specified DateTime. The
     atom `:now` can be used to use the current time as the specified DateTime
   * `after`: Requires the matched DateTime to be after or equal to the specified DateTime. The
     atom `:now` can be used to use the current time as the specified DateTime
@@ -91,26 +91,26 @@ defmodule Machete.DateTimeMatcher do
     end
 
     defp matches_type(%DateTime{}), do: nil
-    defp matches_type(b), do: mismatch("#{inspect(b)} is not a DateTime")
+    defp matches_type(b), do: mismatch("#{safe_inspect(b)} is not a DateTime")
 
     defp matches_precision(_, nil), do: nil
     defp matches_precision(%DateTime{microsecond: {_, precision}}, precision), do: nil
 
     defp matches_precision(%DateTime{microsecond: {_, b_precision}} = b, precision),
-      do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
+      do: mismatch("#{safe_inspect(b)} has precision #{b_precision}, expected #{precision}")
 
     defp matches_time_zone(_, nil), do: nil
     defp matches_time_zone(b, :utc), do: matches_time_zone(b, "Etc/UTC")
     defp matches_time_zone(%DateTime{time_zone: time_zone}, time_zone), do: nil
 
     defp matches_time_zone(b, time_zone),
-      do: mismatch("#{inspect(b)} has time zone #{b.time_zone}, expected #{time_zone}")
+      do: mismatch("#{safe_inspect(b)} has time zone #{b.time_zone}, expected #{time_zone}")
 
     defp matches_exactly(_, nil), do: nil
 
     defp matches_exactly(b, exactly) do
       if DateTime.diff(b, exactly, :microsecond) != 0 do
-        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+        mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(exactly)}")
       end
     end
 
@@ -119,7 +119,7 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_roughly(b, roughly) do
       if DateTime.diff(b, roughly, :microsecond) not in -10_000_000..10_000_000 do
-        mismatch("#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}")
+        mismatch("#{safe_inspect(b)} is not within 10 seconds of #{safe_inspect(roughly)}")
       end
     end
 
@@ -128,7 +128,7 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_before(b, before) do
       if DateTime.compare(b, before) != :lt do
-        mismatch("#{inspect(b)} is not before #{inspect(before)}")
+        mismatch("#{safe_inspect(b)} is not before #{safe_inspect(before)}")
       end
     end
 
@@ -137,7 +137,7 @@ defmodule Machete.DateTimeMatcher do
 
     defp matches_after(b, after_var) do
       if DateTime.compare(b, after_var) != :gt do
-        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
+        mismatch("#{safe_inspect(b)} is not after #{safe_inspect(after_var)}")
       end
     end
   end

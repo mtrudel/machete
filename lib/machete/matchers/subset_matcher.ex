@@ -29,7 +29,7 @@ defmodule Machete.SubsetMatcher do
   def subset(map), do: struct!(__MODULE__, map: map)
 
   defimpl Machete.Matchable do
-    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{inspect(b)} is not a map")
+    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{safe_inspect(b)} is not a map")
     def mismatches(%@for{} = a, b), do: b ~>> Map.take(a.map, Map.keys(b))
   end
 end

@@ -52,10 +52,10 @@ defmodule Machete.JSONMatcher do
       Jason.decode(b)
       |> case do
         {:ok, document} -> document ~>> a.matcher
-        _ -> mismatch("#{inspect(b)} is not parseable JSON")
+        _ -> mismatch("#{safe_inspect(b)} is not parseable JSON")
       end
     end
 
-    def mismatches(%@for{}, b), do: mismatch("#{inspect(b)} is not a string")
+    def mismatches(%@for{}, b), do: mismatch("#{safe_inspect(b)} is not a string")
   end
 end

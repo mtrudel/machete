@@ -34,6 +34,8 @@ defmodule Machete.IsAMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{type: type}, %type{}), do: []
-    def mismatches(%@for{type: type}, b), do: mismatch("#{inspect(b)} is not a #{inspect(type)}")
+
+    def mismatches(%@for{type: type}, b),
+      do: mismatch("#{safe_inspect(b)} is not a #{safe_inspect(type)}")
   end
 end

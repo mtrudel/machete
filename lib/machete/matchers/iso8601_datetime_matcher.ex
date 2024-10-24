@@ -38,14 +38,14 @@ defmodule Machete.ISO8601DateTimeMatcher do
     `:utc` can be used to specify the "Etc/UTC" time zone
   * `offset_required`: Requires the matched ISO8601 string to have a timezone. Defaults to true
   * `exactly`: Requires the matched ISO8601 string to be exactly equal to the specified DateTime
-  * `roughly`: Requires the matched ISO8601 string to be within +/- 10 seconds of the specified 
+  * `roughly`: Requires the matched ISO8601 string to be within +/- 10 seconds of the specified
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
     current time as the specified DateTime
-  * `before`: Requires the matched ISO8601 string to be before or equal to the specified 
+  * `before`: Requires the matched ISO8601 string to be before or equal to the specified
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
     current time as the specified DateTime
   * `after`: Requires the matched ISO8601 string to be after or equal to the specified DateTime.
-    This values must be specified as a DateTime. The atom `:now` can be used to use the current 
+    This values must be specified as a DateTime. The atom `:now` can be used to use the current
     time as the specified DateTime
 
   Examples:
@@ -96,7 +96,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
       end
     end
 
-    def mismatches(%@for{}, b), do: mismatch("#{inspect(b)} is not a string")
+    def mismatches(%@for{}, b), do: mismatch("#{safe_inspect(b)} is not a string")
 
     defp matches_date_time(b, datetime_opts) do
       case DateTime.from_iso8601(b) do
@@ -111,13 +111,13 @@ defmodule Machete.ISO8601DateTimeMatcher do
       case NaiveDateTime.from_iso8601(b) do
         {:ok, naive_datetime_b} ->
           if offset_required do
-            mismatch("#{inspect(b)} does not have a time zone offset")
+            mismatch("#{safe_inspect(b)} does not have a time zone offset")
           else
             naive_datetime_b ~>> naive_datetime(datetime_opts)
           end
 
         _ ->
-          mismatch("#{inspect(b)} is not a parseable ISO8601 datetime")
+          mismatch("#{safe_inspect(b)} is not a parseable ISO8601 datetime")
       end
     end
   end

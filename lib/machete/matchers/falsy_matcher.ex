@@ -23,7 +23,7 @@ defmodule Machete.FalsyMatcher do
   Takes no arguments
 
   Examples:
-      
+
       iex> assert false ~> falsy()
       true
 
@@ -39,6 +39,6 @@ defmodule Machete.FalsyMatcher do
   defimpl Machete.Matchable do
     def mismatches(%@for{}, nil), do: nil
     def mismatches(%@for{}, false), do: nil
-    def mismatches(%@for{}, b), do: mismatch("#{inspect(b)} is not falsy")
+    def mismatches(%@for{}, b), do: mismatch("#{safe_inspect(b)} is not falsy")
   end
 end

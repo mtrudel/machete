@@ -77,13 +77,13 @@ defmodule Machete.UnixTimeMatcher do
     defp matches_type(b) when is_integer(b), do: nil
 
     defp matches_type(b),
-      do: mismatch("#{inspect(b)} is not an integer that represents a unix time")
+      do: mismatch("#{safe_inspect(b)} is not an integer that represents a unix time")
 
     defp matches_exactly(_, nil), do: nil
 
     defp matches_exactly(b, exactly) do
       if b != exactly do
-        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+        mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(exactly)}")
       end
     end
 
@@ -92,7 +92,7 @@ defmodule Machete.UnixTimeMatcher do
 
     defp matches_roughly(b, roughly) when is_integer(roughly) do
       if (b - roughly) not in -:timer.seconds(10)..:timer.seconds(10) do
-        mismatch("#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}")
+        mismatch("#{safe_inspect(b)} is not within 10 seconds of #{safe_inspect(roughly)}")
       end
     end
 
@@ -101,7 +101,7 @@ defmodule Machete.UnixTimeMatcher do
 
     defp matches_before(b, before) when is_integer(before) do
       if !(b < before) do
-        mismatch("#{inspect(b)} is not before #{inspect(before)}")
+        mismatch("#{safe_inspect(b)} is not before #{safe_inspect(before)}")
       end
     end
 
@@ -110,7 +110,7 @@ defmodule Machete.UnixTimeMatcher do
 
     defp matches_after(b, after_var) do
       if !(b > after_var) do
-        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
+        mismatch("#{safe_inspect(b)} is not after #{safe_inspect(after_var)}")
       end
     end
 

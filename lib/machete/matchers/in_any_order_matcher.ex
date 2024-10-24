@@ -14,7 +14,7 @@ defmodule Machete.InAnyOrderMatcher do
   @opaque t :: %__MODULE__{}
 
   @doc """
-  Matches lists in any order. Matchers are applied in all possible orders 
+  Matches lists in any order. Matchers are applied in all possible orders
   until one matches; *this can be exponentially expensive* for long lists.
 
   Examples:
@@ -41,13 +41,13 @@ defmodule Machete.InAnyOrderMatcher do
         |> Enum.any?(&simple_list_match(&1, b))
 
       unless matches,
-        do: mismatch("#{inspect(b)} does not match any ordering of the specified matchers")
+        do: mismatch("#{safe_inspect(b)} does not match any ordering of the specified matchers")
     end
 
     def mismatches(a, b) when is_list(b),
-      do: mismatch("#{inspect(b)} is not the same length as #{inspect(a.matchers)}")
+      do: mismatch("#{safe_inspect(b)} is not the same length as #{safe_inspect(a.matchers)}")
 
-    def mismatches(_, b), do: mismatch("#{inspect(b)} is not a list")
+    def mismatches(_, b), do: mismatch("#{safe_inspect(b)} is not a list")
 
     defp permutations([]), do: [[]]
 

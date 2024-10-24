@@ -32,6 +32,11 @@ defmodule Machete.Mismatch do
     |> Enum.map_join("", fn {msg, idx} -> "#{indent}#{idx}) #{msg}\n" end)
   end
 
+  @doc """
+  Helper that inspects the given term ensuring map ordering
+  """
+  def safe_inspect(term), do: inspect(term, custom_options: [sort_maps: true])
+
   defp format_mismatch(%__MODULE__{path: []} = mismatch) do
     mismatch.message
   end

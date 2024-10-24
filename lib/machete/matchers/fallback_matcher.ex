@@ -15,8 +15,8 @@ defmodule Machete.FallbackMatcher do
     # types match, structs are compared based on their map equivalents
     def mismatches(%t{} = a, %t{} = b), do: Map.from_struct(b) ~>> Map.from_struct(a)
     def mismatches(%_{}, %_{}), do: mismatch("Struct types do not match")
-    def mismatches(%_{}, b), do: mismatch("#{inspect(b)} is not a struct")
+    def mismatches(%_{}, b), do: mismatch("#{safe_inspect(b)} is not a struct")
     def mismatches(a, a), do: nil
-    def mismatches(a, b), do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+    def mismatches(a, b), do: mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(a)}")
   end
 end

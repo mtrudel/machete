@@ -23,7 +23,7 @@ defmodule Machete.PortMatcher do
   Takes no arguments
 
   Examples:
-      
+
       iex> assert hd(Port.list()) ~> port()
       true
 
@@ -35,7 +35,7 @@ defmodule Machete.PortMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) do
-      unless is_port(b), do: mismatch("#{inspect(b)} is not a port")
+      unless is_port(b), do: mismatch("#{safe_inspect(b)} is not a port")
     end
   end
 end

@@ -41,7 +41,7 @@ defmodule Machete.IndifferentAccessMatcher do
   def indifferent_access(map), do: struct!(__MODULE__, map: map)
 
   defimpl Machete.Matchable do
-    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{inspect(b)} is not a map")
+    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{safe_inspect(b)} is not a map")
 
     def mismatches(%@for{} = a, b) do
       mapped_b =

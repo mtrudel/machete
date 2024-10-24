@@ -162,17 +162,17 @@ defmodule Machete.StringMatcher do
     end
 
     defp matches_type(b) when is_binary(b), do: nil
-    defp matches_type(b), do: mismatch("#{inspect(b)} is not a string")
+    defp matches_type(b), do: mismatch("#{safe_inspect(b)} is not a string")
 
-    defp matches_empty("" = b, false), do: mismatch("#{inspect(b)} is empty")
-    defp matches_empty(b, true) when b != "", do: mismatch("#{inspect(b)} is not empty")
+    defp matches_empty("" = b, false), do: mismatch("#{safe_inspect(b)} is empty")
+    defp matches_empty(b, true) when b != "", do: mismatch("#{safe_inspect(b)} is not empty")
     defp matches_empty(_, _), do: nil
 
     defp matches_length(_, nil), do: nil
 
     defp matches_length(b, length) do
       unless String.length(b) == length do
-        mismatch("#{inspect(b)} is not exactly #{length} characters")
+        mismatch("#{safe_inspect(b)} is not exactly #{length} characters")
       end
     end
 
@@ -180,7 +180,7 @@ defmodule Machete.StringMatcher do
 
     defp matches_min(b, length) do
       unless String.length(b) >= length do
-        mismatch("#{inspect(b)} is less than #{length} characters")
+        mismatch("#{safe_inspect(b)} is less than #{length} characters")
       end
     end
 
@@ -188,7 +188,7 @@ defmodule Machete.StringMatcher do
 
     defp matches_max(b, length) do
       unless String.length(b) <= length do
-        mismatch("#{inspect(b)} is more than #{length} characters")
+        mismatch("#{safe_inspect(b)} is more than #{length} characters")
       end
     end
 
@@ -196,7 +196,7 @@ defmodule Machete.StringMatcher do
 
     defp matches_regex(b, regex) do
       unless b =~ regex do
-        mismatch("#{inspect(b)} does not match #{inspect(regex)}")
+        mismatch("#{safe_inspect(b)} does not match #{safe_inspect(regex)}")
       end
     end
 
@@ -214,13 +214,13 @@ defmodule Machete.StringMatcher do
 
       defp unquote(fn_name)(b, false) do
         if b =~ Regex.compile!(unquote(regex)) do
-          mismatch("#{inspect(b)} is #{unquote(name)}")
+          mismatch("#{safe_inspect(b)} is #{unquote(name)}")
         end
       end
 
       defp unquote(fn_name)(b, true) do
         unless b =~ Regex.compile!(unquote(regex)) do
-          mismatch("#{inspect(b)} is not #{unquote(name)}")
+          mismatch("#{safe_inspect(b)} is not #{unquote(name)}")
         end
       end
     end
@@ -228,25 +228,25 @@ defmodule Machete.StringMatcher do
     defp matches_whitespace(_, nil), do: nil
 
     defp matches_whitespace(b, false) do
-      if b =~ ~r/[[:blank:]]/, do: mismatch("#{inspect(b)} contains whitespace")
+      if b =~ ~r/[[:blank:]]/, do: mismatch("#{safe_inspect(b)} contains whitespace")
     end
 
     defp matches_whitespace(b, true) do
-      unless b =~ ~r/[[:blank:]]/, do: mismatch("#{inspect(b)} does not contain whitespace")
+      unless b =~ ~r/[[:blank:]]/, do: mismatch("#{safe_inspect(b)} does not contain whitespace")
     end
 
     defp matches_starts_with(_, nil), do: nil
 
     defp matches_starts_with(b, prefix) do
       unless String.starts_with?(b, prefix),
-        do: mismatch("#{inspect(b)} does not start with #{inspect(prefix)}")
+        do: mismatch("#{safe_inspect(b)} does not start with #{safe_inspect(prefix)}")
     end
 
     defp matches_ends_with(_, nil), do: nil
 
     defp matches_ends_with(b, suffix) do
       unless String.ends_with?(b, suffix),
-        do: mismatch("#{inspect(b)} does not end with #{inspect(suffix)}")
+        do: mismatch("#{safe_inspect(b)} does not end with #{safe_inspect(suffix)}")
     end
   end
 end

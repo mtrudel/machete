@@ -66,7 +66,8 @@ defmodule Machete.ListMatcher do
   def list(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%@for{}, b) when not is_list(b), do: mismatch("#{inspect(b)} is not a list")
+    def mismatches(%@for{}, b) when not is_list(b),
+      do: mismatch("#{safe_inspect(b)} is not a list")
 
     def mismatches(%@for{} = a, b) do
       with nil <- matches_length(b, a.length),
@@ -77,17 +78,17 @@ defmodule Machete.ListMatcher do
     end
 
     defp matches_length(b, length) when is_number(length) and length(b) != length,
-      do: mismatch("#{inspect(b)} is not exactly #{length} elements in length")
+      do: mismatch("#{safe_inspect(b)} is not exactly #{length} elements in length")
 
     defp matches_length(_, _), do: nil
 
     defp matches_min(b, length) when is_number(length) and length(b) < length,
-      do: mismatch("#{inspect(b)} is less than #{length} elements in length")
+      do: mismatch("#{safe_inspect(b)} is less than #{length} elements in length")
 
     defp matches_min(_, _), do: nil
 
     defp matches_max(b, length) when is_number(length) and length(b) > length,
-      do: mismatch("#{inspect(b)} is more than #{length} elements in length")
+      do: mismatch("#{safe_inspect(b)} is more than #{length} elements in length")
 
     defp matches_max(_, _), do: nil
 

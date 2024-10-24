@@ -10,9 +10,10 @@ defmodule Machete.LiteralDateLikeMatcher do
 
   defimpl Machete.Matchable, for: [DateTime, NaiveDateTime, Date, Time] do
     def mismatches(%@for{} = a, %@for{} = b) do
-      if @for.compare(a, b) != :eq, do: mismatch("#{inspect(b)} is not equal to #{inspect(a)}")
+      if @for.compare(a, b) != :eq,
+        do: mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(a)}")
     end
 
-    def mismatches(%@for{}, b), do: mismatch("#{b} is not a #{inspect(@for)}")
+    def mismatches(%@for{}, b), do: mismatch("#{b} is not a #{safe_inspect(@for)}")
   end
 end

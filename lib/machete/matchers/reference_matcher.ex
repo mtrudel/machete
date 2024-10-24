@@ -23,7 +23,7 @@ defmodule Machete.ReferenceMatcher do
   Takes no arguments
 
   Examples:
-      
+
       iex> assert make_ref() ~> reference()
       true
 
@@ -35,7 +35,7 @@ defmodule Machete.ReferenceMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) do
-      unless is_reference(b), do: mismatch("#{inspect(b)} is not a reference")
+      unless is_reference(b), do: mismatch("#{safe_inspect(b)} is not a reference")
     end
   end
 end

@@ -84,19 +84,19 @@ defmodule Machete.NaiveDateTimeMatcher do
     end
 
     defp matches_type(%NaiveDateTime{}), do: nil
-    defp matches_type(b), do: mismatch("#{inspect(b)} is not a NaiveDateTime")
+    defp matches_type(b), do: mismatch("#{safe_inspect(b)} is not a NaiveDateTime")
 
     defp matches_precision(_, nil), do: nil
     defp matches_precision(%NaiveDateTime{microsecond: {_, precision}}, precision), do: nil
 
     defp matches_precision(%NaiveDateTime{microsecond: {_, b_precision}} = b, precision),
-      do: mismatch("#{inspect(b)} has precision #{b_precision}, expected #{precision}")
+      do: mismatch("#{safe_inspect(b)} has precision #{b_precision}, expected #{precision}")
 
     defp matches_exactly(_, nil), do: nil
 
     defp matches_exactly(b, exactly) do
       if NaiveDateTime.diff(b, exactly, :microsecond) != 0 do
-        mismatch("#{inspect(b)} is not equal to #{inspect(exactly)}")
+        mismatch("#{safe_inspect(b)} is not equal to #{safe_inspect(exactly)}")
       end
     end
 
@@ -105,7 +105,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_roughly(b, roughly) do
       if NaiveDateTime.diff(b, roughly, :microsecond) not in -10_000_000..10_000_000 do
-        mismatch("#{inspect(b)} is not within 10 seconds of #{inspect(roughly)}")
+        mismatch("#{safe_inspect(b)} is not within 10 seconds of #{safe_inspect(roughly)}")
       end
     end
 
@@ -114,7 +114,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_before(b, before) do
       if NaiveDateTime.compare(b, before) != :lt do
-        mismatch("#{inspect(b)} is not before #{inspect(before)}")
+        mismatch("#{safe_inspect(b)} is not before #{safe_inspect(before)}")
       end
     end
 
@@ -123,7 +123,7 @@ defmodule Machete.NaiveDateTimeMatcher do
 
     defp matches_after(b, after_var) do
       if NaiveDateTime.compare(b, after_var) != :gt do
-        mismatch("#{inspect(b)} is not after #{inspect(after_var)}")
+        mismatch("#{safe_inspect(b)} is not after #{safe_inspect(after_var)}")
       end
     end
   end

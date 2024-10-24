@@ -23,7 +23,7 @@ defmodule Machete.BooleanMatcher do
   Takes no arguments
 
   Examples:
-      
+
       iex> assert true ~> boolean()
       true
 
@@ -41,7 +41,7 @@ defmodule Machete.BooleanMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) do
-      unless is_boolean(b), do: mismatch("#{inspect(b)} is not a boolean")
+      unless is_boolean(b), do: mismatch("#{safe_inspect(b)} is not a boolean")
     end
   end
 end

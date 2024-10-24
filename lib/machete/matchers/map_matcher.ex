@@ -61,7 +61,7 @@ defmodule Machete.MapMatcher do
   def map(opts \\ []), do: struct!(__MODULE__, opts)
 
   defimpl Machete.Matchable do
-    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{inspect(b)} is not a map")
+    def mismatches(%@for{}, b) when not is_map(b), do: mismatch("#{safe_inspect(b)} is not a map")
 
     def mismatches(%@for{} = a, b) do
       with nil <- matches_size(b, a.size),
@@ -73,17 +73,17 @@ defmodule Machete.MapMatcher do
     end
 
     defp matches_size(b, size) when is_number(size) and map_size(b) != size,
-      do: mismatch("#{inspect(b)} is not exactly #{size} pairs in size")
+      do: mismatch("#{safe_inspect(b)} is not exactly #{size} pairs in size")
 
     defp matches_size(_, _), do: nil
 
     defp matches_min(b, min) when is_number(min) and map_size(b) < min,
-      do: mismatch("#{inspect(b)} is less than #{min} pairs in size")
+      do: mismatch("#{safe_inspect(b)} is less than #{min} pairs in size")
 
     defp matches_min(_, _), do: nil
 
     defp matches_max(b, max) when is_number(max) and map_size(b) > max,
-      do: mismatch("#{inspect(b)} is greater than #{max} pairs in size")
+      do: mismatch("#{safe_inspect(b)} is greater than #{max} pairs in size")
 
     defp matches_max(_, _), do: nil
 

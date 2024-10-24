@@ -32,7 +32,7 @@ defmodule Machete.NoneMatcher do
   defimpl Machete.Matchable do
     def mismatches(%@for{} = a, b) do
       if Enum.any?(a.matchers, &(b ~> &1)),
-        do: mismatch("#{inspect(b)} matches at least one of the specified matchers")
+        do: mismatch("#{safe_inspect(b)} matches at least one of the specified matchers")
     end
   end
 end

@@ -23,7 +23,7 @@ defmodule Machete.PIDMatcher do
   Takes no arguments
 
   Examples:
-      
+
       iex> assert self() ~> pid()
       true
 
@@ -35,7 +35,7 @@ defmodule Machete.PIDMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) do
-      unless is_pid(b), do: mismatch("#{inspect(b)} is not a PID")
+      unless is_pid(b), do: mismatch("#{safe_inspect(b)} is not a PID")
     end
   end
 end

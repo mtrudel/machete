@@ -125,44 +125,46 @@ defmodule Machete.IntegerMatcher do
       end
     end
 
-    defp matches_type(b) when not is_integer(b), do: mismatch("#{inspect(b)} is not an integer")
+    defp matches_type(b) when not is_integer(b),
+      do: mismatch("#{safe_inspect(b)} is not an integer")
+
     defp matches_type(_), do: nil
 
-    defp matches_positive(b, true) when b < 0, do: mismatch("#{inspect(b)} is not positive")
-    defp matches_positive(b, false) when b >= 0, do: mismatch("#{inspect(b)} is positive")
+    defp matches_positive(b, true) when b < 0, do: mismatch("#{safe_inspect(b)} is not positive")
+    defp matches_positive(b, false) when b >= 0, do: mismatch("#{safe_inspect(b)} is positive")
     defp matches_positive(_, _), do: nil
 
     defp matches_strictly_positive(b, true) when b <= 0,
-      do: mismatch("#{inspect(b)} is not strictly positive")
+      do: mismatch("#{safe_inspect(b)} is not strictly positive")
 
     defp matches_strictly_positive(b, false) when b > 0,
-      do: mismatch("#{inspect(b)} is strictly positive")
+      do: mismatch("#{safe_inspect(b)} is strictly positive")
 
     defp matches_strictly_positive(_, _), do: nil
 
-    defp matches_negative(b, true) when b > 0, do: mismatch("#{inspect(b)} is not negative")
-    defp matches_negative(b, false) when b <= 0, do: mismatch("#{inspect(b)} is negative")
+    defp matches_negative(b, true) when b > 0, do: mismatch("#{safe_inspect(b)} is not negative")
+    defp matches_negative(b, false) when b <= 0, do: mismatch("#{safe_inspect(b)} is negative")
     defp matches_negative(_, _), do: nil
 
     defp matches_strictly_negative(b, true) when b >= 0,
-      do: mismatch("#{inspect(b)} is not strictly negative")
+      do: mismatch("#{safe_inspect(b)} is not strictly negative")
 
     defp matches_strictly_negative(b, false) when b < 0,
-      do: mismatch("#{inspect(b)} is strictly negative")
+      do: mismatch("#{safe_inspect(b)} is strictly negative")
 
     defp matches_strictly_negative(_, _), do: nil
 
-    defp matches_nonzero(b, true) when b == 0, do: mismatch("#{inspect(b)} is zero")
-    defp matches_nonzero(b, false) when b != 0, do: mismatch("#{inspect(b)} is not zero")
+    defp matches_nonzero(b, true) when b == 0, do: mismatch("#{safe_inspect(b)} is zero")
+    defp matches_nonzero(b, false) when b != 0, do: mismatch("#{safe_inspect(b)} is not zero")
     defp matches_nonzero(_, _), do: nil
 
     defp matches_min(b, min) when is_integer(min) and b < min,
-      do: mismatch("#{inspect(b)} is less than #{min}")
+      do: mismatch("#{safe_inspect(b)} is less than #{min}")
 
     defp matches_min(_, _), do: nil
 
     defp matches_max(b, max) when is_integer(max) and b > max,
-      do: mismatch("#{inspect(b)} is greater than #{max}")
+      do: mismatch("#{safe_inspect(b)} is greater than #{max}")
 
     defp matches_max(_, _), do: nil
   end

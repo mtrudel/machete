@@ -35,7 +35,7 @@ defmodule Machete.AtomMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{}, b) do
-      unless is_atom(b), do: mismatch("#{inspect(b)} is not an atom")
+      unless is_atom(b), do: mismatch("#{safe_inspect(b)} is not an atom")
     end
   end
 end
