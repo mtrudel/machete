@@ -46,6 +46,7 @@ defmodule Machete.IndifferentAccessMatcher do
     def mismatches(%@for{} = a, b) do
       mapped_b =
         b
+        |> Enum.sort()
         |> Enum.map(fn {k, v} ->
           cond do
             is_atom(k) and Map.has_key?(a.map, to_string(k)) -> {to_string(k), v}

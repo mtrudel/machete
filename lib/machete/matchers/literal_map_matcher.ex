@@ -33,7 +33,9 @@ defmodule Machete.LiteralMapMatcher do
     end
 
     defp mismatched_values(a, b) do
-      Enum.flat_map(b, fn
+      b
+      |> Enum.sort()
+      |> Enum.flat_map(fn
         {k, v} when is_map_key(a, k) -> Enum.map(v ~>> a[k], &%{&1 | path: [k | &1.path]})
         _ -> []
       end)
