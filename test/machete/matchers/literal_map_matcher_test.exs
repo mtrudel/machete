@@ -21,6 +21,14 @@ defmodule LiteralMapMatcherTest do
     assert %{a: 1} ~>> %{} ~> mismatch("Unexpected key", :a)
   end
 
+  test "produces a useful mismatch on atom entries where strings were expected" do
+    assert %{a: 1} ~>> %{"a" => 1} ~> mismatch("Found atom key, expected string", :a)
+  end
+
+  test "produces a useful mismatch on atom entries where atoms were expected" do
+    assert %{"a" => 1} ~>> %{a: 1} ~> mismatch("Found string key, expected atom", "a")
+  end
+
   test "produces a useful mismatch on non-maps" do
     assert 1 ~>> %{} ~> mismatch("Value is not a map")
   end
