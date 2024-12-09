@@ -31,9 +31,7 @@ defmodule Machete.LiteralMapMatcher do
 
       string_keys =
         extra_keys
-        |> Enum.filter(
-          &(is_binary(&1) && MapSet.member?(missing_keys, String.to_existing_atom(&1)))
-        )
+        |> Enum.filter(&(is_binary(&1) && MapSet.member?(missing_keys, safe_existing_atom(&1))))
         |> MapSet.new()
 
       extra_keys =
@@ -43,8 +41,8 @@ defmodule Machete.LiteralMapMatcher do
 
       missing_keys =
         missing_keys
-        |> MapSet.difference(atom_keys |> Enum.map(&Kernel.to_string/1) |> MapSet.new())
-        |> MapSet.difference(string_keys |> Enum.map(&String.to_existing_atom/1) |> MapSet.new())
+        |> MapSet.difference(MapSet.new(atom_keys, &Kernel.to_string/1))
+        |> MapSet.difference(MapSet.new(string_keys, &safe_existing_atom/1))
 
       Enum.flat_map(extra_keys, &mismatch("Unexpected key", &1)) ++
         Enum.flat_map(missing_keys, &mismatch("Missing key", &1)) ++
@@ -59,6 +57,12 @@ defmodule Machete.LiteralMapMatcher do
         {k, v} when is_map_key(a, k) -> Enum.map(v ~>> a[k], &%{&1 | path: [k | &1.path]})
         _ -> []
       end)
+    end
+
+    defp safe_existing_atom(str) do
+      String.to_existing_atom(str)
+    rescue
+      ArgumentError -> {:error, :machete_no_existing_atom}
     end
   end
 end

@@ -33,6 +33,19 @@ defmodule LiteralMapMatcherTest do
     assert 1 ~>> %{} ~> mismatch("Value is not a map")
   end
 
+  test "produces useful mismatches on non-existing atoms" do
+    assert %{"abcdefghijkl" => 1, "mnopqrstuvwxyz" => 2}
+           ~>> %{"abcdefghijkl" => 1}
+           ~> mismatch("Unexpected key", "mnopqrstuvwxyz")
+
+    assert %{"abcdefghijkl" => 1, "mnopqrstuvwxyz" => 2, "zyxwvutsrq" => 3}
+           ~>> %{"abcdefghijkl" => 1}
+           ~> [
+             %Machete.Mismatch{message: "Unexpected key", path: ["mnopqrstuvwxyz"]},
+             %Machete.Mismatch{message: "Unexpected key", path: ["zyxwvutsrq"]}
+           ]
+  end
+
   describe "nested matchers" do
     test "matches when nested matcher returns empty list" do
       assert %{a: 1} ~>> %{a: test_matcher(behaviour: :match_returning_list)} ~> []
