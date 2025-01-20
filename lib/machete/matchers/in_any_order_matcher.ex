@@ -35,13 +35,46 @@ defmodule Machete.InAnyOrderMatcher do
 
   defimpl Machete.Matchable do
     def mismatches(%@for{} = a, b) when is_list(b) and length(a.matchers) == length(b) do
-      matches =
+      mismatch_sets =
         a.matchers
         |> permutations()
-        |> Enum.any?(&simple_list_match(&1, b))
+        |> Enum.reduce_while([], fn a, acc ->
+          mismatches = list_mismatches(a, b)
 
-      unless matches,
-        do: mismatch("#{safe_inspect(b)} does not match any ordering of the specified matchers")
+          if Enum.all?(mismatches, &Enum.empty?/1) do
+            {:halt, []}
+          else
+            {:cont, [mismatches | acc]}
+          end
+        end)
+
+      if mismatch_sets != [] do
+        closest_mismatch_set =
+          Enum.min_by(mismatch_sets, fn mismatch_set ->
+            mismatch_set
+            |> Enum.map(&length/1)
+            |> Enum.sum()
+          end)
+
+        indent = "    "
+        sub_indent = indent <> "  "
+
+        sub_mismatches =
+          closest_mismatch_set
+          |> Enum.with_index(1)
+          |> Enum.map_join("\n", fn
+            {[], _idx} ->
+              ""
+
+            {mismatches, idx} ->
+              "#{indent}.#{idx - 1}\n#{format_mismatches(mismatches, sub_indent)}"
+          end)
+
+        mismatch(
+          "#{safe_inspect(b)} does not match any ordering of the specified matchers:\n" <>
+            sub_mismatches
+        )
+      end
     end
 
     def mismatches(a, b) when is_list(b),
@@ -54,6 +87,9 @@ defmodule Machete.InAnyOrderMatcher do
     defp permutations(list),
       do: for(elem <- list, rest <- permutations(list -- [elem]), do: [elem | rest])
 
-    defp simple_list_match(b, a), do: Enum.zip(a, b) |> Enum.all?(fn {a, b} -> a ~> b end)
+    defp list_mismatches(b, a) do
+      Enum.zip(a, b)
+      |> Enum.map(fn {a, b} -> a ~>> b end)
+    end
   end
 end
