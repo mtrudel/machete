@@ -38,11 +38,14 @@ defmodule Machete.StructLikeMatcher do
       iex> assert %URI{host: "example.com", path: "/abc"} ~> struct_like(URI, host: string())
       true
 
+      iex> assert %URI{host: "example.com", path: "/abc"} ~> struct_like(URI)
+      true
+
       iex> refute %URI{host: "example.com"} ~> struct_like(URI, host: "example.com", path: "/abc")
       false
   """
   @spec struct_like(struct(), Enum.t()) :: t()
-  def struct_like(type, fields),
+  def struct_like(type, fields \\ []),
     do: struct!(__MODULE__, type: type, fields: Enum.into(fields, %{}))
 
   defimpl Machete.Matchable do
