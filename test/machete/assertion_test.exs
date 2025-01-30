@@ -35,17 +35,17 @@ defmodule AssertionTest do
   end
 
   test "ExUnit assertions fail with useful exceptions" do
-    e = get_assertion_error(fn -> assert true == false end)
+    e = get_assertion_error(fn -> assert false end)
 
     assert e
            ~> %ExUnit.AssertionError{
              args: :ex_unit_no_meaningful_value,
              context: :==,
              doctest: :ex_unit_no_meaningful_value,
-             expr: {:assert, [line: integer()], [{:==, [line: integer()], [true, false]}]},
-             left: true,
-             message: "Assertion with == failed",
-             right: false
+             expr: {:assert, [], [false]},
+             left: :ex_unit_no_meaningful_value,
+             message: "Expected truthy, got false",
+             right: :ex_unit_no_meaningful_value
            }
   end
 
