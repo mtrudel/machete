@@ -57,4 +57,14 @@ defmodule IntegerMatcherTest do
   test "produces a useful mismatch for max mismatch" do
     assert 2 ~>> integer(max: 1) ~> mismatch("2 is greater than 1")
   end
+
+  test "produces a useful mismatch for roughly mismatch" do
+    assert 94 ~>> integer(roughly: 100) ~> mismatch("94 is more than 5% different than 100")
+  end
+
+  test "raises when provided with a roughly value of 0" do
+    assert_raise(RuntimeError, "`roughly` parameter cannot be 0", fn ->
+      assert 94 ~>> integer(roughly: 0)
+    end)
+  end
 end
