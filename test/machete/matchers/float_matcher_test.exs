@@ -57,4 +57,14 @@ defmodule FloatMatcherTest do
   test "produces a useful mismatch for max mismatch" do
     assert 2.0 ~>> float(max: 1.0) ~> mismatch("2.0 is greater than 1.0")
   end
+
+  test "produces a useful mismatch for roughly mismatch" do
+    assert 94.0 ~>> float(roughly: 100.0) ~> mismatch("94.0 is more than 5% different than 100.0")
+  end
+
+  test "raises when provided with a roughly value of 0.0" do
+    assert_raise(RuntimeError, "`roughly` parameter cannot be 0.0", fn ->
+      assert 94.0 ~>> float(roughly: 0.0)
+    end)
+  end
 end

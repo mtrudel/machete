@@ -11,7 +11,8 @@ defmodule Machete.FloatMatcher do
             strictly_negative: nil,
             nonzero: nil,
             min: nil,
-            max: nil
+            max: nil,
+            roughly: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -28,7 +29,8 @@ defmodule Machete.FloatMatcher do
           {:strictly_negative, boolean()},
           {:nonzero, boolean()},
           {:min, float()},
-          {:max, float()}
+          {:max, float()},
+          {:roughly, float()}
         ]
 
   @doc """
@@ -43,6 +45,7 @@ defmodule Machete.FloatMatcher do
   * `nonzero`: When `true`, requires the matched float be nonzero
   * `min`: Requires the matched float be greater than or equal to the specified value
   * `max`: Requires the matched float be less than or equal to the specified value
+  * `roughly`: Requires the matched float be within 5% of the specified value. Raises if set to `0.0`
 
   Examples:
 
@@ -108,6 +111,12 @@ defmodule Machete.FloatMatcher do
 
       iex> assert 2.0 ~> float(max: 2.0)
       true
+
+      iex> assert 95.0 ~> float(roughly: 100.0)
+      true
+
+      iex> refute 94.0 ~> float(roughly: 100.0)
+      false
   """
   @spec float(opts()) :: t()
   def float(opts \\ []), do: struct!(__MODULE__, opts)
@@ -121,7 +130,8 @@ defmodule Machete.FloatMatcher do
            nil <- matches_strictly_negative(b, a.strictly_negative),
            nil <- matches_nonzero(b, a.nonzero),
            nil <- matches_min(b, a.min),
-           nil <- matches_max(b, a.max) do
+           nil <- matches_max(b, a.max),
+           nil <- matches_roughly(b, a.roughly) do
       end
     end
 
@@ -169,5 +179,14 @@ defmodule Machete.FloatMatcher do
       do: mismatch("#{safe_inspect(b)} is greater than #{max}")
 
     defp matches_max(_, _), do: nil
+
+    defp matches_roughly(_b, roughly) when roughly in [-0.0, +0.0],
+      do: raise("`roughly` parameter cannot be 0.0")
+
+    defp matches_roughly(b, roughly)
+         when is_float(roughly) and (b / roughly < 0.95 or b / roughly > 1.05),
+         do: mismatch("#{safe_inspect(b)} is more than 5% different than #{roughly}")
+
+    defp matches_roughly(_, _), do: nil
   end
 end
