@@ -49,7 +49,7 @@ defmodule Machete.ListMatcher do
       iex> assert ["a", "b", :c] ~> list(elements: integer(), match_mode: :none)
       true
 
-      iex> assert [1, 2, 3] ~> list(elements: integer(), match_mode: 2)
+      iex> assert [1, 2, 3.0] ~> list(elements: integer(), match_mode: 2)
       true
 
       iex> assert [1] ~> list(length: 1)
