@@ -32,7 +32,7 @@ defmodule NaiveDateTimeMatcherTest do
     assert ~N[2020-01-01 00:00:00.000000]
            ~>> naive_datetime(roughly: ~N[3000-01-01 00:00:00.000000])
            ~> mismatch(
-             "~N[2020-01-01 00:00:00.000000] is not within 10 seconds of ~N[3000-01-01 00:00:00.000000]"
+             "~N[2020-01-01 00:00:00.000000] is not roughly equal to ~N[3000-01-01 00:00:00.000000]"
            )
   end
 

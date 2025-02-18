@@ -29,7 +29,7 @@ defmodule TimeMatcherTest do
   test "produces a useful mismatch for roughly mismatches" do
     assert ~T[00:00:00.000000]
            ~>> time(roughly: ~T[00:00:20.000000])
-           ~> mismatch("~T[00:00:00.000000] is not within 10 seconds of ~T[00:00:20.000000]")
+           ~> mismatch("~T[00:00:00.000000] is not roughly equal to ~T[00:00:20.000000]")
   end
 
   test "produces a useful mismatch for before mismatches" do

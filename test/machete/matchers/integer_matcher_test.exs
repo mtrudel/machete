@@ -59,11 +59,11 @@ defmodule IntegerMatcherTest do
   end
 
   test "produces a useful mismatch for roughly mismatch" do
-    assert 94 ~>> integer(roughly: 100) ~> mismatch("94 is more than 5% different than 100")
+    assert 94 ~>> integer(roughly: 100) ~> mismatch("94 is not roughly equal to 100")
   end
 
   test "raises when provided with a roughly value of 0" do
-    assert_raise(RuntimeError, "`roughly` parameter cannot be 0", fn ->
+    assert_raise(RuntimeError, "Must specify a value for `epsilon` when `roughly` is 0", fn ->
       assert 94 ~>> integer(roughly: 0)
     end)
   end

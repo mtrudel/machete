@@ -26,7 +26,7 @@ defmodule Machete.UnixTimeMatcherTest do
   test "produces a useful mismatch for roughly mismatches" do
     assert 1_681_059_951_018
            ~>> unix_time(roughly: 1_681_060_006_343)
-           ~> mismatch("1681059951018 is not within 10 seconds of 1681060006343")
+           ~> mismatch("1681059951018 is not roughly equal to 1681060006343")
   end
 
   test "produces a useful mismatch for before mismatches" do

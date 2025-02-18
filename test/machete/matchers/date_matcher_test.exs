@@ -19,7 +19,7 @@ defmodule DateMatcherTest do
   test "produces a useful mismatch for roughly mismatches" do
     assert ~D[2020-01-01]
            ~>> date(roughly: ~D[3000-01-01])
-           ~> mismatch("~D[2020-01-01] is not within 1 day of ~D[3000-01-01]")
+           ~> mismatch("~D[2020-01-01] is not roughly equal to ~D[3000-01-01]")
   end
 
   test "produces a useful mismatch for before mismatches" do

@@ -5,7 +5,7 @@ defmodule Machete.UnixTimeMatcher do
 
   import Machete.Mismatch
 
-  defstruct exactly: nil, roughly: nil, before: nil, after: nil
+  defstruct exactly: nil, roughly: nil, epsilon: nil, before: nil, after: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -18,6 +18,7 @@ defmodule Machete.UnixTimeMatcher do
   @type opts :: [
           {:exactly, integer()},
           {:roughly, integer() | :now},
+          {:epsilon, integer() | {integer(), integer()}},
           {:before, integer() | :now},
           {:after, integer() | :now}
         ]
@@ -28,8 +29,12 @@ defmodule Machete.UnixTimeMatcher do
   Takes the following arguments:
 
   * `exactly`: Requires the matched Unix time to be exactly equal to the specified Unix time
-  * `roughly`: Requires the matched Unix time to be within +/- 10 seconds of the specified Unix time. The
-    atom `:now` can be used to use the current time as the specified Unix time
+  * `roughly`: Requires the matched Unix time to be within `epsilon` seconds of the specified Unix
+    time. The atom `:now` can be used to use the current time as the specified Unix time
+  * `epsilon`: The bound(s) to use when determining how close (in milliseconds) the matched Unix
+    time needs to be to `roughly`. Can be specified as a single integer that is used for both lower
+    and upper bounds, or a tuple consisting of distinct lower and upper bounds. If not specified,
+    defaults to 10_000 milliseconds
   * `before`: Requires the matched Unix time to be before or equal to the specified Unix time. The atom
     `:now` can be used to use the current time as the specified Unix time
   * `after`: Requires the matched Unix time to be after or equal to the specified Unix time. The atom `:now`
@@ -48,6 +53,18 @@ defmodule Machete.UnixTimeMatcher do
 
       iex> assert 1681060000000 ~> unix_time(roughly: 1681060005000)
       true
+
+      iex> assert 1681060000000 ~> unix_time(roughly: 1681060001000, epsilon: 1000)
+      true
+
+      iex> assert 1681060000000 ~> unix_time(roughly: 1681060001000, epsilon: {1000, 500})
+      true
+
+      iex> refute 1681060000000 ~> unix_time(roughly: 1681060001001, epsilon: 1000)
+      false
+
+      iex> refute 1681060000000 ~> unix_time(roughly: 1681060001001, epsilon: {1000, 500})
+      false
 
       iex> assert 1681060000000 ~> unix_time(before: :now)
       true
@@ -68,7 +85,7 @@ defmodule Machete.UnixTimeMatcher do
     def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_exactly(b, a.exactly),
-           nil <- matches_roughly(b, a.roughly),
+           nil <- matches_roughly(b, a.roughly, a.epsilon),
            nil <- matches_before(b, a.before),
            nil <- matches_after(b, a.after) do
       end
@@ -87,14 +104,22 @@ defmodule Machete.UnixTimeMatcher do
       end
     end
 
-    defp matches_roughly(_, nil), do: nil
-    defp matches_roughly(b, :now), do: matches_roughly(b, now())
+    defp matches_roughly(b, :now, epsilon), do: matches_roughly(b, now(), epsilon)
 
-    defp matches_roughly(b, roughly) when is_integer(roughly) do
-      if (b - roughly) not in -:timer.seconds(10)..:timer.seconds(10) do
-        mismatch("#{safe_inspect(b)} is not within 10 seconds of #{safe_inspect(roughly)}")
-      end
+    defp matches_roughly(b, roughly, epsilon) when is_integer(roughly) do
+      if b < lower_bound(roughly, epsilon) or b > upper_bound(roughly, epsilon),
+        do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
     end
+
+    defp matches_roughly(_, _, _), do: nil
+
+    defp lower_bound(roughly, nil), do: roughly - 10_000
+    defp lower_bound(roughly, {lower, _upper}), do: roughly - abs(lower)
+    defp lower_bound(roughly, epsilon), do: roughly - abs(epsilon)
+
+    defp upper_bound(roughly, nil), do: roughly + 10_000
+    defp upper_bound(roughly, {_lower, upper}), do: roughly + abs(upper)
+    defp upper_bound(roughly, epsilon), do: roughly + abs(epsilon)
 
     defp matches_before(_, nil), do: nil
     defp matches_before(b, :now), do: matches_before(b, now())

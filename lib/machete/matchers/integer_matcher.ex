@@ -12,7 +12,8 @@ defmodule Machete.IntegerMatcher do
             nonzero: nil,
             min: nil,
             max: nil,
-            roughly: nil
+            roughly: nil,
+            epsilon: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -30,7 +31,8 @@ defmodule Machete.IntegerMatcher do
           {:nonzero, boolean()},
           {:min, integer()},
           {:max, integer()},
-          {:roughly, integer()}
+          {:roughly, integer()},
+          {:epsilon, integer() | {integer(), integer()}}
         ]
 
   @doc """
@@ -45,7 +47,11 @@ defmodule Machete.IntegerMatcher do
   * `nonzero`: When `true`, requires the matched integer be nonzero
   * `min`: Requires the matched integer be greater than or equal to the specified value
   * `max`: Requires the matched integer be less than or equal to the specified value
-  * `roughly`: Requires the matched integer be within 5% of the specified value. Raises if set to `0`
+  * `roughly`: Requires the matched integer be within `epsilon` of the specified value
+  * `epsilon`: The bound(s) to use when determining how close the matched integer needs to be to
+    `roughly`. Can be specified as a single integer that is used for both lower and upper bounds,
+    or a tuple consisting of distinct lower and upper bounds. If not specified, and if `roughly`
+    is not zero, defaults to 5% of the value of `roughly`.
 
   Examples:
 
@@ -115,7 +121,19 @@ defmodule Machete.IntegerMatcher do
       iex> assert 95 ~> integer(roughly: 100)
       true
 
+      iex> assert 90 ~> integer(roughly: 100, epsilon: 10)
+      true
+
+      iex> assert 105 ~> integer(roughly: 100, epsilon: {10, 5})
+      true
+
       iex> refute 94 ~> integer(roughly: 100)
+      false
+
+      iex> refute 89 ~> integer(roughly: 100, epsilon: 10)
+      false
+
+      iex> refute 106 ~> integer(roughly: 100, epsilon: {10, 5})
       false
   """
   @spec integer(opts()) :: t()
@@ -131,7 +149,7 @@ defmodule Machete.IntegerMatcher do
            nil <- matches_nonzero(b, a.nonzero),
            nil <- matches_min(b, a.min),
            nil <- matches_max(b, a.max),
-           nil <- matches_roughly(b, a.roughly) do
+           nil <- matches_roughly(b, a.roughly, a.epsilon) do
       end
     end
 
@@ -178,12 +196,21 @@ defmodule Machete.IntegerMatcher do
 
     defp matches_max(_, _), do: nil
 
-    defp matches_roughly(_b, 0), do: raise("`roughly` parameter cannot be 0")
+    defp matches_roughly(b, roughly, epsilon) when is_integer(roughly) do
+      if b < lower_bound(roughly, epsilon) or b > upper_bound(roughly, epsilon),
+        do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
+    end
 
-    defp matches_roughly(b, roughly)
-         when is_integer(roughly) and (b / roughly < 0.95 or b / roughly > 1.05),
-         do: mismatch("#{safe_inspect(b)} is more than 5% different than #{roughly}")
+    defp matches_roughly(_, _, _), do: nil
 
-    defp matches_roughly(_, _), do: nil
+    defp lower_bound(0, nil), do: raise("Must specify a value for `epsilon` when `roughly` is 0")
+    defp lower_bound(roughly, nil), do: round(0.95 * roughly)
+    defp lower_bound(roughly, {lower, _upper}), do: roughly - abs(lower)
+    defp lower_bound(roughly, epsilon), do: roughly - abs(epsilon)
+
+    defp upper_bound(0, nil), do: raise("Must specify a value for `epsilon` when `roughly` is 0")
+    defp upper_bound(roughly, nil), do: round(1.05 * roughly)
+    defp upper_bound(roughly, {_lower, upper}), do: roughly + abs(upper)
+    defp upper_bound(roughly, epsilon), do: roughly + abs(epsilon)
   end
 end

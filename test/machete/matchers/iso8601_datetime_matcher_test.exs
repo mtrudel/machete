@@ -52,7 +52,7 @@ defmodule ISO8601DateTimeMatcherTest do
     assert "2020-01-01T00:00:00.000000Z"
            ~>> iso8601_datetime(roughly: ~U[3000-01-01 00:00:00.000000Z])
            ~> mismatch(
-             "~U[2020-01-01 00:00:00.000000Z] is not within 10 seconds of ~U[3000-01-01 00:00:00.000000Z]"
+             "~U[2020-01-01 00:00:00.000000Z] is not roughly equal to ~U[3000-01-01 00:00:00.000000Z]"
            )
   end
 

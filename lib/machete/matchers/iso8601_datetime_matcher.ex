@@ -24,6 +24,7 @@ defmodule Machete.ISO8601DateTimeMatcher do
           {:offset_required, boolean()},
           {:exactly, DateTime.t()},
           {:roughly, DateTime.t() | :now},
+          {:epsilon, integer() | {integer(), integer()}},
           {:before, DateTime.t() | :now},
           {:after, DateTime.t() | :now}
         ]
@@ -38,9 +39,13 @@ defmodule Machete.ISO8601DateTimeMatcher do
     `:utc` can be used to specify the "Etc/UTC" time zone
   * `offset_required`: Requires the matched ISO8601 string to have a timezone. Defaults to true
   * `exactly`: Requires the matched ISO8601 string to be exactly equal to the specified DateTime
-  * `roughly`: Requires the matched ISO8601 string to be within +/- 10 seconds of the specified
+  * `roughly`: Requires the matched ISO8601 string to be within `epsilon` seconds of the specified
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
     current time as the specified DateTime
+  * `epsilon`: The bound(s) to use when determining how close (in microseconds) the matched
+    ISO8601 string needs to be to `roughly`. Can be specified as a single integer that is used for both lower
+    and upper bounds, or a tuple consisting of distinct lower and upper bounds. If not specified,
+    defaults to 10_000_000 microseconds (10 seconds)
   * `before`: Requires the matched ISO8601 string to be before or equal to the specified
     DateTime. This values must be specified as a DateTime. The atom `:now` can be used to use the
     current time as the specified DateTime
@@ -73,6 +78,18 @@ defmodule Machete.ISO8601DateTimeMatcher do
 
       iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:05.000000Z])
       true
+
+      iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:10.000000Z], epsilon: 10000000)
+      true
+
+      iex> assert "2020-01-01 00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:10.000000Z], epsilon: {10000000, 5000000})
+      true
+
+      iex> refute "2020-01-01 00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:10.000001Z], epsilon: 10000000)
+      false
+
+      iex> refute "2020-01-01 00:00:00.000000Z" ~> iso8601_datetime(roughly: ~U[2020-01-01 00:00:10.000001Z], epsilon: {10000000, 5000000})
+      false
 
       iex> assert "2020-01-01T00:00:00.000000Z" ~> iso8601_datetime(before: :now)
       true

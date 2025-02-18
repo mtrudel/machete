@@ -59,11 +59,11 @@ defmodule FloatMatcherTest do
   end
 
   test "produces a useful mismatch for roughly mismatch" do
-    assert 94.0 ~>> float(roughly: 100.0) ~> mismatch("94.0 is more than 5% different than 100.0")
+    assert 94.0 ~>> float(roughly: 100.0) ~> mismatch("94.0 is not roughly equal to 100.0")
   end
 
   test "raises when provided with a roughly value of 0.0" do
-    assert_raise(RuntimeError, "`roughly` parameter cannot be 0.0", fn ->
+    assert_raise(RuntimeError, "Must specify a value for `epsilon` when `roughly` is 0.0", fn ->
       assert 94.0 ~>> float(roughly: 0.0)
     end)
   end

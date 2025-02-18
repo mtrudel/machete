@@ -5,7 +5,13 @@ defmodule Machete.DateTimeMatcher do
 
   import Machete.Mismatch
 
-  defstruct precision: nil, time_zone: nil, exactly: nil, roughly: nil, before: nil, after: nil
+  defstruct precision: nil,
+            time_zone: nil,
+            exactly: nil,
+            roughly: nil,
+            epsilon: nil,
+            before: nil,
+            after: nil
 
   @typedoc """
   Describes an instance of this matcher
@@ -20,6 +26,7 @@ defmodule Machete.DateTimeMatcher do
           {:time_zone, Calendar.time_zone() | :utc},
           {:exactly, DateTime.t()},
           {:roughly, DateTime.t() | :now},
+          {:epsilon, integer() | {integer(), integer()}},
           {:before, DateTime.t() | :now},
           {:after, DateTime.t() | :now}
         ]
@@ -33,8 +40,12 @@ defmodule Machete.DateTimeMatcher do
   * `time_zone`: Requires the matched DateTime to have the specified time zone. The atom `:utc`
     can be used to specify the "Etc/UTC" time zone
   * `exactly`: Requires the matched DateTime to be exactly equal to the specified DateTime
-  * `roughly`: Requires the matched DateTime to be within +/- 10 seconds of the specified DateTime.
+  * `roughly`: Requires the matched DateTime to be within `epsilon` seconds of the specified DateTime.
     The atom `:now` can be used to use the current time as the specified DateTime
+  * `epsilon`: The bound(s) to use when determining how close (in microseconds) the matched
+    DateTime time needs to be to `roughly`. Can be specified as a single integer that is used for both lower
+    and upper bounds, or a tuple consisting of distinct lower and upper bounds. If not specified,
+    defaults to 10_000_000 microseconds (10 seconds)
   * `before`: Requires the matched DateTime to be before or equal to the specified DateTime. The
     atom `:now` can be used to use the current time as the specified DateTime
   * `after`: Requires the matched DateTime to be after or equal to the specified DateTime. The
@@ -63,6 +74,18 @@ defmodule Machete.DateTimeMatcher do
       iex> assert ~U[2020-01-01 00:00:00.000000Z] ~> datetime(roughly: ~U[2020-01-01 00:00:05.000000Z])
       true
 
+      iex> assert ~U[2020-01-01 00:00:00.000000Z] ~> datetime(roughly: ~U[2020-01-01 00:00:10.000000Z], epsilon: 10000000)
+      true
+
+      iex> assert ~U[2020-01-01 00:00:00.000000Z] ~> datetime(roughly: ~U[2020-01-01 00:00:10.000000Z], epsilon: {10000000, 5000000})
+      true
+
+      iex> refute ~U[2020-01-01 00:00:00.000000Z] ~> datetime(roughly: ~U[2020-01-01 00:00:10.000001Z], epsilon: 10000000)
+      false
+
+      iex> refute ~U[2020-01-01 00:00:00.000000Z] ~> datetime(roughly: ~U[2020-01-01 00:00:10.000001Z], epsilon: {10000000, 5000000})
+      false
+
       iex> assert ~U[2020-01-01 00:00:00.000000Z] ~> datetime(before: :now)
       true
 
@@ -84,7 +107,7 @@ defmodule Machete.DateTimeMatcher do
            nil <- matches_precision(b, a.precision),
            nil <- matches_time_zone(b, a.time_zone),
            nil <- matches_exactly(b, a.exactly),
-           nil <- matches_roughly(b, a.roughly),
+           nil <- matches_roughly(b, a.roughly, a.epsilon),
            nil <- matches_before(b, a.before),
            nil <- matches_after(b, a.after) do
       end
@@ -114,14 +137,25 @@ defmodule Machete.DateTimeMatcher do
       end
     end
 
-    defp matches_roughly(_, nil), do: nil
-    defp matches_roughly(b, :now), do: matches_roughly(b, DateTime.utc_now())
+    defp matches_roughly(b, :now, epsilon), do: matches_roughly(b, DateTime.utc_now(), epsilon)
 
-    defp matches_roughly(b, roughly) do
-      if DateTime.diff(b, roughly, :microsecond) not in -10_000_000..10_000_000 do
-        mismatch("#{safe_inspect(b)} is not within 10 seconds of #{safe_inspect(roughly)}")
+    defp matches_roughly(b, %DateTime{} = roughly, epsilon) do
+      range = -lower_bound(epsilon)..upper_bound(epsilon)
+
+      if DateTime.diff(b, roughly, :microsecond) not in range do
+        mismatch("#{safe_inspect(b)} is not roughly equal to #{safe_inspect(roughly)}")
       end
     end
+
+    defp matches_roughly(_, _, _), do: nil
+
+    defp lower_bound(nil), do: 10_000_000
+    defp lower_bound({lower, _upper}), do: abs(lower)
+    defp lower_bound(epsilon), do: abs(epsilon)
+
+    defp upper_bound(nil), do: 10_000_000
+    defp upper_bound({_lower, upper}), do: abs(upper)
+    defp upper_bound(epsilon), do: abs(epsilon)
 
     defp matches_before(_, nil), do: nil
     defp matches_before(b, :now), do: matches_before(b, DateTime.utc_now())
