@@ -121,10 +121,19 @@ defmodule Machete.IntegerMatcher do
       iex> assert 95 ~> integer(roughly: 100)
       true
 
+      iex> assert -95 ~> integer(roughly: -100)
+      true
+
       iex> assert 90 ~> integer(roughly: 100, epsilon: 10)
       true
 
+      iex> assert -90 ~> integer(roughly: -100, epsilon: 10)
+      true
+
       iex> assert 105 ~> integer(roughly: 100, epsilon: {10, 5})
+      true
+
+      iex> assert -110 ~> integer(roughly: -100, epsilon: {10, 5})
       true
 
       iex> refute 94 ~> integer(roughly: 100)
@@ -197,20 +206,21 @@ defmodule Machete.IntegerMatcher do
     defp matches_max(_, _), do: nil
 
     defp matches_roughly(b, roughly, epsilon) when is_integer(roughly) do
-      if b < lower_bound(roughly, epsilon) or b > upper_bound(roughly, epsilon),
-        do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
+      if roughly - b > lower_bound(roughly, epsilon) or
+           b - roughly > upper_bound(roughly, epsilon),
+         do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
     end
 
     defp matches_roughly(_, _, _), do: nil
 
     defp lower_bound(0, nil), do: raise("Must specify a value for `epsilon` when `roughly` is 0")
-    defp lower_bound(roughly, nil), do: round(0.95 * roughly)
-    defp lower_bound(roughly, {lower, _upper}), do: roughly - abs(lower)
-    defp lower_bound(roughly, epsilon), do: roughly - abs(epsilon)
+    defp lower_bound(roughly, nil), do: abs(round(0.05 * roughly))
+    defp lower_bound(_roughly, {lower, _upper}), do: abs(lower)
+    defp lower_bound(_roughly, epsilon), do: abs(epsilon)
 
     defp upper_bound(0, nil), do: raise("Must specify a value for `epsilon` when `roughly` is 0")
-    defp upper_bound(roughly, nil), do: round(1.05 * roughly)
-    defp upper_bound(roughly, {_lower, upper}), do: roughly + abs(upper)
-    defp upper_bound(roughly, epsilon), do: roughly + abs(epsilon)
+    defp upper_bound(roughly, nil), do: abs(round(0.05 * roughly))
+    defp upper_bound(_roughly, {_lower, upper}), do: abs(upper)
+    defp upper_bound(_roughly, epsilon), do: abs(epsilon)
   end
 end

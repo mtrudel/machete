@@ -121,10 +121,19 @@ defmodule Machete.FloatMatcher do
       iex> assert 95.0 ~> float(roughly: 100.0)
       true
 
+      iex> assert -95.0 ~> float(roughly: -100.0)
+      true
+
       iex> assert 90.0 ~> float(roughly: 100.0, epsilon: 10.0)
       true
 
+      iex> assert -90.0 ~> float(roughly: -100.0, epsilon: 10.0)
+      true
+
       iex> assert 105.0 ~> float(roughly: 100.0, epsilon: {10.0, 5.0})
+      true
+
+      iex> assert -110.0 ~> float(roughly: -100.0, epsilon: {10.0, 5.0})
       true
 
       iex> refute 94.0 ~> float(roughly: 100.0)
@@ -199,8 +208,9 @@ defmodule Machete.FloatMatcher do
     defp matches_max(_, _), do: nil
 
     defp matches_roughly(b, roughly, epsilon) when is_float(roughly) do
-      if b < lower_bound(roughly, epsilon) or b > upper_bound(roughly, epsilon),
-        do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
+      if roughly - b > lower_bound(roughly, epsilon) or
+           b - roughly > upper_bound(roughly, epsilon),
+         do: mismatch("#{safe_inspect(b)} is not roughly equal to #{roughly}")
     end
 
     defp matches_roughly(_, _, _), do: nil
@@ -208,15 +218,15 @@ defmodule Machete.FloatMatcher do
     defp lower_bound(roughly, nil) when roughly in [-0.0, +0.0],
       do: raise("Must specify a value for `epsilon` when `roughly` is 0.0")
 
-    defp lower_bound(roughly, nil), do: round(0.95 * roughly)
-    defp lower_bound(roughly, {lower, _upper}), do: roughly - abs(lower)
-    defp lower_bound(roughly, epsilon), do: roughly - abs(epsilon)
+    defp lower_bound(roughly, nil), do: abs(round(0.05 * roughly))
+    defp lower_bound(_roughly, {lower, _upper}), do: abs(lower)
+    defp lower_bound(_roughly, epsilon), do: abs(epsilon)
 
     defp upper_bound(roughly, nil) when roughly in [-0.0, +0.0],
       do: raise("Must specify a value for `epsilon` when `roughly` is 0")
 
-    defp upper_bound(roughly, nil), do: round(1.05 * roughly)
-    defp upper_bound(roughly, {_lower, upper}), do: roughly + abs(upper)
-    defp upper_bound(roughly, epsilon), do: roughly + abs(epsilon)
+    defp upper_bound(roughly, nil), do: abs(round(0.05 * roughly))
+    defp upper_bound(_roughly, {_lower, upper}), do: abs(upper)
+    defp upper_bound(_roughly, epsilon), do: abs(epsilon)
   end
 end
