@@ -4,7 +4,7 @@ defmodule Machete.MixProject do
   def project do
     [
       app: :machete,
-      version: "0.3.10",
+      version: "0.3.11",
       elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       elixirc_paths: elixirc_paths(Mix.env()),
