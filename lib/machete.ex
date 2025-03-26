@@ -53,7 +53,7 @@ defmodule Machete do
   refute 1.0 ~> 1
   refute "123" ~> 123
 
-  # Variables 'just work' everywhere; no pinning required!
+  # Variables 'just work' everywhere; no pinning required:
   a_number = 1
   assert a_number ~> 1
   assert 1 ~> a_number
@@ -69,7 +69,24 @@ defmodule Machete do
   assert %User{name: "Moe"} ~> struct_like(User, name: string())
   ```
 
-  ## Type-based matchers
+  ## Matching collections
+
+  Machete matches collections via recursive descent; any nested fields / collections will be
+  matched using the same heuristic:
+
+  ```elixir
+  # Maps have their content matched element by element:
+  assert %{a: 1} ~> %{a: 1}
+
+  # Same for lists and tuples:
+  assert [1,2,3] ~> [1,2,3]
+  assert {:ok, :boomer} ~> {:ok, :boomer}
+
+  # This same pattern applies recursively:
+  assert {:ok, %{a: [1,2,3]}} ~> {:ok, %{a: [1,2,3]}}
+  ```
+
+  ## Parametric matchers
 
   Machete comes with parametric matchers defined for a variety of types. Many of these matchers
   take optional arguments to further refine matches (for example, `integer(positive: true)` will
@@ -97,12 +114,12 @@ defmodule Machete do
   * [`truthy()`](`Machete.TruthyMatcher.truthy/1`) matches truthy values
   * [`unix_time()`](`Machete.UnixTimeMatcher.unix_time/1`) matches integers that represent unix time
 
-  ## Collection matchers
+  ## Parametric collection matchers
 
-  Collections can be matched as literals, with their contents being recursively matched. This
-  usage requires knowing the exact shape of the collection up front, and may not always be
-  suitable. For cases where you may need more flexible collection matching, Machete provides the
-  following matchers:
+  As we've already seen, collections can be matched as literals, with their contents being
+  recursively matched. This usage requires knowing the exact shape of the collection up front, and
+  may not always be suitable. For cases where you may need more flexible collection matching,
+  Machete provides the following parametric matchers that operate on collections:
 
   * [`in_any_order()`](`Machete.InAnyOrderMatcher.in_any_order/1`) matches lists in any order
   * [`indifferent_access()`](`Machete.IndifferentAccessMatcher.indifferent_access/1`) matches maps, considering similar atom and string keys to be
