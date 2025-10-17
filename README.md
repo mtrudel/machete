@@ -46,6 +46,78 @@ combination of literals, variables, or parametrically defined matchers
 When your matches fail, Machete provides useful error messages in ExUnit that point you directly
 at any failing matches using [jq syntax](https://stedolan.github.io/jq/manual/#Basicfilters)
 
+## Matching literals & variables
+
+Machete matches directly against literals & variables. The following examples will all match:
+
+```elixir
+# Builtin type literals all match themselves:
+assert 1 ~> 1
+assert "abc" ~> "abc"
+
+# Comparison is strict, using === semantics:
+refute 1.0 ~> 1
+refute "123" ~> 123
+
+# Variables 'just work' everywhere; no pinning required:
+a_number = 1
+assert a_number ~> 1
+assert 1 ~> a_number
+assert a_number ~> a_number
+
+# Date-like types are compared using the relevant `compare/2` function:
+assert ~D[2021-02-01] ~> ~D[2021-02-01]
+
+# Regexes match using =~ semantics:
+assert "abc" ~> ~r/abc/
+
+# Structs can be matched on a subset of their fields:
+assert %User{name: "Moe"} ~> struct_like(User, name: string())
+```
+
+## Matching collections
+
+Machete matches collections via recursive descent; any nested fields / collections will be
+matched using the same heuristic:
+
+```elixir
+# Maps have their content matched element by element:
+assert %{a: 1} ~> %{a: 1}
+
+# Same for lists and tuples:
+assert [1,2,3] ~> [1,2,3]
+assert {:ok, :boomer} ~> {:ok, :boomer}
+
+# This same pattern applies recursively:
+assert {:ok, %{a: [1,2,3]}} ~> {:ok, %{a: [1,2,3]}}
+```
+
+## Parametric matchers
+
+Machete comes with parametric matchers defined for a variety of types. A few
+illustrative examples follow; for more details, see the [Machete
+Hexdocs](https://hexdocs.pm/machete/Machete.html):
+
+```elixir
+# Matches strings
+assert "abc" ~> string()
+
+# Many parametric matchers can take optional arguments
+# For example, this will match only positive integers
+assert 1 ~> integer(positive: true)
+
+# Parametric matchers make it easy to test fuzzy values:
+almost_now = DateTime.utc_now()
+Process.sleep(1)
+assert almost_now ~> datetime(roughly: :now, time_zone: :utc)
+
+# Of course, parametric matchers work within collections too:
+assert %{name: "Moe Fonebone"} ~> %{name: string()}
+
+# There are even parametric matchers for collections themselves:
+assert [1,2,3] ~> list(elements: integer(), length: 3)
+```
+
 ## Installation
 
 Machete is [available in Hex](https://hex.pm/packages/machete), and can be
