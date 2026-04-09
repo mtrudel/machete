@@ -1,6 +1,6 @@
 defmodule Machete.NumberMatcher do
   @moduledoc """
-  Defines a matcher that matches float values
+  Defines a matcher that matches number values
   """
 
   import Machete.Mismatch
