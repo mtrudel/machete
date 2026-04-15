@@ -104,6 +104,7 @@ defmodule Machete do
   * [`json()`](`Machete.JSONMatcher.json/1`) matches JSON formatted structures
   * [`is_a()`](`Machete.IsAMatcher.is_a/1`) matches against a struct type
   * [`naive_datetime()`](`Machete.NaiveDateTimeMatcher.naive_datetime/1`) matches `NaiveDateTime` instances
+  * [`number()`](`Machete.NumberMatcher.number/1`) matches number values
   * [`pid()`](`Machete.PIDMatcher.pid/1`) matches process IDs
   * [`port()`](`Machete.PortMatcher.port/1`) matches Erlang ports
   * [`reference()`](`Machete.ReferenceMatcher.reference/1`) matches Erlang references
@@ -198,6 +199,7 @@ defmodule Machete do
       import Machete.MaybeMatcher
       import Machete.NaiveDateTimeMatcher
       import Machete.NoneMatcher
+      import Machete.NumberMatcher
       import Machete.PIDMatcher
       import Machete.PortMatcher
       import Machete.ReferenceMatcher
