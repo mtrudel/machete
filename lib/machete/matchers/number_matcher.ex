@@ -1,6 +1,7 @@
 defmodule Machete.NumberMatcher do
   @moduledoc """
-  Defines a matcher that matches number values
+  Defines a matcher that matches number values. Comparison is done in a type-agnostic manner, for
+  example `1.0 ~> number(exactly: 1)` matches, as does `1 ~> number(exactly: 1.0)`.
   """
 
   import Machete.Mismatch
