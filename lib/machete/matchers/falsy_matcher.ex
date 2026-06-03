@@ -18,7 +18,7 @@ defmodule Machete.FalsyMatcher do
   @type opts :: []
 
   @doc """
-  Matches against [falsy values](https://hexdocs.pm/elixir/1.12/Kernel.html#module-truthy-and-falsy-values)
+  Matches against [falsy values](https://elixir.hexdocs.pm/Kernel.html#module-truthy-and-falsy-values)
 
   Takes no arguments
 

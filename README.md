@@ -1,7 +1,7 @@
 # Machete
 
 [![Build Status](https://github.com/mtrudel/machete/workflows/Elixir%20CI/badge.svg)](https://github.com/mtrudel/machete/actions)
-[![Docs](https://img.shields.io/badge/api-docs-green.svg?style=flat)](https://hexdocs.pm/machete)
+[![Docs](https://img.shields.io/badge/api-docs-green.svg?style=flat)](https://machete.hexdocs.pm)
 [![Hex.pm](https://img.shields.io/hexpm/v/machete.svg?style=flat&color=blue)](https://hex.pm/packages/machete)
 
 Machete provides ergonomic match operators to help make your ExUnit tests more literate
@@ -33,12 +33,12 @@ end
 
 At its heart, Machete provides the following two things:
 
-* A new `~>` operator (the 'squiggle arrow') that does flexible matching of 
+* A new `~>` operator (the 'squiggle arrow') that does flexible matching of
   its left operator with its right operator
 * A set of parametric matchers such as `string()` or `integer()` which can match
   against general types. A comprehensive list of Machete's built-in matchers is
   available [in the Machete
-  documentation](https://hexdocs.pm/machete/Machete.html)
+  documentation](https://machete.hexdocs.pm/Machete.html)
 
 These building blocks let you define test expectations that can match data against any
 combination of literals, variables, or parametrically defined matchers
@@ -96,7 +96,7 @@ assert {:ok, %{a: [1,2,3]}} ~> {:ok, %{a: [1,2,3]}}
 
 Machete comes with parametric matchers defined for a variety of types. A few
 illustrative examples follow; for more details, see the [Machete
-Hexdocs](https://hexdocs.pm/machete/Machete.html):
+Hexdocs](https://machete.hexdocs.pm/Machete.html):
 
 ```elixir
 # Matches strings
@@ -131,7 +131,7 @@ def deps do
 end
 ```
 
-Documentation is published on [HexDocs](https://hexdocs.pm/machete)
+Documentation is published on [HexDocs](https://machete.hexdocs.pm)
 
 ## License
 
