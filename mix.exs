@@ -75,7 +75,8 @@ defmodule Machete.MixProject do
           Machete.TermMatcher,
           Machete.TimeMatcher,
           Machete.TruthyMatcher,
-          Machete.UnixTimeMatcher
+          Machete.UnixTimeMatcher,
+          Machete.UUIDMatcher
         ]
       ]
     ]

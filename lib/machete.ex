@@ -114,6 +114,7 @@ defmodule Machete do
   * [`time()`](`Machete.TimeMatcher.time/1`) matches `Time` instances
   * [`truthy()`](`Machete.TruthyMatcher.truthy/1`) matches truthy values
   * [`unix_time()`](`Machete.UnixTimeMatcher.unix_time/1`) matches integers that represent unix time
+  * [`uuid()`](`Machete.UUIDMatcher.uuid/1`) matches UUID formatted strings
 
   ## Parametric collection matchers
 
@@ -211,6 +212,7 @@ defmodule Machete do
       import Machete.TimeMatcher
       import Machete.TruthyMatcher
       import Machete.UnixTimeMatcher
+      import Machete.UUIDMatcher
     end
   end
 end
