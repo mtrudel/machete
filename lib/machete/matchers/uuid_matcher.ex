@@ -69,12 +69,6 @@ defmodule Machete.UUIDMatcher do
     do: raise(ArgumentError, "`case` must be :lower, :upper or :any, got: #{inspect(case)}")
 
   defimpl Machete.Matchable do
-    @formats %{
-      lower: ~r/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/,
-      upper: ~r/\A[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\z/,
-      any: ~r/\A[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\z/
-    }
-
     def mismatches(%@for{} = a, b) do
       with nil <- matches_type(b),
            nil <- matches_format(b, a.case),
@@ -86,9 +80,17 @@ defmodule Machete.UUIDMatcher do
     defp matches_type(b), do: mismatch("#{safe_inspect(b)} is not a string")
 
     defp matches_format(b, case) do
-      unless b =~ Map.fetch!(@formats, case),
+      unless b =~ format(case),
         do: mismatch("#{safe_inspect(b)} is not a valid UUID")
     end
+
+    # These are functions and not a module attribute because Elixir 1.18 on OTP 28 cannot read a
+    # regex out of a module attribute
+    defp format(:lower), do: ~r/\A[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\z/
+    defp format(:upper), do: ~r/\A[0-9A-F]{8}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{4}-[0-9A-F]{12}\z/
+
+    defp format(:any),
+      do: ~r/\A[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}\z/
 
     defp matches_version(_, nil), do: nil
 
